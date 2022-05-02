@@ -29,6 +29,8 @@ dependencies {
 	implementation ("org.springframework.boot:spring-boot-starter-validation")
 	implementation ("org.springframework.boot:spring-boot-starter-web")
 
+	implementation ("com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.4")
+
 	compileOnly ("org.projectlombok:lombok")
 	runtimeOnly ("mysql:mysql-connector-java")
 	annotationProcessor ("org.projectlombok:lombok")
