@@ -8,4 +8,20 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
-      
+
+  datasource:
+    hikari:
+      connection-timeout: 30000 # default 30s
+      maximum-pool-size: 10 # default 10
+      max-lifetime: 1800000 # default 30 minutes
+      data-source-properties:
+        cachePrepStmts: true
+        prepStmtCacheSize: 250
+        prepStmtCacheSqlLimit: 2048
+        useServerPrepStmts: true
+        useLocalSessionState: true
+        rewriteBatchedStatements: true
+        cacheResultSetMetadata: true
+        cacheServerConfiguration: true
+        elideSetAutoCommits: true
+        maintainTimeStats: false
