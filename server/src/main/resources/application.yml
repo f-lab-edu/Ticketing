@@ -25,3 +25,7 @@ spring:
         cacheServerConfiguration: true
         elideSetAutoCommits: true
         maintainTimeStats: false
+
+jasypt:
+  encryptor:
+    bean: jasyptStringEncryptor
