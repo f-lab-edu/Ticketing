@@ -1,6 +1,5 @@
 package com.ticketing.server.global.health;
 
-import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.Status;
@@ -21,7 +20,7 @@ public class L7checkController {
 	private final MutableHealthIndicator indicator;
 
 	@GetMapping
-	public ResponseEntity health() {
+	public ResponseEntity<Object> health() {
 		Health health = indicator.health();
 		boolean isUp = health.getStatus().equals(Status.UP);
 		return ResponseEntity
@@ -31,13 +30,13 @@ public class L7checkController {
 
 	@DeleteMapping
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void down(HttpServletRequest request) {
+	public void down() {
 		indicator.setHealth(Health.down().build());
 	}
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public void up(HttpServletRequest request) {
+	public void up() {
 		indicator.setHealth(Health.up().build());
 	}
 
