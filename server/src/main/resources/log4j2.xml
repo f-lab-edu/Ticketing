@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Configuration status="INFO" monitorInterval="30">
+
+  <Properties>
+    <Property name="LOG_PATH">./logs/log</Property>
+    <Property name="LOG_PATTERN">%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n</Property>
+  </Properties>
+
+  <Appenders>
+    <Console name="ConsoleLog" target="SYSTEM_OUT">
+      <PatternLayout pattern="${LOG_PATTERN}" charset="UTF-8"/>
+    </Console>
+
+    <RollingFile name="FileLog"
+      fileName="${LOG_PATH}.log"
+      filePattern="${LOG_PATH}-%d{yyyy-MM-dd}-%i.log">
+      <PatternLayout pattern="${LOG_PATTERN}" charset="UTF-8" />
+
+      <Policies>
+        <SizeBasedTriggeringPolicy size="15MB" />
+        <TimeBasedTriggeringPolicy modulate="true" interval="1" />
+      </Policies>
+
+      <DefaultRolloverStrategy>
+        <Delete basePath="${LOG_PATH}" maxDepth="1">
+          <IfLastModified age="30d"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+    </RollingFile>
+  </Appenders>
+
+  <Loggers>
+    <Root level="info">
+      <AppenderRef ref="ConsoleLog" />
+      <AppenderRef ref="FileLog" />
+    </Root>
+  </Loggers>
+</Configuration>
