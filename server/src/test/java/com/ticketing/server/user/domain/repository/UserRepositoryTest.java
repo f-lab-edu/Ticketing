@@ -19,13 +19,7 @@ class UserRepositoryTest {
 	@Test
 	void 유저레포지토리테스트() {
 		// given
-		User user = User.builder()
-			.name("동효")
-			.password("test")
-			.email("test@test.com")
-			.grade(UserGrade.GUEST)
-			.phone("010-1234-5678")
-			.build();
+		User user = new User("유저1", "email@gmail.com", "testPassword01", UserGrade.GUEST, "010-1234-5678");
 
 		// when
 		userRepository.save(user);
