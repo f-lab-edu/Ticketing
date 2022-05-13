@@ -32,7 +32,7 @@ public class User extends AbstractEntity {
 	private String password;
 
 	@Column(name = "grade")
-	@NotNull
+	@NotNull(message = "사용자 등급은 필수 입니다.")
 	@Enumerated(value = EnumType.STRING)
 	private UserGrade grade;
 
