@@ -1,7 +1,6 @@
 package com.ticketing.server.user.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.Set;
 import javax.validation.ConstraintViolation;
@@ -23,6 +22,7 @@ class UserTest {
 	void init() {
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 		validator = factory.getValidator();
+
 	}
 
 	@Test
@@ -49,10 +49,7 @@ class UserTest {
 		Set<ConstraintViolation<User>> constraintViolations = validator.validate(user);
 
 		// then
-		assertAll(
-			() -> assertThat(constraintViolations).hasSize(1),
-			() -> assertThat(constraintViolations.iterator().next().getMessage()).isEqualTo("이름은 필수 입니다.")
-		);
+		assertThat(constraintViolations).hasSize(1);
 	}
 
 	@ParameterizedTest
@@ -66,10 +63,7 @@ class UserTest {
 		Set<ConstraintViolation<User>> constraintViolations = validator.validate(user);
 
 		// then
-		assertAll(
-			() -> assertThat(constraintViolations).hasSize(1),
-			() -> assertThat(constraintViolations.iterator().next().getMessage()).isEqualTo("이메일은 필수 입니다.")
-		);
+		assertThat(constraintViolations).hasSize(1);
 	}
 
 	@ParameterizedTest
@@ -83,10 +77,7 @@ class UserTest {
 		Set<ConstraintViolation<User>> constraintViolations = validator.validate(user);
 
 		// then
-		assertAll(
-			() -> assertThat(constraintViolations).hasSize(1),
-			() -> assertThat(constraintViolations.iterator().next().getMessage()).isEqualTo("이메일이 올바르지 않습니다.")
-		);
+		assertThat(constraintViolations).hasSize(1);
 	}
 
 	@ParameterizedTest
@@ -100,10 +91,7 @@ class UserTest {
 		Set<ConstraintViolation<User>> constraintViolations = validator.validate(user);
 
 		// then
-		assertAll(
-			() -> assertThat(constraintViolations).hasSize(1),
-			() -> assertThat(constraintViolations.iterator().next().getMessage()).isEqualTo("패스워드는 필수 입니다.")
-		);
+		assertThat(constraintViolations).hasSize(1);
 	}
 
 	@Test
@@ -116,10 +104,7 @@ class UserTest {
 		Set<ConstraintViolation<User>> constraintViolations = validator.validate(user);
 
 		// then
-		assertAll(
-			() -> assertThat(constraintViolations).hasSize(1),
-			() -> assertThat(constraintViolations.iterator().next().getMessage()).isEqualTo("사용자 등급은 필수 입니다.")
-		);
+		assertThat(constraintViolations).hasSize(1);
 	}
 
 	@ParameterizedTest
@@ -133,10 +118,7 @@ class UserTest {
 		Set<ConstraintViolation<User>> constraintViolations = validator.validate(user);
 
 		// then
-		assertAll(
-			() -> assertThat(constraintViolations).hasSize(1),
-			() -> assertThat(constraintViolations.iterator().next().getMessage()).isEqualTo("휴대번호는 필수 입니다.")
-		);
+		assertThat(constraintViolations).hasSize(1);
 	}
 
 	@ParameterizedTest
@@ -151,7 +133,6 @@ class UserTest {
 
 		// then
 		assertThat(constraintViolations).hasSize(1);
-		assertThat(constraintViolations.iterator().next().getMessage()).isEqualTo("휴대번호가 올바르지 않습니다.");
 	}
 
 }

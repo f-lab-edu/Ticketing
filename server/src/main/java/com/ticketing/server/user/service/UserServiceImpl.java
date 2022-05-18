@@ -23,6 +23,7 @@ public class UserServiceImpl implements UserService {
 	private final PasswordEncoder passwordEncoder;
 	private final UserRepository userRepository;
 
+	@Override
 	@Transactional
 	public User register(@Valid SignUp signUpDto) {
 		validateEmail(signUpDto.getEmail());
