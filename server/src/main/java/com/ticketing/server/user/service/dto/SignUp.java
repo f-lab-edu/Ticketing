@@ -1,6 +1,8 @@
 package com.ticketing.server.user.service.dto;
 
 import com.ticketing.server.global.validator.constraints.Phone;
+import com.ticketing.server.user.domain.User;
+import com.ticketing.server.user.domain.UserGrade;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import lombok.Getter;
@@ -30,7 +32,15 @@ public class SignUp {
 		this.phone = phone;
 	}
 
-	public String encodePassword(PasswordEncoder passwordEncoder) {
+	public User toUser(PasswordEncoder passwordEncoder) {
+		return new User(this.name
+			, this.email
+			, getEncodePassword(passwordEncoder)
+			, UserGrade.GUEST
+			, this.phone);
+	}
+
+	public String getEncodePassword(PasswordEncoder passwordEncoder) {
 		return passwordEncoder.encode(password);
 	}
 

@@ -1,7 +1,6 @@
 package com.ticketing.server.user.service;
 
 import com.ticketing.server.user.domain.User;
-import com.ticketing.server.user.domain.UserGrade;
 import com.ticketing.server.user.domain.repository.UserRepository;
 import com.ticketing.server.user.exception.DuplicateEmailException;
 import com.ticketing.server.user.service.dto.SignUp;
@@ -32,13 +31,7 @@ public class UserServiceImpl implements UserService {
 			throw new DuplicateEmailException(signUpDto.getEmail());
 		}
 
-		User newUser = new User(signUpDto.getName(),
-			signUpDto.getEmail(),
-			signUpDto.encodePassword(passwordEncoder),
-			UserGrade.GUEST,
-			signUpDto.getPhone());
-
-		return userRepository.save(newUser);
+		return userRepository.save(signUpDto.toUser(passwordEncoder));
 	}
 
 }
