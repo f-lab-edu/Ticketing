@@ -7,6 +7,7 @@ import com.ticketing.server.user.service.interfaces.UserService;
 import java.util.Optional;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,7 @@ import org.springframework.validation.annotation.Validated;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Validated
+@Slf4j
 public class UserServiceImpl implements UserService {
 
 	private final PasswordEncoder passwordEncoder;
@@ -26,6 +28,7 @@ public class UserServiceImpl implements UserService {
 	public Optional<User> register(@Valid SignUp signUpDto) {
 		Optional<User> user = userRepository.findByEmail(signUpDto.getEmail());
 		if (user.isPresent()) {
+			log.error("이미 존재하는 이메일이기 때문에 신규 회원가입을 진행할 수 없습니다. :: {}", signUpDto);
 			return Optional.empty();
 		}
 

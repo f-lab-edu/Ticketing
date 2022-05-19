@@ -44,4 +44,13 @@ public class SignUp {
 		return passwordEncoder.encode(password);
 	}
 
+	@Override
+	public String toString() {
+		return "SignUp{" +
+			"name='" + name + '\'' +
+			", email='" + email + '\'' +
+			", phone='" + phone + '\'' +
+			'}';
+	}
+
 }
