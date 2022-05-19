@@ -22,7 +22,7 @@ public class SignUp {
 	private String password;
 
 	@NotEmpty(message = "{validation.not.empty.phone}")
-	@Phone(message = "{validation.phone}")
+	@Phone
 	private String phone;
 
 	public SignUp(String name, String email, String password, String phone) {

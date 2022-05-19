@@ -38,7 +38,7 @@ public class User extends AbstractEntity {
 
 	@Column(name = "phone")
 	@NotEmpty(message = "{validation.not.empty.phone}")
-	@Phone(message = "{validation.phone}")
+	@Phone
 	private String phone;
 
 	private boolean isDeleted = false;

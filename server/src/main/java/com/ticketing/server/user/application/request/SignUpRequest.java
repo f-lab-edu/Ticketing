@@ -20,7 +20,7 @@ public class SignUpRequest {
 	private String password;
 
 	@NotEmpty(message = "{validation.not.empty.phone}")
-	@Phone(message = "{validation.phone}")
+	@Phone
 	private String phone;
 
 	public SignUp toSignUp() {
