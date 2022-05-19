@@ -26,23 +26,19 @@ public class UserServiceImpl implements UserService {
 	@Override
 	@Transactional
 	public User register(@Valid SignUp signUpDto) {
-		validateEmail(signUpDto.getEmail());
+		Optional<User> user = userRepository.findByEmail(signUpDto.getEmail());
 
-		User user = new User(signUpDto.getName(),
+		if (user.isPresent()) {
+			throw new DuplicateEmailException(signUpDto.getEmail());
+		}
+
+		User newUser = new User(signUpDto.getName(),
 			signUpDto.getEmail(),
 			signUpDto.encodePassword(passwordEncoder),
 			UserGrade.GUEST,
 			signUpDto.getPhone());
 
-		return userRepository.save(user);
-	}
-
-	private void validateEmail(String email) {
-		Optional<User> user = userRepository.findByEmail(email);
-
-		if (user.isPresent()) {
-			throw new DuplicateEmailException(email);
-		}
+		return userRepository.save(newUser);
 	}
 
 }
