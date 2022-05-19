@@ -8,7 +8,6 @@ import java.util.Optional;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -20,7 +19,6 @@ import org.springframework.validation.annotation.Validated;
 @Slf4j
 public class UserServiceImpl implements UserService {
 
-	private final PasswordEncoder passwordEncoder;
 	private final UserRepository userRepository;
 
 	@Override
@@ -32,7 +30,7 @@ public class UserServiceImpl implements UserService {
 			return Optional.empty();
 		}
 
-		User newUser = userRepository.save(signUpDto.toUser(passwordEncoder));
+		User newUser = userRepository.save(signUpDto.toUser());
 		return Optional.of(newUser);
 	}
 

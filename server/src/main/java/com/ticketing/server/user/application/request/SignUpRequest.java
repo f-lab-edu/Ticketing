@@ -5,6 +5,7 @@ import com.ticketing.server.user.service.dto.SignUp;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import lombok.Getter;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Getter
 public class SignUpRequest {
@@ -23,7 +24,12 @@ public class SignUpRequest {
 	@Phone
 	private String phone;
 
-	public SignUp toSignUp() {
-		return new SignUp(name, email, password, phone);
+	public SignUp toSignUp(PasswordEncoder passwordEncoder) {
+		return new SignUp(name, email, getEncodePassword(passwordEncoder), phone);
 	}
+
+	private String getEncodePassword(PasswordEncoder passwordEncoder) {
+		return passwordEncoder.encode(password);
+	}
+
 }

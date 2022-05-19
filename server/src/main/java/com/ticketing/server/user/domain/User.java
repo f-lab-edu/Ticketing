@@ -34,7 +34,7 @@ public class User extends AbstractEntity {
 	@Column(name = "grade")
 	@NotNull(message = "{validation.not.empty.grade}")
 	@Enumerated(value = EnumType.STRING)
-	private UserGrade grade;
+	private UserGrade grade = UserGrade.GUEST;
 
 	@Column(name = "phone")
 	@NotEmpty(message = "{validation.not.empty.phone}")

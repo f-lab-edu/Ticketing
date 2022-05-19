@@ -16,21 +16,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
 
 	User user;
 	SignUp signUp;
-
-	DelegatingPasswordEncoder delegatingPasswordEncoder;
-
-	@Mock
-	PasswordEncoder passwordEncoder;
 
 	@Mock
 	UserRepository userRepository;
@@ -40,11 +31,9 @@ class UserServiceImplTest {
 
 	@BeforeEach
 	void init() {
-		delegatingPasswordEncoder = (DelegatingPasswordEncoder) PasswordEncoderFactories.createDelegatingPasswordEncoder();
-		delegatingPasswordEncoder.setDefaultPasswordEncoderForMatches(new BCryptPasswordEncoder());
 
 		signUp = new SignUp("유저", "ticketing@gmail.com", "123456", "010-1234-5678");
-		user = new User("유저", "ticketing@gmail.com", delegatingPasswordEncoder.encode("123456"), UserGrade.GUEST, "010-1234-5678");
+		user = new User("유저", "ticketing@gmail.com", "123456", UserGrade.GUEST, "010-1234-5678");
 	}
 
 	@Test
@@ -65,7 +54,6 @@ class UserServiceImplTest {
 	void UserServiceImplTest() {
 		// given
 		when(userRepository.findByEmail("ticketing@gmail.com")).thenReturn(Optional.empty());
-		when(passwordEncoder.encode("123456")).thenReturn(user.getPassword());
 		when(userRepository.save(any())).thenReturn(user);
 
 		// when
