@@ -2,7 +2,6 @@ package com.ticketing.server.user.service;
 
 import com.ticketing.server.user.domain.User;
 import com.ticketing.server.user.domain.repository.UserRepository;
-import com.ticketing.server.user.exception.DuplicateEmailException;
 import com.ticketing.server.user.service.dto.SignUp;
 import com.ticketing.server.user.service.interfaces.UserService;
 import java.util.Optional;
@@ -24,14 +23,14 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional
-	public User register(@Valid SignUp signUpDto) {
+	public Optional<User> register(@Valid SignUp signUpDto) {
 		Optional<User> user = userRepository.findByEmail(signUpDto.getEmail());
-
 		if (user.isPresent()) {
-			throw new DuplicateEmailException(signUpDto.getEmail());
+			return Optional.empty();
 		}
 
-		return userRepository.save(signUpDto.toUser(passwordEncoder));
+		User newUser = userRepository.save(signUpDto.toUser(passwordEncoder));
+		return Optional.of(newUser);
 	}
 
 }

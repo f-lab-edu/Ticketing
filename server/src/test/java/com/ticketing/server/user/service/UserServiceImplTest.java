@@ -1,14 +1,12 @@
 package com.ticketing.server.user.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import com.ticketing.server.user.domain.User;
 import com.ticketing.server.user.domain.UserGrade;
 import com.ticketing.server.user.domain.repository.UserRepository;
-import com.ticketing.server.user.exception.DuplicateEmailException;
 import com.ticketing.server.user.service.dto.SignUp;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,10 +50,14 @@ class UserServiceImplTest {
 	@Test
 	@DisplayName("이미 동일한 이메일이 있을 경우")
 	void duplicateEmailException() {
+		// given
 		when(userRepository.findByEmail("ticketing@gmail.com")).thenReturn(Optional.of(user));
 
-		assertThatThrownBy(() -> userService.register(signUp))
-			.isInstanceOf(DuplicateEmailException.class);
+		// when
+		Optional<User> user = userService.register(signUp);
+
+		// then
+		assertThat(user).isEmpty();
 	}
 
 	@Test
@@ -67,10 +69,10 @@ class UserServiceImplTest {
 		when(userRepository.save(any())).thenReturn(user);
 
 		// when
-		User user = userService.register(signUp);
+		Optional<User> user = userService.register(signUp);
 
 		// then
-		assertThat(delegatingPasswordEncoder.matches(signUp.getPassword(), user.getPassword())).isTrue();
+		assertThat(user).isPresent();
 	}
 
 }

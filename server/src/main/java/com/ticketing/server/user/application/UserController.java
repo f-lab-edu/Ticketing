@@ -1,7 +1,9 @@
 package com.ticketing.server.user.application;
 
 import com.ticketing.server.user.application.request.SignUpRequest;
+import com.ticketing.server.user.domain.User;
 import com.ticketing.server.user.service.UserServiceImpl;
+import java.util.Optional;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,7 +22,12 @@ public class UserController {
 
 	@PostMapping
 	public ResponseEntity<Object> register(@RequestBody @Valid SignUpRequest signUpRequest) {
-		userService.register(signUpRequest.toSignUp());
+		Optional<User> user = userService.register(signUpRequest.toSignUp());
+
+		if (user.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		}
+
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 
