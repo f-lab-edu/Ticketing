@@ -15,7 +15,7 @@ import javax.validation.Payload;
 @Documented
 public @interface Phone {
 
-	String message() default "휴대번호가 올바르지 않습니다.";
+	String message() default "{validation.phone}";
 
 	Class<?>[] groups() default {};
 
