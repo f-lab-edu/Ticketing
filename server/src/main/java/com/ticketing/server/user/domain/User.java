@@ -3,6 +3,7 @@ package com.ticketing.server.user.domain;
 import com.ticketing.server.global.dto.repository.AbstractEntity;
 import com.ticketing.server.global.validator.constraints.Phone;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -17,6 +18,14 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class User extends AbstractEntity {
+
+	public User(String name, String email, String password, UserGrade grade, String phone) {
+		this.name = name;
+		this.email = email;
+		this.password = password;
+		this.grade = grade;
+		this.phone = phone;
+	}
 
 	@Column(name = "name")
 	@NotEmpty(message = "{validation.not.empty.name}")
@@ -45,12 +54,14 @@ public class User extends AbstractEntity {
 
 	private LocalDateTime deletedAt;
 
-	public User(String name, String email, String password, UserGrade grade, String phone) {
-		this.name = name;
-		this.email = email;
-		this.password = password;
-		this.grade = grade;
-		this.phone = phone;
+	public Optional<User> delete() {
+		if (isDeleted) {
+			return Optional.empty();
+		}
+
+		isDeleted = true;
+		deletedAt = LocalDateTime.now();
+		return Optional.of(this);
 	}
 
 }
