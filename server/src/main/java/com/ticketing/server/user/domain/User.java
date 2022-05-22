@@ -4,7 +4,9 @@ import com.ticketing.server.global.dto.repository.AbstractEntity;
 import com.ticketing.server.global.exception.AlreadyDeletedException;
 import com.ticketing.server.global.exception.PasswordMismatchException;
 import com.ticketing.server.global.validator.constraints.Phone;
+import com.ticketing.server.user.service.dto.ChangePassword;
 import com.ticketing.server.user.service.dto.DeleteUser;
+import com.ticketing.server.user.service.dto.PasswordMatches;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -61,13 +63,24 @@ public class User extends AbstractEntity {
 			throw new AlreadyDeletedException("이미 탈퇴된 회원 입니다.");
 		}
 
-		if (!deleteUser.passwordEquals(password)) {
-			throw new PasswordMismatchException();
-		}
+		comparePassword(deleteUser);
 
 		isDeleted = true;
 		deletedAt = LocalDateTime.now();
 		return this;
+	}
+
+	public User modifyPassword(ChangePassword changePassword) {
+		comparePassword(changePassword);
+
+		this.password = changePassword.getEncodePassword();
+		return this;
+	}
+
+	private void comparePassword(PasswordMatches passwordMatches) {
+		if (!passwordMatches.passwordMatches(password)) {
+			throw new PasswordMismatchException();
+		}
 	}
 
 }

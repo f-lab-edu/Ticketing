@@ -31,7 +31,7 @@ public class DeleteUserTest {
 
 		// when
 		// then
-		assertThat(user.passwordEquals("123456")).isTrue();
+		assertThat(user.passwordMatches("123456")).isTrue();
 	}
 
 }

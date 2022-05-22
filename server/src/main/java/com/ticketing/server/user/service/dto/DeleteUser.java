@@ -4,7 +4,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-public class DeleteUser {
+public class DeleteUser implements PasswordMatches {
 
 	public DeleteUser(String email, String inputPassword, PasswordEncoder passwordEncoder) {
 		this.email = email;
@@ -21,7 +21,8 @@ public class DeleteUser {
 
 	private PasswordEncoder passwordEncoder;
 
-	public boolean passwordEquals(String password) {
+	@Override
+	public boolean passwordMatches(String password) {
 		return passwordEncoder.matches(this.inputPassword, password);
 	}
 
