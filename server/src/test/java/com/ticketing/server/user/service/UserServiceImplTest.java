@@ -57,7 +57,7 @@ class UserServiceImplTest {
 
 	@Test
 	@DisplayName("회원가입 성공했을 경우")
-	void UserServiceImplTest() {
+	void registerSuccess() {
 		// given
 		when(userRepository.findByEmail("ticketing@gmail.com")).thenReturn(Optional.empty());
 		when(userRepository.save(any())).thenReturn(user);
