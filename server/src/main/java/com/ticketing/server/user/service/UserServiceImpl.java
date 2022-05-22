@@ -50,6 +50,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@Transactional
 	public Optional<User> modifyPassword(@Valid ChangePassword changePassword) {
 		Optional<User> optionalUser = userRepository.findByEmailAndIsDeletedFalse(changePassword.getEmail());
 		if (optionalUser.isEmpty()) {
