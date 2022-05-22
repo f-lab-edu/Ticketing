@@ -3,8 +3,10 @@ package com.ticketing.server.user.application.request;
 import com.ticketing.server.user.service.dto.ChangePassword;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import lombok.Getter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+@Getter
 public class UserPasswordModifyRequest {
 
 	@NotEmpty(message = "{validation.not.empty.email}")
@@ -24,4 +26,5 @@ public class UserPasswordModifyRequest {
 	public boolean oldEqualNew() {
 		return oldPassword.equals(newPassword);
 	}
+
 }
