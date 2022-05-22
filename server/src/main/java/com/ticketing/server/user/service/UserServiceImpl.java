@@ -2,6 +2,7 @@ package com.ticketing.server.user.service;
 
 import com.ticketing.server.user.domain.User;
 import com.ticketing.server.user.domain.repository.UserRepository;
+import com.ticketing.server.user.service.dto.DeleteUser;
 import com.ticketing.server.user.service.dto.SignUp;
 import com.ticketing.server.user.service.interfaces.UserService;
 import java.util.Optional;
@@ -32,6 +33,19 @@ public class UserServiceImpl implements UserService {
 
 		User newUser = userRepository.save(signUpDto.toUser());
 		return Optional.of(newUser);
+	}
+
+	@Override
+	@Transactional
+	public Optional<User> delete(@Valid DeleteUser deleteUser) {
+		Optional<User> optionalUser = userRepository.findByEmail(deleteUser.getEmail());
+		if (optionalUser.isEmpty()) {
+			log.error("존재하지 않는 이메일 입니다. :: {}", deleteUser);
+			return Optional.empty();
+		}
+
+		User user = optionalUser.get();
+		return Optional.of(user.delete(deleteUser));
 	}
 
 }

@@ -1,9 +1,12 @@
 package com.ticketing.server.user.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import java.util.Optional;
+import com.ticketing.server.global.exception.AlreadyDeletedException;
+import com.ticketing.server.user.service.dto.DeleteUser;
+import com.ticketing.server.user.service.dto.DeleteUserTest;
 import java.util.Set;
 import java.util.stream.Stream;
 import javax.validation.ConstraintViolation;
@@ -14,6 +17,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 class UserTest {
@@ -81,33 +85,68 @@ class UserTest {
 		);
 	}
 
-	@ParameterizedTest
-	@MethodSource("provideCorrectUsers")
-	@DisplayName("이미 회원탈퇴 되어 있는 경우")
-	void deleteFail(User user) {
-		// given
-		user.delete();
+	public static Stream<Arguments> provideDifferentPasswordDeleteUsers() {
+		return Stream.of(
+			Arguments.of(new User("유저1", "ticketing1@gmail.com", "123456", UserGrade.GUEST, "010-1234-5678")
+				, new DeleteUser("ticketing1@gmail.com", "1234561", DeleteUserTest.CUSTOM_PASSWORD_ENCODER))
+			, Arguments.of(new User("유저2", "ticketing2@gmail.com", "qwe123", UserGrade.GUEST, "010-2234-5678")
+				, new DeleteUser("ticketing2@gmail.com", "qwe1231", DeleteUserTest.CUSTOM_PASSWORD_ENCODER))
+			, Arguments.of(new User("유저3", "ticketing3@gmail.com", "ticketing", UserGrade.STAFF, "010-3234-5678")
+				, new DeleteUser("ticketing3@gmail.com", "ticketing1", DeleteUserTest.CUSTOM_PASSWORD_ENCODER))
+			, Arguments.of(new User("유저4", "ticketing4@gmail.com", "ticketing123456", UserGrade.STAFF, "010-4234-5678")
+				, new DeleteUser("ticketing4@gmail.com", "ticketing1234561", DeleteUserTest.CUSTOM_PASSWORD_ENCODER))
+		);
+	}
 
-		// when
-		Optional<User> deletedUser = user.delete();
-
-		// then
-		assertThat(deletedUser).isEmpty();
+	public static Stream<Arguments> provideDeleteUsers() {
+		return Stream.of(
+			Arguments.of(new User("유저1", "ticketing1@gmail.com", "123456", UserGrade.GUEST, "010-1234-5678")
+				, new DeleteUser("ticketing1@gmail.com", "123456", DeleteUserTest.CUSTOM_PASSWORD_ENCODER))
+			, Arguments.of(new User("유저2", "ticketing2@gmail.com", "qwe123", UserGrade.GUEST, "010-2234-5678")
+				, new DeleteUser("ticketing2@gmail.com", "qwe123", DeleteUserTest.CUSTOM_PASSWORD_ENCODER))
+			, Arguments.of(new User("유저3", "ticketing3@gmail.com", "ticketing", UserGrade.STAFF, "010-3234-5678")
+				, new DeleteUser("ticketing3@gmail.com", "ticketing", DeleteUserTest.CUSTOM_PASSWORD_ENCODER))
+			, Arguments.of(new User("유저4", "ticketing4@gmail.com", "ticketing123456", UserGrade.STAFF, "010-4234-5678")
+				, new DeleteUser("ticketing4@gmail.com", "ticketing123456", DeleteUserTest.CUSTOM_PASSWORD_ENCODER))
+		);
 	}
 
 	@ParameterizedTest
-	@MethodSource("provideCorrectUsers")
-	@DisplayName("회원탈퇴 성공")
-	void deleteSuccess(User user) {
+	@MethodSource("provideDifferentPasswordDeleteUsers")
+	@DisplayName("입력된 패스워드가 다를 경우")
+	void passwordMismatchException(User user, DeleteUser deleteUser) {
 		// given
 		// when
-		Optional<User> deletedUser = user.delete();
+		// then
+		assertThatThrownBy(() -> user.delete(deleteUser))
+			.isInstanceOf(PasswordMismatchException.class);
+	}
+
+	@ParameterizedTest
+	@MethodSource("provideDeleteUsers")
+	@DisplayName("이미 회원탈퇴 되어 있는 경우")
+	void alreadyDeletedException(User user, DeleteUser deleteUser) {
+		// given
+		// when
+		user.delete(deleteUser);
 
 		// then
-		assertThat(deletedUser).isPresent();
+		assertThatThrownBy(() -> user.delete(deleteUser))
+			.isInstanceOf(AlreadyDeletedException.class);
+	}
+
+	@ParameterizedTest
+	@MethodSource("provideDeleteUsers")
+	@DisplayName("회원탈퇴 성공")
+	void deleteSuccess(User user, DeleteUser deleteUser) {
+		// given
+		// when
+		User deletedUser = user.delete(deleteUser);
+
+		// then
 		assertAll(
-			() -> assertThat(deletedUser.get().getDeletedAt()).isNotNull()
-			, () -> assertThat(deletedUser.get().isDeleted()).isTrue()
+			() -> assertThat(deletedUser.getDeletedAt()).isNotNull()
+			, () -> assertThat(deletedUser.isDeleted()).isTrue()
 		);
 	}
 

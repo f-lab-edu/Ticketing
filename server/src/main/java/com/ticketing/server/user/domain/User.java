@@ -1,9 +1,10 @@
 package com.ticketing.server.user.domain;
 
 import com.ticketing.server.global.dto.repository.AbstractEntity;
+import com.ticketing.server.global.exception.AlreadyDeletedException;
 import com.ticketing.server.global.validator.constraints.Phone;
+import com.ticketing.server.user.service.dto.DeleteUser;
 import java.time.LocalDateTime;
-import java.util.Optional;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -54,14 +55,18 @@ public class User extends AbstractEntity {
 
 	private LocalDateTime deletedAt;
 
-	public Optional<User> delete() {
+	public User delete(DeleteUser deleteUser) {
 		if (isDeleted) {
-			return Optional.empty();
+			throw new AlreadyDeletedException("이미 탈퇴된 회원 입니다.");
+		}
+
+		if (!deleteUser.passwordEquals(password)) {
+			throw new PasswordMismatchException();
 		}
 
 		isDeleted = true;
 		deletedAt = LocalDateTime.now();
-		return Optional.of(this);
+		return this;
 	}
 
 }
