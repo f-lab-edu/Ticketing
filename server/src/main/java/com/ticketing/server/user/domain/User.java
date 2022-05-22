@@ -2,6 +2,7 @@ package com.ticketing.server.user.domain;
 
 import com.ticketing.server.global.dto.repository.AbstractEntity;
 import com.ticketing.server.global.exception.AlreadyDeletedException;
+import com.ticketing.server.global.exception.PasswordMismatchException;
 import com.ticketing.server.global.validator.constraints.Phone;
 import com.ticketing.server.user.service.dto.DeleteUser;
 import java.time.LocalDateTime;

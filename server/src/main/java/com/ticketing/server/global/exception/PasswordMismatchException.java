@@ -1,4 +1,4 @@
-package com.ticketing.server.user.domain;
+package com.ticketing.server.global.exception;
 
 public class PasswordMismatchException extends RuntimeException {
 

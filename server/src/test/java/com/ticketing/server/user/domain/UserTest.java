@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.ticketing.server.global.exception.AlreadyDeletedException;
+import com.ticketing.server.global.exception.PasswordMismatchException;
 import com.ticketing.server.user.service.dto.DeleteUser;
 import com.ticketing.server.user.service.dto.DeleteUserTest;
 import java.util.Set;
