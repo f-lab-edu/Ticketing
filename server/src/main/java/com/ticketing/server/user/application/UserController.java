@@ -3,6 +3,9 @@ package com.ticketing.server.user.application;
 import com.ticketing.server.user.application.request.SignUpRequest;
 import com.ticketing.server.user.application.request.UserDeleteRequest;
 import com.ticketing.server.user.application.request.UserModifyPasswordRequest;
+import com.ticketing.server.user.application.response.SignUpResponse;
+import com.ticketing.server.user.application.response.UserDeleteResponse;
+import com.ticketing.server.user.application.response.UserModifyPasswordResponse;
 import com.ticketing.server.user.domain.User;
 import com.ticketing.server.user.service.UserServiceImpl;
 import java.util.Optional;
@@ -37,7 +40,7 @@ public class UserController {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		}
 
-		return ResponseEntity.status(HttpStatus.CREATED).build();
+		return ResponseEntity.status(HttpStatus.CREATED).body(SignUpResponse.of(user.get()));
 	}
 
 	@DeleteMapping
@@ -49,7 +52,7 @@ public class UserController {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		}
 
-		return ResponseEntity.status(HttpStatus.OK).build();
+		return ResponseEntity.status(HttpStatus.OK).body(UserDeleteResponse.of(user.get()));
 	}
 
 	@PatchMapping("/password")
@@ -66,7 +69,7 @@ public class UserController {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		}
 
-		return ResponseEntity.status(HttpStatus.OK).build();
+		return ResponseEntity.status(HttpStatus.OK).body(UserModifyPasswordResponse.of(user.get()));
 	}
 
 }
