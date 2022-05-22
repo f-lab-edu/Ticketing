@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.ticketing.server.global.exception.AlreadyDeletedException;
 import com.ticketing.server.global.exception.PasswordMismatchException;
+import com.ticketing.server.user.service.dto.ChangePassword;
 import com.ticketing.server.user.service.dto.DeleteUser;
 import com.ticketing.server.user.service.dto.DeleteUserTest;
 import java.util.Set;
@@ -149,6 +150,34 @@ class UserTest {
 			() -> assertThat(deletedUser.getDeletedAt()).isNotNull()
 			, () -> assertThat(deletedUser.isDeleted()).isTrue()
 		);
+	}
+
+	@Test
+	@DisplayName("입력받은 패스워드와 불일치로 변경 실패")
+	void modifyPasswordFail() {
+		// given
+		ChangePassword changePassword = new ChangePassword("ticketing@gmail.com", "1234567", "ticketing1234", DeleteUserTest.CUSTOM_PASSWORD_ENCODER);
+		User user = new User("유저1", "ticketing@gmail.com", "123456", UserGrade.GUEST, "010-1234-5678");
+
+		// when
+		// then
+		assertThatThrownBy(() -> user.modifyPassword(changePassword))
+			.isInstanceOf(PasswordMismatchException.class);
+	}
+
+	@Test
+	@DisplayName("패스워드 변경 성공")
+	void modifyPasswordSuccess() {
+	    // given
+		ChangePassword changePassword = new ChangePassword("ticketing@gmail.com", "123456", "ticketing1234", DeleteUserTest.CUSTOM_PASSWORD_ENCODER);
+		User user = new User("유저1", "ticketing@gmail.com", "123456", UserGrade.GUEST, "010-1234-5678");
+		String oldPassword = user.getPassword();
+
+		// when
+		User modifiedUser = user.modifyPassword(changePassword);
+
+		// then
+		assertThat(modifiedUser.getPassword()).isNotEqualTo(oldPassword);
 	}
 
 	@ParameterizedTest
