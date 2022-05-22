@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Optional<User> modifyPassword(@Valid ChangePassword changePassword) {
-		Optional<User> optionalUser = userRepository.findByEmail(changePassword.getEmail());
+		Optional<User> optionalUser = userRepository.findByEmailAndIsDeletedFalse(changePassword.getEmail());
 		if (optionalUser.isEmpty()) {
 			log.error("존재하지 않는 이메일 입니다. :: {}", changePassword);
 			return Optional.empty();

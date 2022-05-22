@@ -99,7 +99,7 @@ class UserServiceImplTest {
 	@DisplayName("패스워드 변경 시 이메일이 존재하지 않을 경우")
 	void modifyPasswordFail() {
 	    // given
-		when(userRepository.findByEmail("ticketing@gmail.com")).thenReturn(Optional.empty());
+		when(userRepository.findByEmailAndIsDeletedFalse("ticketing@gmail.com")).thenReturn(Optional.empty());
 
 	    // when
 		Optional<User> user = userService.modifyPassword(changePassword);
@@ -112,7 +112,7 @@ class UserServiceImplTest {
 	@DisplayName("패스워드 변경 성공했을 경우")
 	void modifyPasswordSuccess() {
 	    // given
-		when(userRepository.findByEmail("ticketing@gmail.com")).thenReturn(Optional.of(user));
+		when(userRepository.findByEmailAndIsDeletedFalse("ticketing@gmail.com")).thenReturn(Optional.of(user));
 
 		// when
 		Optional<User> user = userService.modifyPassword(changePassword);
