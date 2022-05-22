@@ -29,11 +29,11 @@ public class UserController {
 	private final PasswordEncoder passwordEncoder;
 
 	@PostMapping
-	public ResponseEntity<Object> register(@RequestBody @Valid SignUpRequest signUpRequest) {
-		Optional<User> user = userService.register(signUpRequest.toSignUp(passwordEncoder));
+	public ResponseEntity<Object> register(@RequestBody @Valid SignUpRequest request) {
+		Optional<User> user = userService.register(request.toSignUp(passwordEncoder));
 
 		if (user.isEmpty()) {
-			log.error("이미 존재하는 이메일 입니다. :: {}", signUpRequest.getEmail());
+			log.error("이미 존재하는 이메일 입니다. :: {}", request.getEmail());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		}
 
@@ -41,11 +41,11 @@ public class UserController {
 	}
 
 	@DeleteMapping
-	public ResponseEntity<Object> delete(@RequestBody @Valid UserDeleteRequest userDeleteRequest) {
-		Optional<User> user = userService.delete(userDeleteRequest.toDeleteUser(passwordEncoder));
+	public ResponseEntity<Object> delete(@RequestBody @Valid UserDeleteRequest request) {
+		Optional<User> user = userService.delete(request.toDeleteUser(passwordEncoder));
 
 		if (user.isEmpty()) {
-			log.error("존재하지 않는 이메일 입니다. :: {}", userDeleteRequest.getEmail());
+			log.error("존재하지 않는 이메일 입니다. :: {}", request.getEmail());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		}
 
