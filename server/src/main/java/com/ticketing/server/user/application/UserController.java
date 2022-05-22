@@ -44,7 +44,7 @@ public class UserController {
 	}
 
 	@DeleteMapping
-	public ResponseEntity<Object> delete(@RequestBody @Valid UserDeleteRequest request) {
+	public ResponseEntity<Object> deleteUser(@RequestBody @Valid UserDeleteRequest request) {
 		Optional<User> user = userService.delete(request.toDeleteUser(passwordEncoder));
 
 		if (user.isEmpty()) {
