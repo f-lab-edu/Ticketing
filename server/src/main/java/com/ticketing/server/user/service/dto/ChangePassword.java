@@ -37,4 +37,11 @@ public class ChangePassword implements PasswordMatches {
 	public String getEncodePassword() {
 		return passwordEncoder.encode(newPassword);
 	}
+
+	@Override
+	public String toString() {
+		return "ChangePassword{" +
+			"email='" + email + '\'' +
+			'}';
+	}
 }
