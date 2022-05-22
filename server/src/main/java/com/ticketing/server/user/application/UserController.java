@@ -2,7 +2,7 @@ package com.ticketing.server.user.application;
 
 import com.ticketing.server.user.application.request.SignUpRequest;
 import com.ticketing.server.user.application.request.UserDeleteRequest;
-import com.ticketing.server.user.application.request.UserPasswordModifyRequest;
+import com.ticketing.server.user.application.request.UserModifyPasswordRequest;
 import com.ticketing.server.user.domain.User;
 import com.ticketing.server.user.service.UserServiceImpl;
 import java.util.Optional;
@@ -53,7 +53,7 @@ public class UserController {
 	}
 
 	@PatchMapping("/password")
-	public ResponseEntity<Object> modifyPassword(@RequestBody @Valid UserPasswordModifyRequest request) {
+	public ResponseEntity<Object> modifyPassword(@RequestBody @Valid UserModifyPasswordRequest request) {
 		if (request.oldEqualNew()) {
 			log.error("기존 패스워드와 동일한 패스워드로 변경할 수 없습니다.");
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

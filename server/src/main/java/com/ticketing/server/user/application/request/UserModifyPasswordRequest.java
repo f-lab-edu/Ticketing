@@ -7,7 +7,7 @@ import lombok.Getter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Getter
-public class UserPasswordModifyRequest {
+public class UserModifyPasswordRequest {
 
 	@NotEmpty(message = "{validation.not.empty.email}")
 	@Email(message = "{validation.email}")
