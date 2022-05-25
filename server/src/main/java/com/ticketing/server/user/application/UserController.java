@@ -43,13 +43,13 @@ public class UserController {
 	}
 
 	@PatchMapping("/password")
-	public ResponseEntity<Object> modifyPassword(@RequestBody @Valid UserModifyPasswordRequest request) {
+	public ResponseEntity<Object> changePassword(@RequestBody @Valid UserModifyPasswordRequest request) {
 		if (request.oldEqualNew()) {
 			log.error("기존 패스워드와 동일한 패스워드로 변경할 수 없습니다.");
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		}
 
-		User user = userService.modifyPassword(request.toChangePassword(passwordEncoder));
+		User user = userService.changePassword(request.toChangePassword(passwordEncoder));
 		return ResponseEntity.status(HttpStatus.OK).body(UserModifyPasswordResponse.of(user));
 	}
 

@@ -70,7 +70,7 @@ public class User extends AbstractEntity {
 		return this;
 	}
 
-	public User modifyPassword(ChangePasswordDTO changePassword) {
+	public User changePassword(ChangePasswordDTO changePassword) {
 		checkPassword(changePassword);
 
 		this.password = changePassword.getEncodePassword();

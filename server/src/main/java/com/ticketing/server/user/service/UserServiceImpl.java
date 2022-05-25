@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional
-	public User modifyPassword(@Valid ChangePasswordDTO changePassword) {
+	public User changePassword(@Valid ChangePasswordDTO changePassword) {
 		Optional<User> optionalUser = userRepository.findByEmailAndIsDeletedFalse(changePassword.getEmail());
 		if (optionalUser.isEmpty()) {
 			log.error("존재하지 않는 이메일 입니다. :: {}", changePassword);
@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
 		}
 
 		User user = optionalUser.get();
-		return user.modifyPassword(changePassword);
+		return user.changePassword(changePassword);
 	}
 
 }

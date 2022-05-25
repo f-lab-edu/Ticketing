@@ -154,27 +154,27 @@ class UserTest {
 
 	@Test
 	@DisplayName("입력받은 패스워드와 불일치로 변경 실패")
-	void modifyPasswordFail() {
+	void changePasswordFail() {
 		// given
 		ChangePasswordDTO changePassword = new ChangePasswordDTO("ticketing@gmail.com", "1234567", "ticketing1234", DeleteUserTest.CUSTOM_PASSWORD_ENCODER);
 		User user = new User("유저1", "ticketing@gmail.com", "123456", UserGrade.GUEST, "010-1234-5678");
 
 		// when
 		// then
-		assertThatThrownBy(() -> user.modifyPassword(changePassword))
+		assertThatThrownBy(() -> user.changePassword(changePassword))
 			.isInstanceOf(PasswordMismatchException.class);
 	}
 
 	@Test
 	@DisplayName("패스워드 변경 성공")
-	void modifyPasswordSuccess() {
+	void changePasswordSuccess() {
 	    // given
 		ChangePasswordDTO changePassword = new ChangePasswordDTO("ticketing@gmail.com", "123456", "ticketing1234", DeleteUserTest.CUSTOM_PASSWORD_ENCODER);
 		User user = new User("유저1", "ticketing@gmail.com", "123456", UserGrade.GUEST, "010-1234-5678");
 		String oldPassword = user.getPassword();
 
 		// when
-		User modifiedUser = user.modifyPassword(changePassword);
+		User modifiedUser = user.changePassword(changePassword);
 
 		// then
 		assertThat(modifiedUser.getPassword()).isNotEqualTo(oldPassword);

@@ -97,24 +97,24 @@ class UserServiceImplTest {
 
 	@Test
 	@DisplayName("패스워드 변경 시 이메일이 존재하지 않을 경우")
-	void modifyPasswordFail() {
+	void changePasswordFail() {
 		// given
 		when(userRepository.findByEmailAndIsDeletedFalse("ticketing@gmail.com")).thenReturn(Optional.empty());
 
 		// when
 		// then
-		assertThatThrownBy(() -> userService.modifyPassword(changePassword))
+		assertThatThrownBy(() -> userService.changePassword(changePassword))
 			.isInstanceOf(NotFoundEmailException.class);
 	}
 
 	@Test
 	@DisplayName("패스워드 변경 성공했을 경우")
-	void modifyPasswordSuccess() {
+	void changePasswordSuccess() {
 		// given
 		when(userRepository.findByEmailAndIsDeletedFalse("ticketing@gmail.com")).thenReturn(Optional.of(user));
 
 		// when
-		User user = userService.modifyPassword(changePassword);
+		User user = userService.changePassword(changePassword);
 
 		// then
 		assertThat(user).isNotNull();

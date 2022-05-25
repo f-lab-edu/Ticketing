@@ -12,6 +12,6 @@ public interface UserService {
 
 	User delete(@Valid DeleteUserDTO deleteUser);
 
-	User modifyPassword(@Valid ChangePasswordDTO changePassword);
+	User changePassword(@Valid ChangePasswordDTO changePassword);
 
 }
