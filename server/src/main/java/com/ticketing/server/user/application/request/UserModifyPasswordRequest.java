@@ -19,7 +19,7 @@ public class UserModifyPasswordRequest {
 	@NotEmpty(message = "{validation.not.empty.newpassword}")
 	private String newPassword;
 
-	public ChangePasswordDTO toChangePassword(PasswordEncoder passwordEncoder) {
+	public ChangePasswordDTO toChangePasswordDto(PasswordEncoder passwordEncoder) {
 		return new ChangePasswordDTO(email, oldPassword, newPassword, passwordEncoder);
 	}
 

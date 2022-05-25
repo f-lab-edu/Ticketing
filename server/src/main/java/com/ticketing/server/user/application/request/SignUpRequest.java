@@ -24,7 +24,7 @@ public class SignUpRequest {
 	@Phone
 	private String phone;
 
-	public SignUpDTO toSignUp(PasswordEncoder passwordEncoder) {
+	public SignUpDTO toSignUpDto(PasswordEncoder passwordEncoder) {
 		return new SignUpDTO(name, email, getEncodePassword(passwordEncoder), phone);
 	}
 

@@ -6,7 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-public class DeleteUserTest {
+public class DeleteUserDtoTest {
 
 	public static PasswordEncoder CUSTOM_PASSWORD_ENCODER = new CustomPasswordEncoder();
 
@@ -27,11 +27,11 @@ public class DeleteUserTest {
 	@DisplayName("CustomPasswordEncoder matches 테스트")
 	void customPasswordEncoderMatches() {
 		// given
-		DeleteUserDTO user = new DeleteUserDTO("ticketing@gmail.com", "123456", CUSTOM_PASSWORD_ENCODER);
+		DeleteUserDTO deleteUserDto = new DeleteUserDTO("ticketing@gmail.com", "123456", CUSTOM_PASSWORD_ENCODER);
 
 		// when
 		// then
-		assertThat(user.passwordMatches("123456")).isTrue();
+		assertThat(deleteUserDto.passwordMatches("123456")).isTrue();
 	}
 
 }

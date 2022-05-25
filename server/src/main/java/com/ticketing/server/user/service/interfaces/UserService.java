@@ -10,8 +10,8 @@ public interface UserService {
 
 	User register(@Valid SignUpDTO signUpDto);
 
-	User delete(@Valid DeleteUserDTO deleteUser);
+	User delete(@Valid DeleteUserDTO deleteUserDto);
 
-	User changePassword(@Valid ChangePasswordDTO changePassword);
+	User changePassword(@Valid ChangePasswordDTO changePasswordDto);
 
 }

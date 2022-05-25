@@ -38,28 +38,28 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional
-	public User delete(@Valid DeleteUserDTO deleteUser) {
-		Optional<User> optionalUser = userRepository.findByEmail(deleteUser.getEmail());
+	public User delete(@Valid DeleteUserDTO deleteUserDto) {
+		Optional<User> optionalUser = userRepository.findByEmail(deleteUserDto.getEmail());
 		if (optionalUser.isEmpty()) {
-			log.error("존재하지 않는 이메일 입니다. :: {}", deleteUser);
+			log.error("존재하지 않는 이메일 입니다. :: {}", deleteUserDto);
 			throw new NotFoundEmailException();
 		}
 
 		User user = optionalUser.get();
-		return user.delete(deleteUser);
+		return user.delete(deleteUserDto);
 	}
 
 	@Override
 	@Transactional
-	public User changePassword(@Valid ChangePasswordDTO changePassword) {
-		Optional<User> optionalUser = userRepository.findByEmailAndIsDeletedFalse(changePassword.getEmail());
+	public User changePassword(@Valid ChangePasswordDTO changePasswordDto) {
+		Optional<User> optionalUser = userRepository.findByEmailAndIsDeletedFalse(changePasswordDto.getEmail());
 		if (optionalUser.isEmpty()) {
-			log.error("존재하지 않는 이메일 입니다. :: {}", changePassword);
+			log.error("존재하지 않는 이메일 입니다. :: {}", changePasswordDto);
 			throw new NotFoundEmailException();
 		}
 
 		User user = optionalUser.get();
-		return user.changePassword(changePassword);
+		return user.changePassword(changePasswordDto);
 	}
 
 }

@@ -32,13 +32,13 @@ public class UserController {
 
 	@PostMapping
 	public ResponseEntity<Object> register(@RequestBody @Valid SignUpRequest request) {
-		User user = userService.register(request.toSignUp(passwordEncoder));
+		User user = userService.register(request.toSignUpDto(passwordEncoder));
 		return ResponseEntity.status(HttpStatus.CREATED).body(SignUpResponse.of(user));
 	}
 
 	@DeleteMapping
 	public ResponseEntity<Object> deleteUser(@RequestBody @Valid UserDeleteRequest request) {
-		User user = userService.delete(request.toDeleteUser(passwordEncoder));
+		User user = userService.delete(request.toDeleteUserDto(passwordEncoder));
 		return ResponseEntity.status(HttpStatus.OK).body(UserDeleteResponse.of(user));
 	}
 
@@ -49,7 +49,7 @@ public class UserController {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		}
 
-		User user = userService.changePassword(request.toChangePassword(passwordEncoder));
+		User user = userService.changePassword(request.toChangePasswordDto(passwordEncoder));
 		return ResponseEntity.status(HttpStatus.OK).body(UserChangePasswordResponse.of(user));
 	}
 

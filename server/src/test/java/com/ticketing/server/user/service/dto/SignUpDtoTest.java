@@ -6,7 +6,7 @@ import com.ticketing.server.user.domain.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class SignUpTest {
+class SignUpDtoTest {
 
 	@Test
 	@DisplayName("toUser 메소드로 User 객체 생성")

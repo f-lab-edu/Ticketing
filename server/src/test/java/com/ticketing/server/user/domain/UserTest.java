@@ -8,7 +8,7 @@ import com.ticketing.server.global.exception.AlreadyDeletedException;
 import com.ticketing.server.global.exception.PasswordMismatchException;
 import com.ticketing.server.user.service.dto.ChangePasswordDTO;
 import com.ticketing.server.user.service.dto.DeleteUserDTO;
-import com.ticketing.server.user.service.dto.DeleteUserTest;
+import com.ticketing.server.user.service.dto.DeleteUserDtoTest;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -51,27 +51,27 @@ class UserTest {
 	@ParameterizedTest
 	@MethodSource("provideDeleteUsers")
 	@DisplayName("이미 회원탈퇴 되어 있는 경우")
-	void alreadyDeletedException(DeleteUserDTO deleteUser) {
+	void alreadyDeletedException(DeleteUserDTO deleteUserDto) {
 		// given
-		User user = users.get(deleteUser.getEmail());
+		User user = users.get(deleteUserDto.getEmail());
 
 		// when
-		user.delete(deleteUser);
+		user.delete(deleteUserDto);
 
 		// then
-		assertThatThrownBy(() -> user.delete(deleteUser))
+		assertThatThrownBy(() -> user.delete(deleteUserDto))
 			.isInstanceOf(AlreadyDeletedException.class);
 	}
 
 	@ParameterizedTest
 	@MethodSource("provideDeleteUsers")
 	@DisplayName("회원탈퇴 성공")
-	void deleteSuccess(DeleteUserDTO deleteUser) {
+	void deleteSuccess(DeleteUserDTO deleteUserDto) {
 		// given
-		User user = users.get(deleteUser.getEmail());
+		User user = users.get(deleteUserDto.getEmail());
 
 		// when
-		User deletedUser = user.delete(deleteUser);
+		User deletedUser = user.delete(deleteUserDto);
 
 		// then
 		assertAll(
@@ -84,12 +84,12 @@ class UserTest {
 	@DisplayName("입력받은 패스워드와 불일치로 변경 실패")
 	void changePasswordFail() {
 		// given
-		ChangePasswordDTO changePassword = new ChangePasswordDTO("ticketing1@gmail.com", "1234567", "ticketing1234", DeleteUserTest.CUSTOM_PASSWORD_ENCODER);
-		User user = users.get(changePassword.getEmail());
+		ChangePasswordDTO changePasswordDto = new ChangePasswordDTO("ticketing1@gmail.com", "1234567", "ticketing1234", DeleteUserDtoTest.CUSTOM_PASSWORD_ENCODER);
+		User user = users.get(changePasswordDto.getEmail());
 
 		// when
 		// then
-		assertThatThrownBy(() -> user.changePassword(changePassword))
+		assertThatThrownBy(() -> user.changePassword(changePasswordDto))
 			.isInstanceOf(PasswordMismatchException.class);
 	}
 
@@ -97,12 +97,12 @@ class UserTest {
 	@DisplayName("패스워드 변경 성공")
 	void changePasswordSuccess() {
 		// given
-		ChangePasswordDTO changePassword = new ChangePasswordDTO("ticketing1@gmail.com", "123456", "ticketing1234", DeleteUserTest.CUSTOM_PASSWORD_ENCODER);
-		User user = users.get(changePassword.getEmail());
+		ChangePasswordDTO changePasswordDto = new ChangePasswordDTO("ticketing1@gmail.com", "123456", "ticketing1234", DeleteUserDtoTest.CUSTOM_PASSWORD_ENCODER);
+		User user = users.get(changePasswordDto.getEmail());
 		String oldPassword = user.getPassword();
 
 		// when
-		User modifiedUser = user.changePassword(changePassword);
+		User modifiedUser = user.changePassword(changePasswordDto);
 
 		// then
 		assertThat(modifiedUser.getPassword()).isNotEqualTo(oldPassword);
@@ -261,19 +261,19 @@ class UserTest {
 
 	public static Stream<DeleteUserDTO> provideDifferentPasswordDeleteUsers() {
 		return Stream.of(
-			new DeleteUserDTO("ticketing1@gmail.com", "1234561", DeleteUserTest.CUSTOM_PASSWORD_ENCODER)
-			, new DeleteUserDTO("ticketing2@gmail.com", "qwe1231", DeleteUserTest.CUSTOM_PASSWORD_ENCODER)
-			, new DeleteUserDTO("ticketing3@gmail.com", "ticketing1", DeleteUserTest.CUSTOM_PASSWORD_ENCODER)
-			, new DeleteUserDTO("ticketing4@gmail.com", "ticketing1234561", DeleteUserTest.CUSTOM_PASSWORD_ENCODER)
+			new DeleteUserDTO("ticketing1@gmail.com", "1234561", DeleteUserDtoTest.CUSTOM_PASSWORD_ENCODER)
+			, new DeleteUserDTO("ticketing2@gmail.com", "qwe1231", DeleteUserDtoTest.CUSTOM_PASSWORD_ENCODER)
+			, new DeleteUserDTO("ticketing3@gmail.com", "ticketing1", DeleteUserDtoTest.CUSTOM_PASSWORD_ENCODER)
+			, new DeleteUserDTO("ticketing4@gmail.com", "ticketing1234561", DeleteUserDtoTest.CUSTOM_PASSWORD_ENCODER)
 		);
 	}
 
 	public static Stream<DeleteUserDTO> provideDeleteUsers() {
 		return Stream.of(
-			new DeleteUserDTO("ticketing1@gmail.com", "123456", DeleteUserTest.CUSTOM_PASSWORD_ENCODER)
-			, new DeleteUserDTO("ticketing2@gmail.com", "qwe123", DeleteUserTest.CUSTOM_PASSWORD_ENCODER)
-			, new DeleteUserDTO("ticketing3@gmail.com", "ticketing", DeleteUserTest.CUSTOM_PASSWORD_ENCODER)
-			, new DeleteUserDTO("ticketing4@gmail.com", "ticketing123456", DeleteUserTest.CUSTOM_PASSWORD_ENCODER)
+			new DeleteUserDTO("ticketing1@gmail.com", "123456", DeleteUserDtoTest.CUSTOM_PASSWORD_ENCODER)
+			, new DeleteUserDTO("ticketing2@gmail.com", "qwe123", DeleteUserDtoTest.CUSTOM_PASSWORD_ENCODER)
+			, new DeleteUserDTO("ticketing3@gmail.com", "ticketing", DeleteUserDtoTest.CUSTOM_PASSWORD_ENCODER)
+			, new DeleteUserDTO("ticketing4@gmail.com", "ticketing123456", DeleteUserDtoTest.CUSTOM_PASSWORD_ENCODER)
 		);
 	}
 

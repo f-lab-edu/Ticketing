@@ -11,7 +11,7 @@ import com.ticketing.server.user.domain.UserGrade;
 import com.ticketing.server.user.domain.repository.UserRepository;
 import com.ticketing.server.user.service.dto.ChangePasswordDTO;
 import com.ticketing.server.user.service.dto.DeleteUserDTO;
-import com.ticketing.server.user.service.dto.DeleteUserTest;
+import com.ticketing.server.user.service.dto.DeleteUserDtoTest;
 import com.ticketing.server.user.service.dto.SignUpDTO;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,9 +26,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class UserServiceImplTest {
 
 	User user;
-	SignUpDTO signUp;
-	DeleteUserDTO deleteUser;
-	ChangePasswordDTO changePassword;
+	SignUpDTO signUpDto;
+	DeleteUserDTO deleteUserDto;
+	ChangePasswordDTO changePasswordDto;
 
 	@Mock
 	UserRepository userRepository;
@@ -38,10 +38,10 @@ class UserServiceImplTest {
 
 	@BeforeEach
 	void init() {
-		signUp = new SignUpDTO("유저", "ticketing@gmail.com", "123456", "010-1234-5678");
+		signUpDto = new SignUpDTO("유저", "ticketing@gmail.com", "123456", "010-1234-5678");
 		user = new User("유저", "ticketing@gmail.com", "123456", UserGrade.GUEST, "010-1234-5678");
-		deleteUser = new DeleteUserDTO("ticketing@gmail.com", "123456", DeleteUserTest.CUSTOM_PASSWORD_ENCODER);
-		changePassword = new ChangePasswordDTO("ticketing@gmail.com", "123456", "ticketing1234", DeleteUserTest.CUSTOM_PASSWORD_ENCODER);
+		deleteUserDto = new DeleteUserDTO("ticketing@gmail.com", "123456", DeleteUserDtoTest.CUSTOM_PASSWORD_ENCODER);
+		changePasswordDto = new ChangePasswordDTO("ticketing@gmail.com", "123456", "ticketing1234", DeleteUserDtoTest.CUSTOM_PASSWORD_ENCODER);
 	}
 
 	@Test
@@ -52,7 +52,7 @@ class UserServiceImplTest {
 
 		// when
 		// then
-		assertThatThrownBy(() -> userService.register(signUp))
+		assertThatThrownBy(() -> userService.register(signUpDto))
 			.isInstanceOf(IllegalArgumentException.class);
 	}
 
@@ -64,7 +64,7 @@ class UserServiceImplTest {
 		when(userRepository.save(any())).thenReturn(user);
 
 		// when
-		User user = userService.register(signUp);
+		User user = userService.register(signUpDto);
 
 		// then
 		assertThat(user).isNotNull();
@@ -78,7 +78,7 @@ class UserServiceImplTest {
 
 		// when
 		// then
-		assertThatThrownBy(() -> userService.delete(deleteUser))
+		assertThatThrownBy(() -> userService.delete(deleteUserDto))
 			.isInstanceOf(NotFoundEmailException.class);
 	}
 
@@ -89,7 +89,7 @@ class UserServiceImplTest {
 		when(userRepository.findByEmail("ticketing@gmail.com")).thenReturn(Optional.of(user));
 
 		// when
-		User user = userService.delete(deleteUser);
+		User user = userService.delete(deleteUserDto);
 
 		// then
 		assertThat(user).isNotNull();
@@ -103,7 +103,7 @@ class UserServiceImplTest {
 
 		// when
 		// then
-		assertThatThrownBy(() -> userService.changePassword(changePassword))
+		assertThatThrownBy(() -> userService.changePassword(changePasswordDto))
 			.isInstanceOf(NotFoundEmailException.class);
 	}
 
@@ -114,7 +114,7 @@ class UserServiceImplTest {
 		when(userRepository.findByEmailAndIsDeletedFalse("ticketing@gmail.com")).thenReturn(Optional.of(user));
 
 		// when
-		User user = userService.changePassword(changePassword);
+		User user = userService.changePassword(changePasswordDto);
 
 		// then
 		assertThat(user).isNotNull();

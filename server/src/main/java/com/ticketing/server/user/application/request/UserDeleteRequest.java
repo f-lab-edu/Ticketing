@@ -16,7 +16,7 @@ public class UserDeleteRequest {
 	@NotEmpty(message = "{validation.not.empty.password}")
 	private String password;
 
-	public DeleteUserDTO toDeleteUser(PasswordEncoder passwordEncoder) {
+	public DeleteUserDTO toDeleteUserDto(PasswordEncoder passwordEncoder) {
 		return new DeleteUserDTO(email, password, passwordEncoder);
 	}
 
