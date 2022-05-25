@@ -9,7 +9,7 @@ import javax.validation.Valid;
 
 public interface UserService {
 
-	Optional<User> register(@Valid SignUpDTO signUpDto);
+	User register(@Valid SignUpDTO signUpDto);
 
 	Optional<User> delete(@Valid DeleteUserDTO deleteUser);
 

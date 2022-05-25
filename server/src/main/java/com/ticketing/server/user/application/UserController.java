@@ -33,14 +33,8 @@ public class UserController {
 
 	@PostMapping
 	public ResponseEntity<Object> register(@RequestBody @Valid SignUpRequest request) {
-		Optional<User> user = userService.register(request.toSignUp(passwordEncoder));
-
-		if (user.isEmpty()) {
-			log.error("이미 존재하는 이메일 입니다. :: {}", request.getEmail());
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-		}
-
-		return ResponseEntity.status(HttpStatus.CREATED).body(SignUpResponse.of(user.get()));
+		User user = userService.register(request.toSignUp(passwordEncoder));
+		return ResponseEntity.status(HttpStatus.CREATED).body(SignUpResponse.of(user));
 	}
 
 	@DeleteMapping

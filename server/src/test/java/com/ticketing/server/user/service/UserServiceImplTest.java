@@ -1,6 +1,7 @@
 package com.ticketing.server.user.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -49,10 +50,9 @@ class UserServiceImplTest {
 		when(userRepository.findByEmail("ticketing@gmail.com")).thenReturn(Optional.of(user));
 
 		// when
-		Optional<User> user = userService.register(signUp);
-
 		// then
-		assertThat(user).isEmpty();
+		assertThatThrownBy(() -> userService.register(signUp))
+			.isInstanceOf(IllegalArgumentException.class);
 	}
 
 	@Test
@@ -63,10 +63,10 @@ class UserServiceImplTest {
 		when(userRepository.save(any())).thenReturn(user);
 
 		// when
-		Optional<User> user = userService.register(signUp);
+		User user = userService.register(signUp);
 
 		// then
-		assertThat(user).isPresent();
+		assertThat(user).isNotNull();
 	}
 
 	@Test
@@ -98,20 +98,20 @@ class UserServiceImplTest {
 	@Test
 	@DisplayName("패스워드 변경 시 이메일이 존재하지 않을 경우")
 	void modifyPasswordFail() {
-	    // given
+		// given
 		when(userRepository.findByEmailAndIsDeletedFalse("ticketing@gmail.com")).thenReturn(Optional.empty());
 
-	    // when
+		// when
 		Optional<User> user = userService.modifyPassword(changePassword);
 
-	    // then
+		// then
 		assertThat(user).isEmpty();
 	}
 
 	@Test
 	@DisplayName("패스워드 변경 성공했을 경우")
 	void modifyPasswordSuccess() {
-	    // given
+		// given
 		when(userRepository.findByEmailAndIsDeletedFalse("ticketing@gmail.com")).thenReturn(Optional.of(user));
 
 		// when
