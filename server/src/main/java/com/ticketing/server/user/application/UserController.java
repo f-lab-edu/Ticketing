@@ -5,7 +5,7 @@ import com.ticketing.server.user.application.request.UserDeleteRequest;
 import com.ticketing.server.user.application.request.UserModifyPasswordRequest;
 import com.ticketing.server.user.application.response.SignUpResponse;
 import com.ticketing.server.user.application.response.UserDeleteResponse;
-import com.ticketing.server.user.application.response.UserModifyPasswordResponse;
+import com.ticketing.server.user.application.response.UserChangePasswordResponse;
 import com.ticketing.server.user.domain.User;
 import com.ticketing.server.user.service.UserServiceImpl;
 import javax.validation.Valid;
@@ -50,7 +50,7 @@ public class UserController {
 		}
 
 		User user = userService.changePassword(request.toChangePassword(passwordEncoder));
-		return ResponseEntity.status(HttpStatus.OK).body(UserModifyPasswordResponse.of(user));
+		return ResponseEntity.status(HttpStatus.OK).body(UserChangePasswordResponse.of(user));
 	}
 
 }
