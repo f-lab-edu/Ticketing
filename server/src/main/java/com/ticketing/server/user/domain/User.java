@@ -63,7 +63,7 @@ public class User extends AbstractEntity {
 			throw new AlreadyDeletedException("이미 탈퇴된 회원 입니다.");
 		}
 
-		comparePassword(deleteUser);
+		checkPassword(deleteUser);
 
 		isDeleted = true;
 		deletedAt = LocalDateTime.now();
@@ -71,13 +71,13 @@ public class User extends AbstractEntity {
 	}
 
 	public User modifyPassword(ChangePasswordDTO changePassword) {
-		comparePassword(changePassword);
+		checkPassword(changePassword);
 
 		this.password = changePassword.getEncodePassword();
 		return this;
 	}
 
-	private void comparePassword(PasswordMatches passwordMatches) {
+	private void checkPassword(PasswordMatches passwordMatches) {
 		if (!passwordMatches.passwordMatches(password)) {
 			throw new PasswordMismatchException();
 		}
