@@ -21,7 +21,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 class UserTest {
@@ -52,8 +51,10 @@ class UserTest {
 	@ParameterizedTest
 	@MethodSource("provideDeleteUsers")
 	@DisplayName("이미 회원탈퇴 되어 있는 경우")
-	void alreadyDeletedException(User user, DeleteUserDTO deleteUser) {
+	void alreadyDeletedException(DeleteUserDTO deleteUser) {
 		// given
+		User user = users.get(deleteUser.getEmail());
+
 		// when
 		user.delete(deleteUser);
 
@@ -65,8 +66,10 @@ class UserTest {
 	@ParameterizedTest
 	@MethodSource("provideDeleteUsers")
 	@DisplayName("회원탈퇴 성공")
-	void deleteSuccess(User user, DeleteUserDTO deleteUser) {
+	void deleteSuccess(DeleteUserDTO deleteUser) {
 		// given
+		User user = users.get(deleteUser.getEmail());
+
 		// when
 		User deletedUser = user.delete(deleteUser);
 
@@ -265,16 +268,12 @@ class UserTest {
 		);
 	}
 
-	public static Stream<Arguments> provideDeleteUsers() {
+	public static Stream<DeleteUserDTO> provideDeleteUsers() {
 		return Stream.of(
-			Arguments.of(new User("유저1", "ticketing1@gmail.com", "123456", UserGrade.GUEST, "010-1234-5678")
-				, new DeleteUserDTO("ticketing1@gmail.com", "123456", DeleteUserTest.CUSTOM_PASSWORD_ENCODER))
-			, Arguments.of(new User("유저2", "ticketing2@gmail.com", "qwe123", UserGrade.GUEST, "010-2234-5678")
-				, new DeleteUserDTO("ticketing2@gmail.com", "qwe123", DeleteUserTest.CUSTOM_PASSWORD_ENCODER))
-			, Arguments.of(new User("유저3", "ticketing3@gmail.com", "ticketing", UserGrade.STAFF, "010-3234-5678")
-				, new DeleteUserDTO("ticketing3@gmail.com", "ticketing", DeleteUserTest.CUSTOM_PASSWORD_ENCODER))
-			, Arguments.of(new User("유저4", "ticketing4@gmail.com", "ticketing123456", UserGrade.STAFF, "010-4234-5678")
-				, new DeleteUserDTO("ticketing4@gmail.com", "ticketing123456", DeleteUserTest.CUSTOM_PASSWORD_ENCODER))
+			new DeleteUserDTO("ticketing1@gmail.com", "123456", DeleteUserTest.CUSTOM_PASSWORD_ENCODER)
+			, new DeleteUserDTO("ticketing2@gmail.com", "qwe123", DeleteUserTest.CUSTOM_PASSWORD_ENCODER)
+			, new DeleteUserDTO("ticketing3@gmail.com", "ticketing", DeleteUserTest.CUSTOM_PASSWORD_ENCODER)
+			, new DeleteUserDTO("ticketing4@gmail.com", "ticketing123456", DeleteUserTest.CUSTOM_PASSWORD_ENCODER)
 		);
 	}
 
