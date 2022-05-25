@@ -4,9 +4,9 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-public class DeleteUser implements PasswordMatches {
+public class DeleteUserDTO implements PasswordMatches {
 
-	public DeleteUser(String email, String inputPassword, PasswordEncoder passwordEncoder) {
+	public DeleteUserDTO(String email, String inputPassword, PasswordEncoder passwordEncoder) {
 		this.email = email;
 		this.inputPassword = inputPassword;
 		this.passwordEncoder = passwordEncoder;

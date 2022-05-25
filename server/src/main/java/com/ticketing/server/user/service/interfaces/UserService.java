@@ -1,18 +1,18 @@
 package com.ticketing.server.user.service.interfaces;
 
 import com.ticketing.server.user.domain.User;
-import com.ticketing.server.user.service.dto.ChangePassword;
-import com.ticketing.server.user.service.dto.DeleteUser;
-import com.ticketing.server.user.service.dto.SignUp;
+import com.ticketing.server.user.service.dto.ChangePasswordDTO;
+import com.ticketing.server.user.service.dto.DeleteUserDTO;
+import com.ticketing.server.user.service.dto.SignUpDTO;
 import java.util.Optional;
 import javax.validation.Valid;
 
 public interface UserService {
 
-	Optional<User> register(@Valid SignUp signUpDto);
+	Optional<User> register(@Valid SignUpDTO signUpDto);
 
-	Optional<User> delete(@Valid DeleteUser deleteUser);
+	Optional<User> delete(@Valid DeleteUserDTO deleteUser);
 
-	Optional<User> modifyPassword(@Valid ChangePassword changePassword);
+	Optional<User> modifyPassword(@Valid ChangePasswordDTO changePassword);
 
 }

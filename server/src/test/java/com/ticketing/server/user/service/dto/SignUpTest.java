@@ -12,7 +12,7 @@ class SignUpTest {
 	@DisplayName("toUser 메소드로 User 객체 생성")
 	void toUser() {
 		// given
-		SignUp signUp = new SignUp("유저1", "ticketing@gmail.com", "123456", "010-1234-5678");
+		SignUpDTO signUp = new SignUpDTO("유저1", "ticketing@gmail.com", "123456", "010-1234-5678");
 
 		// when
 		User user = signUp.toUser();

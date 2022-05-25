@@ -1,6 +1,6 @@
 package com.ticketing.server.user.application.request;
 
-import com.ticketing.server.user.service.dto.DeleteUser;
+import com.ticketing.server.user.service.dto.DeleteUserDTO;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import lombok.Getter;
@@ -16,8 +16,8 @@ public class UserDeleteRequest {
 	@NotEmpty(message = "{validation.not.empty.password}")
 	private String password;
 
-	public DeleteUser toDeleteUser(PasswordEncoder passwordEncoder) {
-		return new DeleteUser(email, password, passwordEncoder);
+	public DeleteUserDTO toDeleteUser(PasswordEncoder passwordEncoder) {
+		return new DeleteUserDTO(email, password, passwordEncoder);
 	}
 
 }

@@ -4,9 +4,9 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-public class ChangePassword implements PasswordMatches {
+public class ChangePasswordDTO implements PasswordMatches {
 
-	public ChangePassword(String email, String oldPassword, String newPassword, PasswordEncoder passwordEncoder) {
+	public ChangePasswordDTO(String email, String oldPassword, String newPassword, PasswordEncoder passwordEncoder) {
 		this.email = email;
 		this.oldPassword = oldPassword;
 		this.newPassword = newPassword;

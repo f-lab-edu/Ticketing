@@ -7,10 +7,10 @@ import static org.mockito.Mockito.when;
 import com.ticketing.server.user.domain.User;
 import com.ticketing.server.user.domain.UserGrade;
 import com.ticketing.server.user.domain.repository.UserRepository;
-import com.ticketing.server.user.service.dto.ChangePassword;
-import com.ticketing.server.user.service.dto.DeleteUser;
+import com.ticketing.server.user.service.dto.ChangePasswordDTO;
+import com.ticketing.server.user.service.dto.DeleteUserDTO;
 import com.ticketing.server.user.service.dto.DeleteUserTest;
-import com.ticketing.server.user.service.dto.SignUp;
+import com.ticketing.server.user.service.dto.SignUpDTO;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,9 +24,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class UserServiceImplTest {
 
 	User user;
-	SignUp signUp;
-	DeleteUser deleteUser;
-	ChangePassword changePassword;
+	SignUpDTO signUp;
+	DeleteUserDTO deleteUser;
+	ChangePasswordDTO changePassword;
 
 	@Mock
 	UserRepository userRepository;
@@ -36,10 +36,10 @@ class UserServiceImplTest {
 
 	@BeforeEach
 	void init() {
-		signUp = new SignUp("유저", "ticketing@gmail.com", "123456", "010-1234-5678");
+		signUp = new SignUpDTO("유저", "ticketing@gmail.com", "123456", "010-1234-5678");
 		user = new User("유저", "ticketing@gmail.com", "123456", UserGrade.GUEST, "010-1234-5678");
-		deleteUser = new DeleteUser("ticketing@gmail.com", "123456", DeleteUserTest.CUSTOM_PASSWORD_ENCODER);
-		changePassword = new ChangePassword("ticketing@gmail.com", "123456", "ticketing1234", DeleteUserTest.CUSTOM_PASSWORD_ENCODER);
+		deleteUser = new DeleteUserDTO("ticketing@gmail.com", "123456", DeleteUserTest.CUSTOM_PASSWORD_ENCODER);
+		changePassword = new ChangePasswordDTO("ticketing@gmail.com", "123456", "ticketing1234", DeleteUserTest.CUSTOM_PASSWORD_ENCODER);
 	}
 
 	@Test

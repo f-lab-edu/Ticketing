@@ -6,8 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.ticketing.server.global.exception.AlreadyDeletedException;
 import com.ticketing.server.global.exception.PasswordMismatchException;
-import com.ticketing.server.user.service.dto.ChangePassword;
-import com.ticketing.server.user.service.dto.DeleteUser;
+import com.ticketing.server.user.service.dto.ChangePasswordDTO;
+import com.ticketing.server.user.service.dto.DeleteUserDTO;
 import com.ticketing.server.user.service.dto.DeleteUserTest;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -90,33 +90,33 @@ class UserTest {
 	public static Stream<Arguments> provideDifferentPasswordDeleteUsers() {
 		return Stream.of(
 			Arguments.of(new User("유저1", "ticketing1@gmail.com", "123456", UserGrade.GUEST, "010-1234-5678")
-				, new DeleteUser("ticketing1@gmail.com", "1234561", DeleteUserTest.CUSTOM_PASSWORD_ENCODER))
+				, new DeleteUserDTO("ticketing1@gmail.com", "1234561", DeleteUserTest.CUSTOM_PASSWORD_ENCODER))
 			, Arguments.of(new User("유저2", "ticketing2@gmail.com", "qwe123", UserGrade.GUEST, "010-2234-5678")
-				, new DeleteUser("ticketing2@gmail.com", "qwe1231", DeleteUserTest.CUSTOM_PASSWORD_ENCODER))
+				, new DeleteUserDTO("ticketing2@gmail.com", "qwe1231", DeleteUserTest.CUSTOM_PASSWORD_ENCODER))
 			, Arguments.of(new User("유저3", "ticketing3@gmail.com", "ticketing", UserGrade.STAFF, "010-3234-5678")
-				, new DeleteUser("ticketing3@gmail.com", "ticketing1", DeleteUserTest.CUSTOM_PASSWORD_ENCODER))
+				, new DeleteUserDTO("ticketing3@gmail.com", "ticketing1", DeleteUserTest.CUSTOM_PASSWORD_ENCODER))
 			, Arguments.of(new User("유저4", "ticketing4@gmail.com", "ticketing123456", UserGrade.STAFF, "010-4234-5678")
-				, new DeleteUser("ticketing4@gmail.com", "ticketing1234561", DeleteUserTest.CUSTOM_PASSWORD_ENCODER))
+				, new DeleteUserDTO("ticketing4@gmail.com", "ticketing1234561", DeleteUserTest.CUSTOM_PASSWORD_ENCODER))
 		);
 	}
 
 	public static Stream<Arguments> provideDeleteUsers() {
 		return Stream.of(
 			Arguments.of(new User("유저1", "ticketing1@gmail.com", "123456", UserGrade.GUEST, "010-1234-5678")
-				, new DeleteUser("ticketing1@gmail.com", "123456", DeleteUserTest.CUSTOM_PASSWORD_ENCODER))
+				, new DeleteUserDTO("ticketing1@gmail.com", "123456", DeleteUserTest.CUSTOM_PASSWORD_ENCODER))
 			, Arguments.of(new User("유저2", "ticketing2@gmail.com", "qwe123", UserGrade.GUEST, "010-2234-5678")
-				, new DeleteUser("ticketing2@gmail.com", "qwe123", DeleteUserTest.CUSTOM_PASSWORD_ENCODER))
+				, new DeleteUserDTO("ticketing2@gmail.com", "qwe123", DeleteUserTest.CUSTOM_PASSWORD_ENCODER))
 			, Arguments.of(new User("유저3", "ticketing3@gmail.com", "ticketing", UserGrade.STAFF, "010-3234-5678")
-				, new DeleteUser("ticketing3@gmail.com", "ticketing", DeleteUserTest.CUSTOM_PASSWORD_ENCODER))
+				, new DeleteUserDTO("ticketing3@gmail.com", "ticketing", DeleteUserTest.CUSTOM_PASSWORD_ENCODER))
 			, Arguments.of(new User("유저4", "ticketing4@gmail.com", "ticketing123456", UserGrade.STAFF, "010-4234-5678")
-				, new DeleteUser("ticketing4@gmail.com", "ticketing123456", DeleteUserTest.CUSTOM_PASSWORD_ENCODER))
+				, new DeleteUserDTO("ticketing4@gmail.com", "ticketing123456", DeleteUserTest.CUSTOM_PASSWORD_ENCODER))
 		);
 	}
 
 	@ParameterizedTest
 	@MethodSource("provideDifferentPasswordDeleteUsers")
 	@DisplayName("입력된 패스워드가 다를 경우")
-	void passwordMismatchException(User user, DeleteUser deleteUser) {
+	void passwordMismatchException(User user, DeleteUserDTO deleteUser) {
 		// given
 		// when
 		// then
@@ -127,7 +127,7 @@ class UserTest {
 	@ParameterizedTest
 	@MethodSource("provideDeleteUsers")
 	@DisplayName("이미 회원탈퇴 되어 있는 경우")
-	void alreadyDeletedException(User user, DeleteUser deleteUser) {
+	void alreadyDeletedException(User user, DeleteUserDTO deleteUser) {
 		// given
 		// when
 		user.delete(deleteUser);
@@ -140,7 +140,7 @@ class UserTest {
 	@ParameterizedTest
 	@MethodSource("provideDeleteUsers")
 	@DisplayName("회원탈퇴 성공")
-	void deleteSuccess(User user, DeleteUser deleteUser) {
+	void deleteSuccess(User user, DeleteUserDTO deleteUser) {
 		// given
 		// when
 		User deletedUser = user.delete(deleteUser);
@@ -156,7 +156,7 @@ class UserTest {
 	@DisplayName("입력받은 패스워드와 불일치로 변경 실패")
 	void modifyPasswordFail() {
 		// given
-		ChangePassword changePassword = new ChangePassword("ticketing@gmail.com", "1234567", "ticketing1234", DeleteUserTest.CUSTOM_PASSWORD_ENCODER);
+		ChangePasswordDTO changePassword = new ChangePasswordDTO("ticketing@gmail.com", "1234567", "ticketing1234", DeleteUserTest.CUSTOM_PASSWORD_ENCODER);
 		User user = new User("유저1", "ticketing@gmail.com", "123456", UserGrade.GUEST, "010-1234-5678");
 
 		// when
@@ -169,7 +169,7 @@ class UserTest {
 	@DisplayName("패스워드 변경 성공")
 	void modifyPasswordSuccess() {
 	    // given
-		ChangePassword changePassword = new ChangePassword("ticketing@gmail.com", "123456", "ticketing1234", DeleteUserTest.CUSTOM_PASSWORD_ENCODER);
+		ChangePasswordDTO changePassword = new ChangePasswordDTO("ticketing@gmail.com", "123456", "ticketing1234", DeleteUserTest.CUSTOM_PASSWORD_ENCODER);
 		User user = new User("유저1", "ticketing@gmail.com", "123456", UserGrade.GUEST, "010-1234-5678");
 		String oldPassword = user.getPassword();
 

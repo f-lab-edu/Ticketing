@@ -27,7 +27,7 @@ public class DeleteUserTest {
 	@DisplayName("CustomPasswordEncoder matches 테스트")
 	void customPasswordEncoderMatches() {
 		// given
-		DeleteUser user = new DeleteUser("ticketing@gmail.com", "123456", CUSTOM_PASSWORD_ENCODER);
+		DeleteUserDTO user = new DeleteUserDTO("ticketing@gmail.com", "123456", CUSTOM_PASSWORD_ENCODER);
 
 		// when
 		// then
