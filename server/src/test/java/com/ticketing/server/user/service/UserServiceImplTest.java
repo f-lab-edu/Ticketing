@@ -102,10 +102,9 @@ class UserServiceImplTest {
 		when(userRepository.findByEmailAndIsDeletedFalse("ticketing@gmail.com")).thenReturn(Optional.empty());
 
 		// when
-		Optional<User> user = userService.modifyPassword(changePassword);
-
 		// then
-		assertThat(user).isEmpty();
+		assertThatThrownBy(() -> userService.modifyPassword(changePassword))
+			.isInstanceOf(NotFoundEmailException.class);
 	}
 
 	@Test
@@ -115,10 +114,10 @@ class UserServiceImplTest {
 		when(userRepository.findByEmailAndIsDeletedFalse("ticketing@gmail.com")).thenReturn(Optional.of(user));
 
 		// when
-		Optional<User> user = userService.modifyPassword(changePassword);
+		User user = userService.modifyPassword(changePassword);
 
 		// then
-		assertThat(user).isPresent();
+		assertThat(user).isNotNull();
 	}
 
 }

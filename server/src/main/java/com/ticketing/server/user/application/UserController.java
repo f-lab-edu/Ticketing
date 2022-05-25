@@ -8,7 +8,6 @@ import com.ticketing.server.user.application.response.UserDeleteResponse;
 import com.ticketing.server.user.application.response.UserModifyPasswordResponse;
 import com.ticketing.server.user.domain.User;
 import com.ticketing.server.user.service.UserServiceImpl;
-import java.util.Optional;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,14 +49,8 @@ public class UserController {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		}
 
-		Optional<User> user = userService.modifyPassword(request.toChangePassword(passwordEncoder));
-
-		if (user.isEmpty()) {
-			log.error("존재하지 않는 이메일 입니다. :: {}", request.getEmail());
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-		}
-
-		return ResponseEntity.status(HttpStatus.OK).body(UserModifyPasswordResponse.of(user.get()));
+		User user = userService.modifyPassword(request.toChangePassword(passwordEncoder));
+		return ResponseEntity.status(HttpStatus.OK).body(UserModifyPasswordResponse.of(user));
 	}
 
 }
