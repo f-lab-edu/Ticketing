@@ -84,8 +84,8 @@ class UserTest {
 	@DisplayName("입력받은 패스워드와 불일치로 변경 실패")
 	void changePasswordFail() {
 		// given
-		ChangePasswordDTO changePassword = new ChangePasswordDTO("ticketing@gmail.com", "1234567", "ticketing1234", DeleteUserTest.CUSTOM_PASSWORD_ENCODER);
-		User user = new User("유저1", "ticketing@gmail.com", "123456", UserGrade.GUEST, "010-1234-5678");
+		ChangePasswordDTO changePassword = new ChangePasswordDTO("ticketing1@gmail.com", "1234567", "ticketing1234", DeleteUserTest.CUSTOM_PASSWORD_ENCODER);
+		User user = users.get(changePassword.getEmail());
 
 		// when
 		// then
@@ -97,8 +97,8 @@ class UserTest {
 	@DisplayName("패스워드 변경 성공")
 	void changePasswordSuccess() {
 		// given
-		ChangePasswordDTO changePassword = new ChangePasswordDTO("ticketing@gmail.com", "123456", "ticketing1234", DeleteUserTest.CUSTOM_PASSWORD_ENCODER);
-		User user = new User("유저1", "ticketing@gmail.com", "123456", UserGrade.GUEST, "010-1234-5678");
+		ChangePasswordDTO changePassword = new ChangePasswordDTO("ticketing1@gmail.com", "123456", "ticketing1234", DeleteUserTest.CUSTOM_PASSWORD_ENCODER);
+		User user = users.get(changePassword.getEmail());
 		String oldPassword = user.getPassword();
 
 		// when
