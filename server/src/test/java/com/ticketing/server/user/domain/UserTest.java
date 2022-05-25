@@ -9,7 +9,9 @@ import com.ticketing.server.global.exception.PasswordMismatchException;
 import com.ticketing.server.user.service.dto.ChangePasswordDTO;
 import com.ticketing.server.user.service.dto.DeleteUserDTO;
 import com.ticketing.server.user.service.dto.DeleteUserTest;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -24,100 +26,23 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 class UserTest {
 
-	private static Validator validator;
+	private Validator validator;
+	private Map<String, User> users;
 
 	@BeforeEach
 	void init() {
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 		validator = factory.getValidator();
-
-	}
-
-	public static Stream<User> provideCorrectUsers() {
-		return Stream.of(
-			new User("유저1", "ticketing1@gmail.com", "123456", UserGrade.GUEST, "010-1234-5678")
-			, new User("유저2", "ticketing2@gmail.com", "qwe123", UserGrade.GUEST, "010-2234-5678")
-			, new User("유저3", "ticketing3@gmail.com", "ticketing", UserGrade.STAFF, "010-3234-5678")
-			, new User("유저4", "ticketing4@gmail.com", "ticketing123456", UserGrade.STAFF, "010-4234-5678")
-		);
-	}
-
-	public static Stream<User> provideNullOrEmptyOfName() {
-		return Stream.of(
-			new User(null, "ticketing1@gmail.com", "123456", UserGrade.GUEST, "010-1234-5678")
-			, new User("", "ticketing2@gmail.com", "qwe123", UserGrade.GUEST, "010-2234-5678")
-		);
-	}
-
-	public static Stream<User> provideNullOrEmptyOfEmail() {
-		return Stream.of(
-			new User("유저1", null, "123456", UserGrade.GUEST, "010-1234-5678")
-			, new User("유저2", "", "qwe123", UserGrade.GUEST, "010-2234-5678")
-		);
-	}
-
-	public static Stream<User> provideValidationFailedOfEmail() {
-		return Stream.of(
-			new User("유저1", "email", "123456", UserGrade.GUEST, "010-1234-5678")
-			, new User("유저2", "@gmail.com", "qwe123", UserGrade.GUEST, "010-2234-5678")
-			, new User("유저3", "12Bye#domain.com", "ticketing", UserGrade.STAFF, "010-3234-5678")
-		);
-	}
-
-	public static Stream<User> provideNullOrEmptyOfPassword() {
-		return Stream.of(
-			new User("유저1", "ticketing1@gmail.com", null, UserGrade.GUEST, "010-1234-5678")
-			, new User("유저2", "ticketing2@gmail.com", "", UserGrade.GUEST, "010-2234-5678")
-		);
-	}
-
-	public static Stream<User> provideNullOrEmptyOfPhone() {
-		return Stream.of(
-			new User("유저1", "ticketing1@gmail.com", "123456", UserGrade.GUEST, null)
-			, new User("유저2", "ticketing2@gmail.com", "qwe123", UserGrade.GUEST, "")
-		);
-	}
-
-	public static Stream<User> provideValidationFailedOfPhone() {
-		return Stream.of(
-			new User("유저1", "ticketing1@gmail.com", "123456", UserGrade.GUEST, "010-123-1234")
-			, new User("유저2", "ticketing2@gmail.com", "qwe123", UserGrade.GUEST, "02-0444-4044")
-			, new User("유저3", "ticketing3@gmail.com", "ticketing", UserGrade.STAFF, "033-7953")
-			, new User("유저4", "ticketing4@gmail.com", "ticketing123456", UserGrade.STAFF, "033-0455-504")
-		);
-	}
-
-	public static Stream<Arguments> provideDifferentPasswordDeleteUsers() {
-		return Stream.of(
-			Arguments.of(new User("유저1", "ticketing1@gmail.com", "123456", UserGrade.GUEST, "010-1234-5678")
-				, new DeleteUserDTO("ticketing1@gmail.com", "1234561", DeleteUserTest.CUSTOM_PASSWORD_ENCODER))
-			, Arguments.of(new User("유저2", "ticketing2@gmail.com", "qwe123", UserGrade.GUEST, "010-2234-5678")
-				, new DeleteUserDTO("ticketing2@gmail.com", "qwe1231", DeleteUserTest.CUSTOM_PASSWORD_ENCODER))
-			, Arguments.of(new User("유저3", "ticketing3@gmail.com", "ticketing", UserGrade.STAFF, "010-3234-5678")
-				, new DeleteUserDTO("ticketing3@gmail.com", "ticketing1", DeleteUserTest.CUSTOM_PASSWORD_ENCODER))
-			, Arguments.of(new User("유저4", "ticketing4@gmail.com", "ticketing123456", UserGrade.STAFF, "010-4234-5678")
-				, new DeleteUserDTO("ticketing4@gmail.com", "ticketing1234561", DeleteUserTest.CUSTOM_PASSWORD_ENCODER))
-		);
-	}
-
-	public static Stream<Arguments> provideDeleteUsers() {
-		return Stream.of(
-			Arguments.of(new User("유저1", "ticketing1@gmail.com", "123456", UserGrade.GUEST, "010-1234-5678")
-				, new DeleteUserDTO("ticketing1@gmail.com", "123456", DeleteUserTest.CUSTOM_PASSWORD_ENCODER))
-			, Arguments.of(new User("유저2", "ticketing2@gmail.com", "qwe123", UserGrade.GUEST, "010-2234-5678")
-				, new DeleteUserDTO("ticketing2@gmail.com", "qwe123", DeleteUserTest.CUSTOM_PASSWORD_ENCODER))
-			, Arguments.of(new User("유저3", "ticketing3@gmail.com", "ticketing", UserGrade.STAFF, "010-3234-5678")
-				, new DeleteUserDTO("ticketing3@gmail.com", "ticketing", DeleteUserTest.CUSTOM_PASSWORD_ENCODER))
-			, Arguments.of(new User("유저4", "ticketing4@gmail.com", "ticketing123456", UserGrade.STAFF, "010-4234-5678")
-				, new DeleteUserDTO("ticketing4@gmail.com", "ticketing123456", DeleteUserTest.CUSTOM_PASSWORD_ENCODER))
-		);
+		users = provideCorrectUsers().collect(Collectors.toMap(User::getEmail, user -> user));
 	}
 
 	@ParameterizedTest
 	@MethodSource("provideDifferentPasswordDeleteUsers")
 	@DisplayName("입력된 패스워드가 다를 경우")
-	void passwordMismatchException(User user, DeleteUserDTO deleteUser) {
+	void passwordMismatchException(DeleteUserDTO deleteUser) {
 		// given
+		User user = users.get(deleteUser.getEmail());
+
 		// when
 		// then
 		assertThatThrownBy(() -> user.delete(deleteUser))
@@ -168,7 +93,7 @@ class UserTest {
 	@Test
 	@DisplayName("패스워드 변경 성공")
 	void changePasswordSuccess() {
-	    // given
+		// given
 		ChangePasswordDTO changePassword = new ChangePasswordDTO("ticketing@gmail.com", "123456", "ticketing1234", DeleteUserTest.CUSTOM_PASSWORD_ENCODER);
 		User user = new User("유저1", "ticketing@gmail.com", "123456", UserGrade.GUEST, "010-1234-5678");
 		String oldPassword = user.getPassword();
@@ -275,6 +200,82 @@ class UserTest {
 
 		// then
 		assertThat(constraintViolations).hasSize(1);
+	}
+
+	public static Stream<User> provideCorrectUsers() {
+		return Stream.of(
+			new User("유저1", "ticketing1@gmail.com", "123456", UserGrade.GUEST, "010-1234-5678")
+			, new User("유저2", "ticketing2@gmail.com", "qwe123", UserGrade.GUEST, "010-2234-5678")
+			, new User("유저3", "ticketing3@gmail.com", "ticketing", UserGrade.STAFF, "010-3234-5678")
+			, new User("유저4", "ticketing4@gmail.com", "ticketing123456", UserGrade.STAFF, "010-4234-5678")
+		);
+	}
+
+	public static Stream<User> provideNullOrEmptyOfName() {
+		return Stream.of(
+			new User(null, "ticketing1@gmail.com", "123456", UserGrade.GUEST, "010-1234-5678")
+			, new User("", "ticketing2@gmail.com", "qwe123", UserGrade.GUEST, "010-2234-5678")
+		);
+	}
+
+	public static Stream<User> provideNullOrEmptyOfEmail() {
+		return Stream.of(
+			new User("유저1", null, "123456", UserGrade.GUEST, "010-1234-5678")
+			, new User("유저2", "", "qwe123", UserGrade.GUEST, "010-2234-5678")
+		);
+	}
+
+	public static Stream<User> provideValidationFailedOfEmail() {
+		return Stream.of(
+			new User("유저1", "email", "123456", UserGrade.GUEST, "010-1234-5678")
+			, new User("유저2", "@gmail.com", "qwe123", UserGrade.GUEST, "010-2234-5678")
+			, new User("유저3", "12Bye#domain.com", "ticketing", UserGrade.STAFF, "010-3234-5678")
+		);
+	}
+
+	public static Stream<User> provideNullOrEmptyOfPassword() {
+		return Stream.of(
+			new User("유저1", "ticketing1@gmail.com", null, UserGrade.GUEST, "010-1234-5678")
+			, new User("유저2", "ticketing2@gmail.com", "", UserGrade.GUEST, "010-2234-5678")
+		);
+	}
+
+	public static Stream<User> provideNullOrEmptyOfPhone() {
+		return Stream.of(
+			new User("유저1", "ticketing1@gmail.com", "123456", UserGrade.GUEST, null)
+			, new User("유저2", "ticketing2@gmail.com", "qwe123", UserGrade.GUEST, "")
+		);
+	}
+
+	public static Stream<User> provideValidationFailedOfPhone() {
+		return Stream.of(
+			new User("유저1", "ticketing1@gmail.com", "123456", UserGrade.GUEST, "010-123-1234")
+			, new User("유저2", "ticketing2@gmail.com", "qwe123", UserGrade.GUEST, "02-0444-4044")
+			, new User("유저3", "ticketing3@gmail.com", "ticketing", UserGrade.STAFF, "033-7953")
+			, new User("유저4", "ticketing4@gmail.com", "ticketing123456", UserGrade.STAFF, "033-0455-504")
+		);
+	}
+
+	public static Stream<DeleteUserDTO> provideDifferentPasswordDeleteUsers() {
+		return Stream.of(
+			new DeleteUserDTO("ticketing1@gmail.com", "1234561", DeleteUserTest.CUSTOM_PASSWORD_ENCODER)
+			, new DeleteUserDTO("ticketing2@gmail.com", "qwe1231", DeleteUserTest.CUSTOM_PASSWORD_ENCODER)
+			, new DeleteUserDTO("ticketing3@gmail.com", "ticketing1", DeleteUserTest.CUSTOM_PASSWORD_ENCODER)
+			, new DeleteUserDTO("ticketing4@gmail.com", "ticketing1234561", DeleteUserTest.CUSTOM_PASSWORD_ENCODER)
+		);
+	}
+
+	public static Stream<Arguments> provideDeleteUsers() {
+		return Stream.of(
+			Arguments.of(new User("유저1", "ticketing1@gmail.com", "123456", UserGrade.GUEST, "010-1234-5678")
+				, new DeleteUserDTO("ticketing1@gmail.com", "123456", DeleteUserTest.CUSTOM_PASSWORD_ENCODER))
+			, Arguments.of(new User("유저2", "ticketing2@gmail.com", "qwe123", UserGrade.GUEST, "010-2234-5678")
+				, new DeleteUserDTO("ticketing2@gmail.com", "qwe123", DeleteUserTest.CUSTOM_PASSWORD_ENCODER))
+			, Arguments.of(new User("유저3", "ticketing3@gmail.com", "ticketing", UserGrade.STAFF, "010-3234-5678")
+				, new DeleteUserDTO("ticketing3@gmail.com", "ticketing", DeleteUserTest.CUSTOM_PASSWORD_ENCODER))
+			, Arguments.of(new User("유저4", "ticketing4@gmail.com", "ticketing123456", UserGrade.STAFF, "010-4234-5678")
+				, new DeleteUserDTO("ticketing4@gmail.com", "ticketing123456", DeleteUserTest.CUSTOM_PASSWORD_ENCODER))
+		);
 	}
 
 }
