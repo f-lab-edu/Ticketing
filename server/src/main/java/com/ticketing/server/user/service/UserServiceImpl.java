@@ -1,5 +1,6 @@
 package com.ticketing.server.user.service;
 
+import com.ticketing.server.global.exception.NotFoundEmailException;
 import com.ticketing.server.user.domain.User;
 import com.ticketing.server.user.domain.repository.UserRepository;
 import com.ticketing.server.user.service.dto.ChangePasswordDTO;
@@ -37,15 +38,15 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional
-	public Optional<User> delete(@Valid DeleteUserDTO deleteUser) {
+	public User delete(@Valid DeleteUserDTO deleteUser) {
 		Optional<User> optionalUser = userRepository.findByEmail(deleteUser.getEmail());
 		if (optionalUser.isEmpty()) {
 			log.error("존재하지 않는 이메일 입니다. :: {}", deleteUser);
-			return Optional.empty();
+			throw new NotFoundEmailException();
 		}
 
 		User user = optionalUser.get();
-		return Optional.of(user.delete(deleteUser));
+		return user.delete(deleteUser);
 	}
 
 	@Override

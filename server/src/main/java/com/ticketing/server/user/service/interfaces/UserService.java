@@ -11,7 +11,7 @@ public interface UserService {
 
 	User register(@Valid SignUpDTO signUpDto);
 
-	Optional<User> delete(@Valid DeleteUserDTO deleteUser);
+	User delete(@Valid DeleteUserDTO deleteUser);
 
 	Optional<User> modifyPassword(@Valid ChangePasswordDTO changePassword);
 

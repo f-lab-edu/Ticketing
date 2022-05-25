@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import com.ticketing.server.global.exception.NotFoundEmailException;
 import com.ticketing.server.user.domain.User;
 import com.ticketing.server.user.domain.UserGrade;
 import com.ticketing.server.user.domain.repository.UserRepository;
@@ -76,10 +77,9 @@ class UserServiceImplTest {
 		when(userRepository.findByEmail("ticketing@gmail.com")).thenReturn(Optional.empty());
 
 		// when
-		Optional<User> user = userService.delete(deleteUser);
-
 		// then
-		assertThat(user).isEmpty();
+		assertThatThrownBy(() -> userService.delete(deleteUser))
+			.isInstanceOf(NotFoundEmailException.class);
 	}
 
 	@Test
@@ -89,10 +89,10 @@ class UserServiceImplTest {
 		when(userRepository.findByEmail("ticketing@gmail.com")).thenReturn(Optional.of(user));
 
 		// when
-		Optional<User> user = userService.delete(deleteUser);
+		User user = userService.delete(deleteUser);
 
 		// then
-		assertThat(user).isPresent();
+		assertThat(user).isNotNull();
 	}
 
 	@Test

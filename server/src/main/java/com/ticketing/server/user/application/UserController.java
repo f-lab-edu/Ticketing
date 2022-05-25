@@ -39,14 +39,8 @@ public class UserController {
 
 	@DeleteMapping
 	public ResponseEntity<Object> deleteUser(@RequestBody @Valid UserDeleteRequest request) {
-		Optional<User> user = userService.delete(request.toDeleteUser(passwordEncoder));
-
-		if (user.isEmpty()) {
-			log.error("존재하지 않는 이메일 입니다. :: {}", request.getEmail());
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-		}
-
-		return ResponseEntity.status(HttpStatus.OK).body(UserDeleteResponse.of(user.get()));
+		User user = userService.delete(request.toDeleteUser(passwordEncoder));
+		return ResponseEntity.status(HttpStatus.OK).body(UserDeleteResponse.of(user));
 	}
 
 	@PatchMapping("/password")
