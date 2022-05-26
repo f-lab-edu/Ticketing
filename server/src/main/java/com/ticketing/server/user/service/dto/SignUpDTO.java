@@ -8,7 +8,7 @@ import javax.validation.constraints.NotEmpty;
 import lombok.Getter;
 
 @Getter
-public class SignUp {
+public class SignUpDTO {
 
 	@NotEmpty(message = "{validation.not.empty.name}")
 	private String name;
@@ -24,7 +24,7 @@ public class SignUp {
 	@Phone
 	private String phone;
 
-	public SignUp(String name, String email, String password, String phone) {
+	public SignUpDTO(String name, String email, String password, String phone) {
 		this.name = name;
 		this.email = email;
 		this.password = password;

@@ -1,7 +1,7 @@
 package com.ticketing.server.user.application.request;
 
 import com.ticketing.server.global.validator.constraints.Phone;
-import com.ticketing.server.user.service.dto.SignUp;
+import com.ticketing.server.user.service.dto.SignUpDTO;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import lombok.Getter;
@@ -24,8 +24,8 @@ public class SignUpRequest {
 	@Phone
 	private String phone;
 
-	public SignUp toSignUp(PasswordEncoder passwordEncoder) {
-		return new SignUp(name, email, getEncodePassword(passwordEncoder), phone);
+	public SignUpDTO toSignUpDto(PasswordEncoder passwordEncoder) {
+		return new SignUpDTO(name, email, getEncodePassword(passwordEncoder), phone);
 	}
 
 	private String getEncodePassword(PasswordEncoder passwordEncoder) {

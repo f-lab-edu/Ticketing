@@ -1,8 +1,11 @@
 package com.ticketing.server.user.service;
 
+import com.ticketing.server.global.exception.NotFoundEmailException;
 import com.ticketing.server.user.domain.User;
 import com.ticketing.server.user.domain.repository.UserRepository;
-import com.ticketing.server.user.service.dto.SignUp;
+import com.ticketing.server.user.service.dto.ChangePasswordDTO;
+import com.ticketing.server.user.service.dto.DeleteUserDTO;
+import com.ticketing.server.user.service.dto.SignUpDTO;
 import com.ticketing.server.user.service.interfaces.UserService;
 import java.util.Optional;
 import javax.validation.Valid;
@@ -23,15 +26,40 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional
-	public Optional<User> register(@Valid SignUp signUpDto) {
+	public User register(@Valid SignUpDTO signUpDto) {
 		Optional<User> user = userRepository.findByEmail(signUpDto.getEmail());
 		if (user.isPresent()) {
 			log.error("이미 존재하는 이메일이기 때문에 신규 회원가입을 진행할 수 없습니다. :: {}", signUpDto);
-			return Optional.empty();
+			throw new IllegalArgumentException("이미 존재하는 이메일이기 때문에 신규 회원가입을 진행할 수 없습니다.");
 		}
 
-		User newUser = userRepository.save(signUpDto.toUser());
-		return Optional.of(newUser);
+		return userRepository.save(signUpDto.toUser());
+	}
+
+	@Override
+	@Transactional
+	public User delete(@Valid DeleteUserDTO deleteUserDto) {
+		Optional<User> optionalUser = userRepository.findByEmail(deleteUserDto.getEmail());
+		if (optionalUser.isEmpty()) {
+			log.error("존재하지 않는 이메일 입니다. :: {}", deleteUserDto);
+			throw new NotFoundEmailException();
+		}
+
+		User user = optionalUser.get();
+		return user.delete(deleteUserDto);
+	}
+
+	@Override
+	@Transactional
+	public User changePassword(@Valid ChangePasswordDTO changePasswordDto) {
+		Optional<User> optionalUser = userRepository.findByEmailAndIsDeletedFalse(changePasswordDto.getEmail());
+		if (optionalUser.isEmpty()) {
+			log.error("존재하지 않는 이메일 입니다. :: {}", changePasswordDto);
+			throw new NotFoundEmailException();
+		}
+
+		User user = optionalUser.get();
+		return user.changePassword(changePasswordDto);
 	}
 
 }

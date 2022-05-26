@@ -1,7 +1,12 @@
 package com.ticketing.server.user.domain;
 
 import com.ticketing.server.global.dto.repository.AbstractEntity;
+import com.ticketing.server.global.exception.AlreadyDeletedException;
+import com.ticketing.server.global.exception.PasswordMismatchException;
 import com.ticketing.server.global.validator.constraints.Phone;
+import com.ticketing.server.user.service.dto.ChangePasswordDTO;
+import com.ticketing.server.user.service.dto.DeleteUserDTO;
+import com.ticketing.server.user.service.dto.PasswordMatches;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,6 +22,14 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class User extends AbstractEntity {
+
+	public User(String name, String email, String password, UserGrade grade, String phone) {
+		this.name = name;
+		this.email = email;
+		this.password = password;
+		this.grade = grade;
+		this.phone = phone;
+	}
 
 	@Column(name = "name")
 	@NotEmpty(message = "{validation.not.empty.name}")
@@ -45,12 +58,29 @@ public class User extends AbstractEntity {
 
 	private LocalDateTime deletedAt;
 
-	public User(String name, String email, String password, UserGrade grade, String phone) {
-		this.name = name;
-		this.email = email;
-		this.password = password;
-		this.grade = grade;
-		this.phone = phone;
+	public User delete(DeleteUserDTO deleteUser) {
+		if (isDeleted) {
+			throw new AlreadyDeletedException("이미 탈퇴된 회원 입니다.");
+		}
+
+		checkPassword(deleteUser);
+
+		isDeleted = true;
+		deletedAt = LocalDateTime.now();
+		return this;
+	}
+
+	public User changePassword(ChangePasswordDTO changePassword) {
+		checkPassword(changePassword);
+
+		this.password = changePassword.getEncodePassword();
+		return this;
+	}
+
+	private void checkPassword(PasswordMatches passwordMatches) {
+		if (!passwordMatches.passwordMatches(password)) {
+			throw new PasswordMismatchException();
+		}
 	}
 
 }
