@@ -34,6 +34,7 @@ dependencies {
 	implementation("com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.4")
 	implementation("org.springframework.boot:spring-boot-starter-log4j2")
 	implementation("com.lmax:disruptor:3.4.2")
+	implementation("io.jsonwebtoken:jjwt-api")
 
 	modules {
 		module("org.springframework.boot:spring-boot-starter-logging") {
@@ -43,6 +44,8 @@ dependencies {
 
 	compileOnly("org.projectlombok:lombok")
 	runtimeOnly("mysql:mysql-connector-java")
+	runtimeOnly("io.jsonwebtoken:jjwt-impl")
+	runtimeOnly("io.jsonwebtoken:jjwt-jackson")
 	annotationProcessor("org.projectlombok:lombok")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
