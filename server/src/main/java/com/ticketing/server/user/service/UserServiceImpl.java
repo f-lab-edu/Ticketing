@@ -5,6 +5,7 @@ import com.ticketing.server.user.domain.User;
 import com.ticketing.server.user.domain.repository.UserRepository;
 import com.ticketing.server.user.service.dto.ChangePasswordDTO;
 import com.ticketing.server.user.service.dto.DeleteUserDTO;
+import com.ticketing.server.user.service.dto.LoginDTO;
 import com.ticketing.server.user.service.dto.SignUpDTO;
 import com.ticketing.server.user.service.interfaces.UserService;
 import java.util.Optional;
@@ -23,6 +24,20 @@ import org.springframework.validation.annotation.Validated;
 public class UserServiceImpl implements UserService {
 
 	private final UserRepository userRepository;
+
+
+	@Override
+	public User login(LoginDTO loginDto) {
+		Optional<User> optionalUser = userRepository.findByEmailAndIsDeletedFalse(loginDto.getEmail());
+		if (optionalUser.isEmpty()) {
+			log.error("존재하지 않는 이메일 입니다. :: {}", loginDto);
+			throw new NotFoundEmailException();
+		}
+
+		User user = optionalUser.get();
+		user.checkPassword(loginDto);
+		return user;
+	}
 
 	@Override
 	@Transactional
