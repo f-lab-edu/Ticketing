@@ -25,16 +25,9 @@ public class UserServiceImpl implements UserService {
 
 	private final UserRepository userRepository;
 
-
 	@Override
 	public User login(LoginDTO loginDto) {
-		Optional<User> optionalUser = userRepository.findByEmailAndIsDeletedFalse(loginDto.getEmail());
-		if (optionalUser.isEmpty()) {
-			log.error("존재하지 않는 이메일 입니다. :: {}", loginDto);
-			throw new NotFoundEmailException();
-		}
-
-		User user = optionalUser.get();
+		User user = findNotDeletedUserByEmail(loginDto.getEmail());
 		user.checkPassword(loginDto);
 		return user;
 	}
@@ -56,7 +49,7 @@ public class UserServiceImpl implements UserService {
 	public User delete(@Valid DeleteUserDTO deleteUserDto) {
 		Optional<User> optionalUser = userRepository.findByEmail(deleteUserDto.getEmail());
 		if (optionalUser.isEmpty()) {
-			log.error("존재하지 않는 이메일 입니다. :: {}", deleteUserDto);
+			log.error("존재하지 않는 이메일 입니다. :: {}", deleteUserDto.getEmail());
 			throw new NotFoundEmailException();
 		}
 
@@ -67,14 +60,17 @@ public class UserServiceImpl implements UserService {
 	@Override
 	@Transactional
 	public User changePassword(@Valid ChangePasswordDTO changePasswordDto) {
-		Optional<User> optionalUser = userRepository.findByEmailAndIsDeletedFalse(changePasswordDto.getEmail());
+		User user = findNotDeletedUserByEmail(changePasswordDto.getEmail());
+		return user.changePassword(changePasswordDto);
+	}
+
+	private User findNotDeletedUserByEmail(String email) {
+		Optional<User> optionalUser = userRepository.findByEmailAndIsDeletedFalse(email);
 		if (optionalUser.isEmpty()) {
-			log.error("존재하지 않는 이메일 입니다. :: {}", changePasswordDto);
+			log.error("존재하지 않는 이메일 입니다. :: {}", email);
 			throw new NotFoundEmailException();
 		}
-
-		User user = optionalUser.get();
-		return user.changePassword(changePasswordDto);
+		return optionalUser.get();
 	}
 
 }
