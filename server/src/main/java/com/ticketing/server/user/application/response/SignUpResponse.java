@@ -1,7 +1,9 @@
 package com.ticketing.server.user.application.response;
 
 import com.ticketing.server.user.domain.User;
+import lombok.Getter;
 
+@Getter
 public class SignUpResponse {
 
 	public static SignUpResponse of(User user) {
