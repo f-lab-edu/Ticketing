@@ -27,7 +27,7 @@ class JwtPropertiesTest {
 		// when
 		// then
 		assertAll(
-			() -> assertThat(jwtProperties.getHeader()).isEqualTo("Authorization")
+			() -> assertThat(jwtProperties.getAccessHeader()).isEqualTo("ACCESS_TOKEN")
 			, () -> assertThat(jwtProperties.getPrefix()).isEqualTo("Bearer")
 			, () -> assertThat(jwtProperties.getTokenValidityInSeconds()).isEqualTo(86400)
 			, () -> assertThat(jwtProperties.getSecretKey()).isNotEmpty());

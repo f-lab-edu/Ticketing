@@ -14,7 +14,7 @@ import org.springframework.context.annotation.PropertySource;
 @PropertySource(value = "classpath:application.yml", factory = YamlPropertySourceFactory.class)
 public class JwtProperties {
 
-	private final String header;
+	private final String accessHeader;
 	private final String prefix;
 	private final String secretKey;
 	private final Integer tokenValidityInSeconds;
