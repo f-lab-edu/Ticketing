@@ -6,6 +6,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ticketing.server.user.application.request.LoginRequest;
+import com.ticketing.server.user.application.request.SignUpRequest;
 import com.ticketing.server.user.service.interfaces.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -33,6 +37,9 @@ class UserControllerTest {
 	@Autowired
 	PasswordEncoder passwordEncoder;
 
+	@Autowired
+	ObjectMapper objectMapper;
+
 	MockMvc mvc;
 
 	@BeforeEach
@@ -42,13 +49,10 @@ class UserControllerTest {
 			.apply(springSecurity())
 			.build();
 
+		SignUpRequest signUpRequest = new SignUpRequest("ticketing", "ticketing@gmail.com", "qwe123", "010-2240-7920");
+
 		mvc.perform(post("/user")
-			.content("{\n" +
-				" \"email\": \"ticketing@gmail.com\",\n" +
-				" \"password\": \"qwe123\",\n" +
-				" \"name\": \"ticketing\",\n" +
-				" \"phone\": \"010-2240-7920\"\n" +
-				"}")
+			.content(asJsonString(signUpRequest))
 			.contentType(MediaType.APPLICATION_JSON));
 	}
 
@@ -56,14 +60,11 @@ class UserControllerTest {
 	@DisplayName("로그인 인증 성공")
 	void loginSuccess() throws Exception {
 		// given
-		String requestJson = "{\n" +
-			" \"email\": \"ticketing@gmail.com\",\n" +
-			" \"password\": \"qwe123\"\n" +
-			"}";
+		LoginRequest request = new LoginRequest("ticketing@gmail.com", "qwe123");
 
 		// when
 		ResultActions actions = mvc.perform(post("/user/login")
-			.content(requestJson)
+			.content(asJsonString(request))
 			.contentType(MediaType.APPLICATION_JSON));
 
 		// then
@@ -76,19 +77,20 @@ class UserControllerTest {
 	@DisplayName("로그인 패스워드 인증 실패")
 	void loginPasswordFail() throws Exception {
 		// given
-		String requestJson = "{\n" +
-			" \"email\": \"ticketing@gmail.com\",\n" +
-			" \"password\": \"qwe1234\"\n" +
-			"}";
+		LoginRequest request = new LoginRequest("ticketing@gmail.com", "qwe1234");
 
 		// when
 		ResultActions actions = mvc.perform(post("/user/login")
-			.content(requestJson)
+			.content(asJsonString(request))
 			.contentType(MediaType.APPLICATION_JSON));
 
 		// then
 		actions.andDo(print())
 			.andExpect(status().isUnauthorized());
+	}
+
+	private String asJsonString(Object object) throws JsonProcessingException {
+		return objectMapper.writeValueAsString(object);
 	}
 
 }

@@ -5,10 +5,19 @@ import com.ticketing.server.user.service.dto.SignUpDTO;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Getter
+@NoArgsConstructor
 public class SignUpRequest {
+
+	public SignUpRequest(String name, String email, String password, String phone) {
+		this.name = name;
+		this.email = email;
+		this.password = password;
+		this.phone = phone;
+	}
 
 	@NotEmpty(message = "{validation.not.empty.name}")
 	private String name;
