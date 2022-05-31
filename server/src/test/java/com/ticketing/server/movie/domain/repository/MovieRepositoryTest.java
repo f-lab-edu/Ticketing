@@ -1,6 +1,7 @@
 package com.ticketing.server.movie.domain.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.ticketing.server.movie.domain.Movie;
@@ -49,4 +50,14 @@ public class MovieRepositoryTest {
         assertTrue(optionalMovie.isPresent());
     }
 
+    @Order(3)
+    @Test
+    @DisplayName("Movie Repository - test finding movie that doesn't exist")
+    void ShouldNotAbleToFindMovie() {
+        // given, when
+        Optional<Movie> optionalMovie = movieRepository.findByTitle("존재하지 않는 영화");
+
+        // then
+        assertFalse(optionalMovie.isPresent());
+    }
 }
