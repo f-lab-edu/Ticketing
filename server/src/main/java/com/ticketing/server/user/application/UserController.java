@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -43,12 +44,14 @@ public class UserController {
 	}
 
 	@DeleteMapping
+	@PreAuthorize("hasRole('GUEST')")
 	public ResponseEntity<Object> deleteUser(@RequestBody @Valid UserDeleteRequest request) {
 		User user = userService.delete(request.toDeleteUserDto(passwordEncoder));
 		return ResponseEntity.status(HttpStatus.OK).body(UserDeleteResponse.of(user));
 	}
 
 	@PatchMapping("/password")
+	@PreAuthorize("hasRole('GUEST')")
 	public ResponseEntity<Object> changePassword(@RequestBody @Valid UserModifyPasswordRequest request) {
 		if (request.oldEqualNew()) {
 			log.error("기존 패스워드와 동일한 패스워드로 변경할 수 없습니다.");
