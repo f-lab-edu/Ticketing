@@ -120,44 +120,4 @@ class UserServiceImplTest {
 		assertThat(user).isNotNull();
 	}
 
-//	@Test
-//	@DisplayName("로그인 성공 시")
-//	void loginSuccess() {
-//		// given
-//		LoginDTO loginDTO = new LoginDTO("ticketing@gmail.com", "123456", DeleteUserDtoTest.CUSTOM_PASSWORD_ENCODER);
-//		when(userRepository.findByEmailAndIsDeletedFalse("ticketing@gmail.com")).thenReturn(Optional.of(user));
-//
-//		// when
-//		User user = userService.login(loginDTO);
-//
-//		// then
-//		assertThat(user).isInstanceOf(User.class);
-//	}
-//
-//	@Test
-//	@DisplayName("로그인 시도 시 이메일이 없을 경우")
-//	void loginNotFoundEmail() {
-//		// given
-//		LoginDTO loginDTO = new LoginDTO("ticketing1@gmail.com", "123456", DeleteUserDtoTest.CUSTOM_PASSWORD_ENCODER);
-//		when(userRepository.findByEmailAndIsDeletedFalse(any())).thenReturn(Optional.empty());
-//
-//		// when
-//		// then
-//		assertThatThrownBy(() -> userService.login(loginDTO))
-//			.isInstanceOf(NotFoundEmailException.class);
-//	}
-//
-//	@Test
-//	@DisplayName("로그인 시도 시 패스워드가 일치하지 않을 경우")
-//	void loginPasswordMatchesFail() {
-//		// given
-//		LoginDTO loginDTO = new LoginDTO("ticketing@gmail.com", "1234567", DeleteUserDtoTest.CUSTOM_PASSWORD_ENCODER);
-//		when(userRepository.findByEmailAndIsDeletedFalse("ticketing@gmail.com")).thenReturn(Optional.of(user));
-//
-//		// when
-//		// then
-//		assertThatThrownBy(() -> userService.login(loginDTO))
-//			.isInstanceOf(PasswordMismatchException.class);
-//	}
-
 }
