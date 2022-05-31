@@ -1,13 +1,17 @@
 package com.ticketing.server.user.application;
 
+import com.ticketing.server.global.jwt.JwtProperties;
+import com.ticketing.server.user.application.request.LoginRequest;
 import com.ticketing.server.user.application.request.SignUpRequest;
 import com.ticketing.server.user.application.request.UserDeleteRequest;
 import com.ticketing.server.user.application.request.UserModifyPasswordRequest;
+import com.ticketing.server.user.application.response.LoginResponse;
 import com.ticketing.server.user.application.response.SignUpResponse;
-import com.ticketing.server.user.application.response.UserDeleteResponse;
 import com.ticketing.server.user.application.response.UserChangePasswordResponse;
+import com.ticketing.server.user.application.response.UserDeleteResponse;
 import com.ticketing.server.user.domain.User;
 import com.ticketing.server.user.service.UserServiceImpl;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,10 +29,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/user")
 @Slf4j
+
 public class UserController {
 
 	private final UserServiceImpl userService;
 	private final PasswordEncoder passwordEncoder;
+	private final JwtProperties jwtProperties;
 
 	@PostMapping
 	public ResponseEntity<Object> register(@RequestBody @Valid SignUpRequest request) {
@@ -51,6 +57,14 @@ public class UserController {
 
 		User user = userService.changePassword(request.toChangePasswordDto(passwordEncoder));
 		return ResponseEntity.status(HttpStatus.OK).body(UserChangePasswordResponse.of(user));
+	}
+
+	@PostMapping("/login")
+	public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
+		String accessToken = userService.login(loginRequest.toAuthentication());
+
+		response.setHeader(jwtProperties.getAccessHeader(), accessToken);
+		return ResponseEntity.status(HttpStatus.OK).body(new LoginResponse(accessToken));
 	}
 
 }
