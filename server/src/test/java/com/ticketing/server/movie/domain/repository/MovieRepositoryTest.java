@@ -41,7 +41,7 @@ public class MovieRepositoryTest {
 
     @Order(2)
     @Test
-    @DisplayName("Movie Repository - test finding movie with title")
+    @DisplayName("Movie Repository Test - finding movie with title")
     void ShouldAbleToFindMovieWithTitle() {
         // given, when
         Optional<Movie> optionalMovie = movieRepository.findByTitle("범죄도시 2");
@@ -52,7 +52,7 @@ public class MovieRepositoryTest {
 
     @Order(3)
     @Test
-    @DisplayName("Movie Repository - test finding movie that doesn't exist")
+    @DisplayName("Movie Repository Test - finding movie that doesn't exist")
     void ShouldNotAbleToFindMovie() {
         // given, when
         Optional<Movie> optionalMovie = movieRepository.findByTitle("존재하지 않는 영화");
