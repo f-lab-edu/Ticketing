@@ -3,13 +3,14 @@ package com.ticketing.server.user.service.interfaces;
 import com.ticketing.server.user.domain.User;
 import com.ticketing.server.user.service.dto.ChangePasswordDTO;
 import com.ticketing.server.user.service.dto.DeleteUserDTO;
-import com.ticketing.server.user.service.dto.LoginDTO;
 import com.ticketing.server.user.service.dto.SignUpDTO;
 import javax.validation.Valid;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 
 public interface UserService {
 
-	User login(@Valid LoginDTO loginDto);
+	String login(UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken);
 
 	User register(@Valid SignUpDTO signUpDto);
 
