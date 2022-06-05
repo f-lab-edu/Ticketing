@@ -37,6 +37,7 @@ dependencies {
 	implementation("io.springfox:springfox-swagger-ui:3.0.0")
 	implementation("com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.4")
 	implementation("com.lmax:disruptor:3.4.2")
+	implementation("io.jsonwebtoken:jjwt-api:0.11.2")
 
 	modules {
 		module("org.springframework.boot:spring-boot-starter-logging") {
@@ -50,8 +51,14 @@ dependencies {
 
 	compileOnly("org.projectlombok:lombok")
 	runtimeOnly("mysql:mysql-connector-java")
-	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
+	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.2")
+	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.2")
 	annotationProcessor("org.projectlombok:lombok")
+	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+
+	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	testImplementation("org.springframework.security:spring-security-test")
 }
 
 tasks.withType<Test> {

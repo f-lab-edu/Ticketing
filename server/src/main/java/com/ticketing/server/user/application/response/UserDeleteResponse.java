@@ -1,20 +1,20 @@
 package com.ticketing.server.user.application.response;
 
 import com.ticketing.server.user.domain.User;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+@Getter
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserDeleteResponse {
-
-	public static SignUpResponse of(User user) {
-		return new SignUpResponse(user.getName(), user.getEmail());
-	}
-
-	public UserDeleteResponse(String name, String email) {
-		this.name = name;
-		this.email = email;
-	}
 
 	private String name;
 
 	private String email;
+
+	public static UserDeleteResponse of(User user) {
+		return new UserDeleteResponse(user.getName(), user.getEmail());
+	}
 
 }

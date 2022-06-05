@@ -77,7 +77,7 @@ public class User extends AbstractEntity {
 		return this;
 	}
 
-	private void checkPassword(PasswordMatches passwordMatches) {
+	public void checkPassword(PasswordMatches passwordMatches) {
 		if (!passwordMatches.passwordMatches(password)) {
 			throw new PasswordMismatchException();
 		}

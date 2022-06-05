@@ -4,10 +4,14 @@ import com.ticketing.server.global.validator.constraints.Phone;
 import com.ticketing.server.user.service.dto.SignUpDTO;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class SignUpRequest {
 
 	@NotEmpty(message = "{validation.not.empty.name}")
