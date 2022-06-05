@@ -38,21 +38,21 @@ public class UserController {
 	private final JwtProperties jwtProperties;
 
 	@PostMapping
-	public ResponseEntity<Object> register(@RequestBody @Valid SignUpRequest request) {
+	public ResponseEntity<SignUpResponse> register(@RequestBody @Valid SignUpRequest request) {
 		User user = userService.register(request.toSignUpDto(passwordEncoder));
 		return ResponseEntity.status(HttpStatus.CREATED).body(SignUpResponse.of(user));
 	}
 
 	@DeleteMapping
 	@PreAuthorize("hasRole('GUEST')")
-	public ResponseEntity<Object> deleteUser(@RequestBody @Valid UserDeleteRequest request) {
+	public ResponseEntity<UserDeleteResponse> deleteUser(@RequestBody @Valid UserDeleteRequest request) {
 		User user = userService.delete(request.toDeleteUserDto(passwordEncoder));
 		return ResponseEntity.status(HttpStatus.OK).body(UserDeleteResponse.of(user));
 	}
 
 	@PatchMapping("/password")
 	@PreAuthorize("hasRole('GUEST')")
-	public ResponseEntity<Object> changePassword(@RequestBody @Valid UserModifyPasswordRequest request) {
+	public ResponseEntity<UserChangePasswordResponse> changePassword(@RequestBody @Valid UserModifyPasswordRequest request) {
 		if (request.oldEqualNew()) {
 			log.error("기존 패스워드와 동일한 패스워드로 변경할 수 없습니다.");
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -67,7 +67,7 @@ public class UserController {
 		String accessToken = userService.login(loginRequest.toAuthentication());
 
 		response.setHeader(jwtProperties.getAccessHeader(), accessToken);
-		return ResponseEntity.status(HttpStatus.OK).body(new LoginResponse(accessToken));
+		return ResponseEntity.status(HttpStatus.OK).body(LoginResponse.of(accessToken));
 	}
 
 }

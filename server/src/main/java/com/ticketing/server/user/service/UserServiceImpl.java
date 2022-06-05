@@ -51,13 +51,13 @@ public class UserServiceImpl implements UserService {
 	@Override
 	@Transactional
 	public User delete(@Valid DeleteUserDTO deleteUserDto) {
-		Optional<User> optionalUser = userRepository.findByEmail(deleteUserDto.getEmail());
-		if (optionalUser.isEmpty()) {
-			log.error("존재하지 않는 이메일 입니다. :: {}", deleteUserDto.getEmail());
-			throw new NotFoundEmailException();
-		}
+		User user = userRepository.findByEmail(deleteUserDto.getEmail())
+			.orElseThrow(() -> {
+					log.error("존재하지 않는 이메일 입니다. :: {}", deleteUserDto.getEmail());
+					throw new NotFoundEmailException();
+				}
+			);
 
-		User user = optionalUser.get();
 		return user.delete(deleteUserDto);
 	}
 
@@ -69,12 +69,11 @@ public class UserServiceImpl implements UserService {
 	}
 
 	private User findNotDeletedUserByEmail(String email) {
-		Optional<User> optionalUser = userRepository.findByEmailAndIsDeletedFalse(email);
-		if (optionalUser.isEmpty()) {
-			log.error("존재하지 않는 이메일 입니다. :: {}", email);
-			throw new NotFoundEmailException();
-		}
-		return optionalUser.get();
+		return userRepository.findByEmailAndIsDeletedFalse(email)
+			.orElseThrow(() -> {
+				log.error("존재하지 않는 이메일 입니다. :: {}", email);
+				throw new NotFoundEmailException();
+			});
 	}
 
 }

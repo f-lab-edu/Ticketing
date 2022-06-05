@@ -1,16 +1,17 @@
 package com.ticketing.server.user.application.response;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class LoginResponse {
 
-	public LoginResponse(String accessToken) {
-		this.accessToken = accessToken;
-	}
-
 	private String accessToken;
+
+	public static LoginResponse of(String accessToken) {
+		return new LoginResponse(accessToken);
+	}
 
 }
