@@ -42,7 +42,7 @@ class TokenProviderTest {
 			new UsernamePasswordAuthenticationToken("ticketing@gmail.com", "123456", Collections.singleton(grantedAuthority));
 
 		// when
-		String token = tokenProvider.createToken(authenticationToken);
+		String token = tokenProvider.createAccessToken(authenticationToken);
 
 		// then
 		assertThat(token).isNotEmpty();
@@ -57,7 +57,7 @@ class TokenProviderTest {
 			new UsernamePasswordAuthenticationToken("ticketing@gmail.com", "123456", Collections.singleton(grantedAuthority));
 
 		// when
-		String token = tokenProvider.createToken(authenticationToken);
+		String token = tokenProvider.createAccessToken(authenticationToken);
 		Authentication authentication = tokenProvider.getAuthentication(token);
 
 		// then

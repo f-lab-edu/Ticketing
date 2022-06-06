@@ -21,6 +21,8 @@ jasypt:
 
 jwt:
   access-header: ACCESS_TOKEN
+  refresh-header: REFRESH_TOKEN
   prefix: Bearer
   secret-key: Zi1sYWItdGlja2V0aW5nLXByb2plY3Qtc3ByaW5nLWJvb3Qtc2VjdXJpdHktand0LXNlY3JldC1rZXktZi1sYWItdGlja2V0aW5nLXByb2plY3Qtc3ByaW5nLWJvb3Qtc2VjdXJpdHktand0LXNlY3JldC1rZXkK
-  token-validity-in-seconds: 86400
+  access-token-validity-in-seconds: 60 # 1분
+  refresh-token-validity-in-seconds: 259200 # 3일

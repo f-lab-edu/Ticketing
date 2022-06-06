@@ -20,8 +20,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -50,7 +50,7 @@ public class UserController {
 		return ResponseEntity.status(HttpStatus.OK).body(UserDeleteResponse.of(user));
 	}
 
-	@PatchMapping("/password")
+	@PutMapping("/password")
 	@Secured("ROLE_GUEST")
 	public ResponseEntity<UserChangePasswordResponse> changePassword(@RequestBody @Valid UserModifyPasswordRequest request) {
 		if (request.oldEqualNew()) {
@@ -64,10 +64,11 @@ public class UserController {
 
 	@PostMapping("/login")
 	public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
-		String accessToken = userService.login(loginRequest.toAuthentication());
+		LoginResponse tokenDto = userService.login(loginRequest.toAuthentication());
 
-		response.setHeader(jwtProperties.getAccessHeader(), accessToken);
-		return ResponseEntity.status(HttpStatus.OK).body(LoginResponse.of(accessToken));
+		response.setHeader(jwtProperties.getAccessHeader(), tokenDto.getAccessToken());
+		response.setHeader(jwtProperties.getRefreshHeader(), tokenDto.getRefreshToken());
+		return ResponseEntity.status(HttpStatus.OK).body(tokenDto);
 	}
 
 }

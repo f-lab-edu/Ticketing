@@ -31,29 +31,43 @@ public class JwtProvider {
 	private static final String AUTHORITIES_KEY = "auth";
 	private static final String AUTHORITIES_DELIMITER = ",";
 
-	private final long tokenValidityInMilliseconds;
+	private final long accessTokenValidityInMilliseconds;
+	private final long refreshTokenValidityInMilliseconds;
 	private final Key key;
 
 	public JwtProvider(JwtProperties jwtProperties) {
-		this.tokenValidityInMilliseconds = jwtProperties.getTokenValidityInSeconds();
+		this.accessTokenValidityInMilliseconds = jwtProperties.getAccessTokenValidityInSeconds() * 1000L;
+		this.refreshTokenValidityInMilliseconds = jwtProperties.getRefreshTokenValidityInSeconds() * 1000L;
 
 		byte[] keyBytes = Decoders.BASE64.decode(jwtProperties.getSecretKey());
 		this.key = Keys.hmacShaKeyFor(keyBytes);
 	}
 
-	public String createToken(Authentication authentication) {
+	public String createAccessToken(Authentication authentication) {
+		// 만료시간 계산
+		long now = (new Date()).getTime();
+		Date accessTokenExpiresIn = new Date(now + this.accessTokenValidityInMilliseconds);
+
+		return createToken(authentication, accessTokenExpiresIn);
+	}
+
+	public String createRefreshToken(Authentication authentication) {
+		// 만료시간 계산
+		long now = (new Date()).getTime();
+		Date refreshTokenExpiresIn = new Date(now + this.refreshTokenValidityInMilliseconds);
+
+		return createToken(authentication, refreshTokenExpiresIn);
+	}
+
+	private String createToken(Authentication authentication, Date expiration) {
 		// 권한 정보 가져오기
 		String authorities = generateStringToAuthorities(authentication);
-
-		// 만료시간 계산
-		long now = new Date().getTime();
-		Date accessTokenExpiresIn = new Date(now + this.tokenValidityInMilliseconds);
 
 		// JWT 생성
 		return Jwts.builder()
 			.setSubject(authentication.getName()) // email
 			.claim(AUTHORITIES_KEY, authorities) // payload
-			.setExpiration(accessTokenExpiresIn) // 만료일
+			.setExpiration(expiration) // 만료일
 			.signWith(key, SignatureAlgorithm.HS512) // 서명 키 값
 			.compact();
 	}

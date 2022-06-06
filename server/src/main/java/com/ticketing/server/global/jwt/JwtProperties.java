@@ -15,8 +15,10 @@ import org.springframework.context.annotation.PropertySource;
 public class JwtProperties {
 
 	private final String accessHeader;
+	private final String refreshHeader;
 	private final String prefix;
 	private final String secretKey;
-	private final Integer tokenValidityInSeconds;
+	private final Integer accessTokenValidityInSeconds;
+	private final Integer refreshTokenValidityInSeconds;
 
 }

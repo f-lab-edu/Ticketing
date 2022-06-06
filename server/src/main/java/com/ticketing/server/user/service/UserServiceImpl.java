@@ -2,6 +2,7 @@ package com.ticketing.server.user.service;
 
 import com.ticketing.server.global.exception.NotFoundEmailException;
 import com.ticketing.server.global.jwt.JwtProvider;
+import com.ticketing.server.user.application.response.LoginResponse;
 import com.ticketing.server.user.domain.User;
 import com.ticketing.server.user.domain.repository.UserRepository;
 import com.ticketing.server.user.service.dto.ChangePasswordDTO;
@@ -31,9 +32,9 @@ public class UserServiceImpl implements UserService {
 	private final JwtProvider jwtProvider;
 
 	@Override
-	public String login(UsernamePasswordAuthenticationToken authenticationToken) {
+	public LoginResponse login(UsernamePasswordAuthenticationToken authenticationToken) {
 		Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-		return jwtProvider.createToken(authentication);
+		return LoginResponse.of(jwtProvider.createAccessToken(authentication), jwtProvider.createRefreshToken(authentication));
 	}
 
 	@Override

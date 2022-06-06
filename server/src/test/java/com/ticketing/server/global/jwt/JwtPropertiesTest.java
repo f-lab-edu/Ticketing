@@ -28,8 +28,10 @@ class JwtPropertiesTest {
 		// then
 		assertAll(
 			() -> assertThat(jwtProperties.getAccessHeader()).isEqualTo("ACCESS_TOKEN")
+			, () -> assertThat(jwtProperties.getRefreshHeader()).isEqualTo("REFRESH_TOKEN")
 			, () -> assertThat(jwtProperties.getPrefix()).isEqualTo("Bearer")
-			, () -> assertThat(jwtProperties.getTokenValidityInSeconds()).isEqualTo(86400)
+			, () -> assertThat(jwtProperties.getAccessTokenValidityInSeconds()).isEqualTo(60)
+			, () -> assertThat(jwtProperties.getRefreshTokenValidityInSeconds()).isEqualTo(259200)
 			, () -> assertThat(jwtProperties.getSecretKey()).isNotEmpty());
 	}
 

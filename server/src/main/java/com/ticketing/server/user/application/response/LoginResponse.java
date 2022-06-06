@@ -9,9 +9,10 @@ import lombok.Getter;
 public class LoginResponse {
 
 	private String accessToken;
+	private String refreshToken;
 
-	public static LoginResponse of(String accessToken) {
-		return new LoginResponse(accessToken);
+	public static LoginResponse of(String accessToken, String refreshToken) {
+		return new LoginResponse(accessToken, refreshToken);
 	}
 
 }

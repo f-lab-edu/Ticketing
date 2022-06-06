@@ -51,7 +51,7 @@ class UserControllerTest {
 
 		SignUpRequest signUpRequest = new SignUpRequest("ticketing", "ticketing@gmail.com", "qwe123", "010-2240-7920");
 
-		mvc.perform(post("/user")
+		mvc.perform(post("/api/user")
 			.content(asJsonString(signUpRequest))
 			.contentType(MediaType.APPLICATION_JSON));
 	}
@@ -63,14 +63,15 @@ class UserControllerTest {
 		LoginRequest request = new LoginRequest("ticketing@gmail.com", "qwe123");
 
 		// when
-		ResultActions actions = mvc.perform(post("/user/login")
+		ResultActions actions = mvc.perform(post("/api/user/login")
 			.content(asJsonString(request))
 			.contentType(MediaType.APPLICATION_JSON));
 
 		// then
 		actions.andDo(print())
 			.andExpect(status().isOk())
-			.andExpect(header().exists("ACCESS_TOKEN"));
+			.andExpect(header().exists("ACCESS_TOKEN"))
+			.andExpect(header().exists("REFRESH_TOKEN"));
 	}
 
 	@Test
@@ -80,7 +81,7 @@ class UserControllerTest {
 		LoginRequest request = new LoginRequest("ticketing@gmail.com", "qwe1234");
 
 		// when
-		ResultActions actions = mvc.perform(post("/user/login")
+		ResultActions actions = mvc.perform(post("/api/user/login")
 			.content(asJsonString(request))
 			.contentType(MediaType.APPLICATION_JSON));
 
