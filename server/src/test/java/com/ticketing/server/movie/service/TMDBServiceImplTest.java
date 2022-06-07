@@ -1,25 +1,23 @@
 package com.ticketing.server.movie.service;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import org.json.JSONObject;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.client.RestTemplate;
 
 @SpringBootTest
@@ -63,8 +61,16 @@ public class TMDBServiceImplTest {
             String.class
         );
 
+//        JSONParser parser  = new JSONParser();
+//        Object obj = parser.parse(String.valueOf(response));
+//        Object results = ((JSONObject) obj).get("results");
+//
+//        ArrayList<String> movieList = new ArrayList<>();
+//
+//        ArrayList<JSONObject> jsonMovieList = new ArrayList<>();
+
         // then
-        System.out.println("@@@@" + response.toString());
+        assertTrue(response.getStatusCode().is2xxSuccessful());
     }
 
     private static String mapToUrlParam(Map<String, String> params) {
