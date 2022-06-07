@@ -76,8 +76,8 @@ public class TMDBServiceImplTest {
     private static String mapToUrlParam(Map<String, String> params) {
         StringBuffer paramData = new StringBuffer();
 
-        for(Map.Entry<String, String> param : params.entrySet()) {
-            if(paramData.length() != 0) {
+        for (Map.Entry<String, String> param : params.entrySet()) {
+            if (paramData.length() != 0) {
                 paramData.append('&');
             }
 
@@ -90,4 +90,5 @@ public class TMDBServiceImplTest {
     }
 
 }
+
 
