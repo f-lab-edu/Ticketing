@@ -22,3 +22,8 @@ jwt:
   prefix: Bearer
   secret-key: Zi1sYWItdGlja2V0aW5nLXByb2plY3Qtc3ByaW5nLWJvb3Qtc2VjdXJpdHktand0LXNlY3JldC1rZXktZi1sYWItdGlja2V0aW5nLXByb2plY3Qtc3ByaW5nLWJvb3Qtc2VjdXJpdHktand0LXNlY3JldC1rZXkK
   token-validity-in-seconds: 86400
+
+tmdb:
+  api-key: 0d1503b6dcbfe1c514299b5564c649b8
+  read-access-token: eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIwZDE1MDNiNmRjYmZlMWM1MTQyOTliNTU2NGM2NDliOCIsInN1YiI6IjYyOWYwODRlNzI2ZmIxMTA2NDA4MjI2NCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.rs8KZea8QLyashILiggWFx2s46lgUtzo-xSWoDgE58A
+
