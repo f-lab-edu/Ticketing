@@ -1,16 +1,17 @@
 package com.ticketing.server.user.application;
 
-import com.ticketing.server.global.jwt.JwtProperties;
+import com.ticketing.server.global.security.jwt.JwtProperties;
 import com.ticketing.server.user.application.request.LoginRequest;
 import com.ticketing.server.user.application.request.SignUpRequest;
 import com.ticketing.server.user.application.request.UserDeleteRequest;
 import com.ticketing.server.user.application.request.UserModifyPasswordRequest;
-import com.ticketing.server.user.application.response.LoginResponse;
 import com.ticketing.server.user.application.response.SignUpResponse;
+import com.ticketing.server.user.application.response.TokenDto;
 import com.ticketing.server.user.application.response.UserChangePasswordResponse;
 import com.ticketing.server.user.application.response.UserDeleteResponse;
 import com.ticketing.server.user.domain.User;
 import com.ticketing.server.user.service.UserServiceImpl;
+import com.ticketing.server.user.service.interfaces.AuthenticationService;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -34,6 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
 	private final UserServiceImpl userService;
+	private final AuthenticationService authenticationService;
 	private final PasswordEncoder passwordEncoder;
 	private final JwtProperties jwtProperties;
 
@@ -63,8 +66,17 @@ public class UserController {
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
-		LoginResponse tokenDto = userService.login(loginRequest.toAuthentication());
+	public ResponseEntity<TokenDto> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
+		TokenDto tokenDto = authenticationService.login(loginRequest.toAuthentication());
+
+		response.setHeader("Cache-Control", "no-store");
+		response.setHeader("Pragma", "no-store");
+		return ResponseEntity.status(HttpStatus.OK).body(tokenDto);
+	}
+
+	@PostMapping("/refresh")
+	public ResponseEntity<TokenDto> refreshToken(@RequestParam("refreshToken") String refreshToken, HttpServletResponse response) {
+		TokenDto tokenDto = authenticationService.reissueAccessToken(refreshToken);
 
 		response.setHeader(jwtProperties.getAccessHeader(), tokenDto.getAccessToken());
 		response.setHeader(jwtProperties.getRefreshHeader(), tokenDto.getRefreshToken());

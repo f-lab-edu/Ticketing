@@ -1,4 +1,4 @@
-package com.ticketing.server.global.jwt;
+package com.ticketing.server.global.security.jwt;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;

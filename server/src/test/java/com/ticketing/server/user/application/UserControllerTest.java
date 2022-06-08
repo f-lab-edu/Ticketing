@@ -3,14 +3,15 @@ package com.ticketing.server.user.application;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ticketing.server.global.redis.RefreshRedisRepository;
 import com.ticketing.server.user.application.request.LoginRequest;
 import com.ticketing.server.user.application.request.SignUpRequest;
 import com.ticketing.server.user.service.interfaces.UserService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -40,21 +41,10 @@ class UserControllerTest {
 	@Autowired
 	ObjectMapper objectMapper;
 
+	@Autowired
+	RefreshRedisRepository refreshRedisRepository;
+
 	MockMvc mvc;
-
-	@BeforeEach
-	void init() throws Exception {
-		mvc = MockMvcBuilders
-			.webAppContextSetup(context)
-			.apply(springSecurity())
-			.build();
-
-		SignUpRequest signUpRequest = new SignUpRequest("ticketing", "ticketing@gmail.com", "qwe123", "010-2240-7920");
-
-		mvc.perform(post("/api/user")
-			.content(asJsonString(signUpRequest))
-			.contentType(MediaType.APPLICATION_JSON));
-	}
 
 	@Test
 	@DisplayName("로그인 인증 성공")
@@ -69,9 +59,7 @@ class UserControllerTest {
 
 		// then
 		actions.andDo(print())
-			.andExpect(status().isOk())
-			.andExpect(header().exists("ACCESS_TOKEN"))
-			.andExpect(header().exists("REFRESH_TOKEN"));
+			.andExpect(status().isOk());
 	}
 
 	@Test
@@ -92,6 +80,25 @@ class UserControllerTest {
 
 	private String asJsonString(Object object) throws JsonProcessingException {
 		return objectMapper.writeValueAsString(object);
+	}
+
+	@BeforeEach
+	void init() throws Exception {
+		mvc = MockMvcBuilders
+			.webAppContextSetup(context)
+			.apply(springSecurity())
+			.build();
+
+		SignUpRequest signUpRequest = new SignUpRequest("ticketing", "ticketing@gmail.com", "qwe123", "010-2240-7920");
+
+		mvc.perform(post("/api/user")
+			.content(asJsonString(signUpRequest))
+			.contentType(MediaType.APPLICATION_JSON));
+	}
+
+	@AfterEach
+	void tearDown() {
+		refreshRedisRepository.deleteAll();
 	}
 
 }

@@ -1,4 +1,4 @@
-package com.ticketing.server.global.jwt.handle;
+package com.ticketing.server.global.security.jwt.handle;
 
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;

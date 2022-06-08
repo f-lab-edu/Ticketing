@@ -38,6 +38,7 @@ dependencies {
 	implementation("com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.4")
 	implementation("com.lmax:disruptor:3.4.2")
 	implementation("io.jsonwebtoken:jjwt-api:0.11.2")
+	implementation("org.springframework.boot:spring-boot-starter-data-redis")
 
 	modules {
 		module("org.springframework.boot:spring-boot-starter-logging") {
