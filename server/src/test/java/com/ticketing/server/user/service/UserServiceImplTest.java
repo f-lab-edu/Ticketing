@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import com.ticketing.server.global.exception.NotFoundEmailException;
+import com.ticketing.server.global.exception.EmailNotFoundException;
 import com.ticketing.server.user.domain.User;
 import com.ticketing.server.user.domain.UserGrade;
 import com.ticketing.server.user.domain.repository.UserRepository;
@@ -79,7 +79,7 @@ class UserServiceImplTest {
 		// when
 		// then
 		assertThatThrownBy(() -> userService.delete(deleteUserDto))
-			.isInstanceOf(NotFoundEmailException.class);
+			.isInstanceOf(EmailNotFoundException.class);
 	}
 
 	@Test
@@ -104,7 +104,7 @@ class UserServiceImplTest {
 		// when
 		// then
 		assertThatThrownBy(() -> userService.changePassword(changePasswordDto))
-			.isInstanceOf(NotFoundEmailException.class);
+			.isInstanceOf(EmailNotFoundException.class);
 	}
 
 	@Test

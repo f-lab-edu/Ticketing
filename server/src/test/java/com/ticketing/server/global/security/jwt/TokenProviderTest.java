@@ -1,8 +1,9 @@
-package com.ticketing.server.global.jwt;
+package com.ticketing.server.global.security.jwt;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ticketing.server.global.factory.YamlPropertySourceFactory;
+import com.ticketing.server.user.application.response.TokenDto;
 import com.ticketing.server.user.domain.UserGrade;
 import java.util.Collections;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,12 +26,12 @@ class TokenProviderTest {
 	@Autowired
 	private JwtProperties jwtProperties;
 
-	JwtProvider tokenProvider;
+	JwtProvider jwtProvider;
 
 
 	@BeforeEach
 	void init() {
-		tokenProvider = new JwtProvider(jwtProperties);
+		jwtProvider = new JwtProvider(jwtProperties);
 	}
 
 	@Test
@@ -42,10 +43,10 @@ class TokenProviderTest {
 			new UsernamePasswordAuthenticationToken("ticketing@gmail.com", "123456", Collections.singleton(grantedAuthority));
 
 		// when
-		String token = tokenProvider.createToken(authenticationToken);
+		TokenDto tokenDto = jwtProvider.generateTokenDto(authenticationToken);
 
 		// then
-		assertThat(token).isNotEmpty();
+		assertThat(tokenDto).isInstanceOf(TokenDto.class);
 	}
 
 	@Test
@@ -57,8 +58,8 @@ class TokenProviderTest {
 			new UsernamePasswordAuthenticationToken("ticketing@gmail.com", "123456", Collections.singleton(grantedAuthority));
 
 		// when
-		String token = tokenProvider.createToken(authenticationToken);
-		Authentication authentication = tokenProvider.getAuthentication(token);
+		TokenDto tokenDto = jwtProvider.generateTokenDto(authenticationToken);
+		Authentication authentication = jwtProvider.getAuthentication(tokenDto.getAccessToken());
 
 		// then
 		assertThat(authentication.getName()).isEqualTo("ticketing@gmail.com");

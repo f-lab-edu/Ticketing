@@ -26,19 +26,20 @@ repositories {
 
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("org.springframework.boot:spring-boot-starter-security")
-    implementation("org.springframework.boot:spring-boot-starter-validation")
-    implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("org.springframework.boot:spring-boot-starter-actuator")
-    implementation("org.springframework.boot:spring-boot-starter-log4j2")
-    implementation("org.projectlombok:lombok:1.18.20")
-    implementation("io.springfox:springfox-swagger2:3.0.0")
-    implementation("io.springfox:springfox-swagger-ui:3.0.0")
-    implementation("com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.4")
-    implementation("com.lmax:disruptor:3.4.2")
-    implementation("io.jsonwebtoken:jjwt-api:0.11.2")
-    implementation("com.googlecode.json-simple:json-simple:1.1.1")
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+	implementation("org.springframework.boot:spring-boot-starter-security")
+	implementation("org.springframework.boot:spring-boot-starter-validation")
+	implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation("org.springframework.boot:spring-boot-starter-actuator")
+	implementation("org.springframework.boot:spring-boot-starter-log4j2")
+	implementation("org.projectlombok:lombok:1.18.20")
+	implementation("io.springfox:springfox-swagger2:3.0.0")
+	implementation("io.springfox:springfox-swagger-ui:3.0.0")
+	implementation("com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.4")
+	implementation("com.lmax:disruptor:3.4.2")
+	implementation("io.jsonwebtoken:jjwt-api:0.11.2")
+  implementation("com.googlecode.json-simple:json-simple:1.1.1")
+	implementation("org.springframework.boot:spring-boot-starter-data-redis")
 
     modules {
         module("org.springframework.boot:spring-boot-starter-logging") {

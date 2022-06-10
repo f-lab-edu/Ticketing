@@ -1,4 +1,4 @@
-package com.ticketing.server.global.jwt;
+package com.ticketing.server.global.security.jwt;
 
 import com.ticketing.server.global.factory.YamlPropertySourceFactory;
 import lombok.Getter;
@@ -15,8 +15,13 @@ import org.springframework.context.annotation.PropertySource;
 public class JwtProperties {
 
 	private final String accessHeader;
+	private final String refreshHeader;
 	private final String prefix;
 	private final String secretKey;
-	private final Integer tokenValidityInSeconds;
+	private final Integer accessTokenValidityInSeconds;
+	private final Integer refreshTokenValidityInSeconds;
 
+	public boolean hasTokenStartsWith(String token) {
+		return token.startsWith(prefix);
+	}
 }

@@ -1,9 +1,9 @@
 package com.ticketing.server.global.security;
 
-import com.ticketing.server.global.jwt.JwtFilter;
-import com.ticketing.server.global.jwt.JwtSecurityConfig;
-import com.ticketing.server.global.jwt.handle.JwtAccessDeniedHandler;
-import com.ticketing.server.global.jwt.handle.JwtAuthenticationEntryPoint;
+import com.ticketing.server.global.security.jwt.JwtFilter;
+import com.ticketing.server.global.security.jwt.JwtSecurityConfig;
+import com.ticketing.server.global.security.jwt.handle.JwtAccessDeniedHandler;
+import com.ticketing.server.global.security.jwt.handle.JwtAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -52,8 +52,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 			.and()
 			.authorizeRequests()
-			.antMatchers(HttpMethod.POST, "/user").permitAll()
-			.antMatchers(HttpMethod.POST, "/user/login").permitAll()
+			.antMatchers(HttpMethod.POST, "/api/user/login").permitAll()
+			.antMatchers(HttpMethod.POST, "/api/user/refresh").permitAll()
+			.antMatchers(HttpMethod.POST, "/api/user").permitAll()
 			.antMatchers("/l7check").permitAll()
 			.antMatchers("/actuator/health").permitAll()
 			.anyRequest().authenticated()

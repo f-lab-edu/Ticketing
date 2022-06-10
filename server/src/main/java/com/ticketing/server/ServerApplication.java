@@ -1,6 +1,6 @@
 package com.ticketing.server;
 
-import com.ticketing.server.global.jwt.JwtProperties;
+import com.ticketing.server.global.security.jwt.JwtProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

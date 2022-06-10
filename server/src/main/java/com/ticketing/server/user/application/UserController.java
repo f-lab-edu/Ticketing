@@ -1,16 +1,17 @@
 package com.ticketing.server.user.application;
 
-import com.ticketing.server.global.jwt.JwtProperties;
+import com.ticketing.server.global.security.jwt.JwtProperties;
 import com.ticketing.server.user.application.request.LoginRequest;
 import com.ticketing.server.user.application.request.SignUpRequest;
 import com.ticketing.server.user.application.request.UserDeleteRequest;
 import com.ticketing.server.user.application.request.UserModifyPasswordRequest;
-import com.ticketing.server.user.application.response.LoginResponse;
 import com.ticketing.server.user.application.response.SignUpResponse;
+import com.ticketing.server.user.application.response.TokenDto;
 import com.ticketing.server.user.application.response.UserChangePasswordResponse;
 import com.ticketing.server.user.application.response.UserDeleteResponse;
 import com.ticketing.server.user.domain.User;
 import com.ticketing.server.user.service.UserServiceImpl;
+import com.ticketing.server.user.service.interfaces.AuthenticationService;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,10 +21,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -34,6 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
 	private final UserServiceImpl userService;
+	private final AuthenticationService authenticationService;
 	private final PasswordEncoder passwordEncoder;
 	private final JwtProperties jwtProperties;
 
@@ -50,7 +53,7 @@ public class UserController {
 		return ResponseEntity.status(HttpStatus.OK).body(UserDeleteResponse.of(user));
 	}
 
-	@PatchMapping("/password")
+	@PutMapping("/password")
 	@Secured("ROLE_GUEST")
 	public ResponseEntity<UserChangePasswordResponse> changePassword(@RequestBody @Valid UserModifyPasswordRequest request) {
 		if (request.oldEqualNew()) {
@@ -63,11 +66,21 @@ public class UserController {
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
-		String accessToken = userService.login(loginRequest.toAuthentication());
+	public ResponseEntity<TokenDto> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
+		TokenDto tokenDto = authenticationService.login(loginRequest.toAuthentication());
 
-		response.setHeader(jwtProperties.getAccessHeader(), accessToken);
-		return ResponseEntity.status(HttpStatus.OK).body(LoginResponse.of(accessToken));
+		response.setHeader("Cache-Control", "no-store");
+		response.setHeader("Pragma", "no-store");
+		return ResponseEntity.status(HttpStatus.OK).body(tokenDto);
+	}
+
+	@PostMapping("/refresh")
+	public ResponseEntity<TokenDto> refreshToken(@RequestParam("refreshToken") String refreshToken, HttpServletResponse response) {
+		TokenDto tokenDto = authenticationService.reissueAccessToken(refreshToken);
+
+		response.setHeader(jwtProperties.getAccessHeader(), tokenDto.getAccessToken());
+		response.setHeader(jwtProperties.getRefreshHeader(), tokenDto.getRefreshToken());
+		return ResponseEntity.status(HttpStatus.OK).body(tokenDto);
 	}
 
 }

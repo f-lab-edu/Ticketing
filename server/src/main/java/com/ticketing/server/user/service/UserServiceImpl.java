@@ -1,7 +1,6 @@
 package com.ticketing.server.user.service;
 
-import com.ticketing.server.global.exception.NotFoundEmailException;
-import com.ticketing.server.global.jwt.JwtProvider;
+import com.ticketing.server.global.exception.EmailNotFoundException;
 import com.ticketing.server.user.domain.User;
 import com.ticketing.server.user.domain.repository.UserRepository;
 import com.ticketing.server.user.service.dto.ChangePasswordDTO;
@@ -12,9 +11,6 @@ import java.util.Optional;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -27,14 +23,6 @@ import org.springframework.validation.annotation.Validated;
 public class UserServiceImpl implements UserService {
 
 	private final UserRepository userRepository;
-	private final AuthenticationManagerBuilder authenticationManagerBuilder;
-	private final JwtProvider jwtProvider;
-
-	@Override
-	public String login(UsernamePasswordAuthenticationToken authenticationToken) {
-		Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-		return jwtProvider.createToken(authentication);
-	}
 
 	@Override
 	@Transactional
@@ -54,7 +42,7 @@ public class UserServiceImpl implements UserService {
 		User user = userRepository.findByEmail(deleteUserDto.getEmail())
 			.orElseThrow(() -> {
 					log.error("존재하지 않는 이메일 입니다. :: {}", deleteUserDto.getEmail());
-					throw new NotFoundEmailException();
+					throw new EmailNotFoundException();
 				}
 			);
 
@@ -72,7 +60,7 @@ public class UserServiceImpl implements UserService {
 		return userRepository.findByEmailAndIsDeletedFalse(email)
 			.orElseThrow(() -> {
 				log.error("존재하지 않는 이메일 입니다. :: {}", email);
-				throw new NotFoundEmailException();
+				throw new EmailNotFoundException();
 			});
 	}
 

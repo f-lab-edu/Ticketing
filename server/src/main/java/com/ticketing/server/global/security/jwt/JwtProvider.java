@@ -1,14 +1,11 @@
-package com.ticketing.server.global.jwt;
+package com.ticketing.server.global.security.jwt;
 
+import com.ticketing.server.user.application.response.TokenDto;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import io.jsonwebtoken.security.SecurityException;
 import java.security.Key;
 import java.util.Arrays;
 import java.util.Date;
@@ -31,29 +28,53 @@ public class JwtProvider {
 	private static final String AUTHORITIES_KEY = "auth";
 	private static final String AUTHORITIES_DELIMITER = ",";
 
-	private final long tokenValidityInMilliseconds;
 	private final Key key;
+	private final String prefix;
+	private final long accessTokenValidityInMilliseconds;
+	private final long refreshTokenValidityInMilliseconds;
 
 	public JwtProvider(JwtProperties jwtProperties) {
-		this.tokenValidityInMilliseconds = jwtProperties.getTokenValidityInSeconds();
-
 		byte[] keyBytes = Decoders.BASE64.decode(jwtProperties.getSecretKey());
 		this.key = Keys.hmacShaKeyFor(keyBytes);
+
+		this.prefix = jwtProperties.getPrefix();
+		this.accessTokenValidityInMilliseconds = jwtProperties.getAccessTokenValidityInSeconds() * 1000L;
+		this.refreshTokenValidityInMilliseconds = jwtProperties.getRefreshTokenValidityInSeconds() * 1000L;
 	}
 
-	public String createToken(Authentication authentication) {
+	public TokenDto generateTokenDto(Authentication authentication) {
+		String accessToken = createAccessToken(authentication);
+		String refreshToken = createRefreshToken(authentication);
+		long expiresIn = accessTokenValidityInMilliseconds / 1000L;
+
+		return TokenDto.of(accessToken, refreshToken, prefix, expiresIn);
+	}
+
+	private String createAccessToken(Authentication authentication) {
+		// 만료시간 계산
+		long now = (new Date()).getTime();
+		Date accessTokenExpiresIn = new Date(now + this.accessTokenValidityInMilliseconds);
+
+		return createToken(authentication, accessTokenExpiresIn);
+	}
+
+	private String createRefreshToken(Authentication authentication) {
+		// 만료시간 계산
+		long now = (new Date()).getTime();
+		Date refreshTokenExpiresIn = new Date(now + this.refreshTokenValidityInMilliseconds);
+
+		return createToken(authentication, refreshTokenExpiresIn);
+	}
+
+	private String createToken(Authentication authentication, Date expiration) {
 		// 권한 정보 가져오기
 		String authorities = generateStringToAuthorities(authentication);
-
-		// 만료시간 계산
-		long now = new Date().getTime();
-		Date accessTokenExpiresIn = new Date(now + this.tokenValidityInMilliseconds);
 
 		// JWT 생성
 		return Jwts.builder()
 			.setSubject(authentication.getName()) // email
 			.claim(AUTHORITIES_KEY, authorities) // payload
-			.setExpiration(accessTokenExpiresIn) // 만료일
+			.setExpiration(expiration) // 만료일
 			.signWith(key, SignatureAlgorithm.HS512) // 서명 키 값
 			.compact();
 	}
@@ -75,6 +96,7 @@ public class JwtProvider {
 		// 토큰 복호화
 		Claims claims = parseClaims(token);
 
+		// 권한조회
 		List<SimpleGrantedAuthority> authorities =
 			Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(AUTHORITIES_DELIMITER))
 				.map(SimpleGrantedAuthority::new)
@@ -85,25 +107,12 @@ public class JwtProvider {
 	}
 
 	public boolean validateToken(String token) {
-		try {
-			parseClaims(token);
-			return true;
-		} catch (SecurityException | MalformedJwtException exception) {
-			log.info("잘못된 JWT 서명입니다.");
-		} catch (ExpiredJwtException e) {
-			log.info("잘못된 JWT 토큰입니다.");
-		} catch (UnsupportedJwtException e) {
-			log.info("지원되지 않는 JWT 토큰입니다.");
-		} catch (IllegalArgumentException e) {
-			log.info("JWT 토큰이 잘못되었습니다.");
-		}
-
-		return false;
+		parseClaims(token);
+		return true;
 	}
 
 	private Claims parseClaims(String token) {
-		return Jwts
-			.parserBuilder()
+		return Jwts.parserBuilder()
 			.setSigningKey(key)
 			.build()
 			.parseClaimsJws(token)

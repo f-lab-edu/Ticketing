@@ -1,4 +1,4 @@
-package com.ticketing.server.global.jwt;
+package com.ticketing.server.global.security.jwt;
 
 import java.io.IOException;
 import javax.servlet.FilterChain;
@@ -17,12 +17,10 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JwtFilter extends OncePerRequestFilter {
 
 	private final JwtProvider tokenProvider;
-	private final String accessHeader;
-	private final String tokenPrefix;
+	private final JwtProperties jwtProperties;
 
 	public JwtFilter(JwtProperties jwtProperties, JwtProvider tokenProvider) {
-		this.accessHeader = jwtProperties.getAccessHeader();
-		this.tokenPrefix = jwtProperties.getPrefix();
+		this.jwtProperties = jwtProperties;
 		this.tokenProvider = tokenProvider;
 	}
 
@@ -40,11 +38,10 @@ public class JwtFilter extends OncePerRequestFilter {
 	}
 
 	private String resolveToken(HttpServletRequest request) {
-		String bearerToken = request.getHeader(accessHeader);
-		if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(tokenPrefix)) {
+		String bearerToken = request.getHeader(jwtProperties.getAccessHeader());
+		if (StringUtils.hasText(bearerToken) && jwtProperties.hasTokenStartsWith(bearerToken)) {
 			return bearerToken.substring(7);
 		}
-
 		return null;
 	}
 

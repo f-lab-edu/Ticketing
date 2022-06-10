@@ -1,4 +1,4 @@
-package com.ticketing.server.global.jwt;
+package com.ticketing.server.global.security.jwt;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -28,9 +28,37 @@ class JwtPropertiesTest {
 		// then
 		assertAll(
 			() -> assertThat(jwtProperties.getAccessHeader()).isEqualTo("ACCESS_TOKEN")
+			, () -> assertThat(jwtProperties.getRefreshHeader()).isEqualTo("REFRESH_TOKEN")
 			, () -> assertThat(jwtProperties.getPrefix()).isEqualTo("Bearer")
-			, () -> assertThat(jwtProperties.getTokenValidityInSeconds()).isEqualTo(86400)
+			, () -> assertThat(jwtProperties.getAccessTokenValidityInSeconds()).isEqualTo(60)
+			, () -> assertThat(jwtProperties.getRefreshTokenValidityInSeconds()).isEqualTo(259200)
 			, () -> assertThat(jwtProperties.getSecretKey()).isNotEmpty());
+	}
+
+	@Test
+	@DisplayName("token prefix 가 일치할 경우")
+	void hasTokenStartsWithTrue() {
+		// given
+		String token = jwtProperties.getPrefix() + " " + "tokenPrefixTest";
+
+		// when
+		boolean result = jwtProperties.hasTokenStartsWith(token);
+
+		// then
+		assertThat(result).isTrue();
+	}
+
+	@Test
+	@DisplayName("token prefix 가 일치하지 않을 경우")
+	void hasTokenStartsWithFalse() {
+		// given
+		String token = "tokenPrefixTest";
+
+		// when
+		boolean result = jwtProperties.hasTokenStartsWith(token);
+
+		// then
+		assertThat(result).isFalse();
 	}
 
 }
