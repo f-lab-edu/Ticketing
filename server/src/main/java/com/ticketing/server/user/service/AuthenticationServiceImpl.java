@@ -1,6 +1,6 @@
 package com.ticketing.server.user.service;
 
-import com.ticketing.server.global.exception.token.NotFindTokenException;
+import com.ticketing.server.global.exception.token.TokenNotFindException;
 import com.ticketing.server.global.exception.token.TokenTypeException;
 import com.ticketing.server.global.exception.token.UnavailableRefreshTokenException;
 import com.ticketing.server.global.redis.RefreshRedisRepository;
@@ -60,7 +60,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 		// Redis 에 토큰이 있는지 검증
 		RefreshToken findTokenEntity = refreshRedisRepository.findByEmail(authentication.getName())
-			.orElseThrow(NotFindTokenException::new);
+			.orElseThrow(TokenNotFindException::new);
 
 		// redis 토큰과 input 토큰이 일치한지 확인
 		if (!refreshToken.equals(findTokenEntity.getToken())) {

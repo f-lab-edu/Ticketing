@@ -1,6 +1,6 @@
 package com.ticketing.server.user.service;
 
-import com.ticketing.server.global.exception.NotFoundEmailException;
+import com.ticketing.server.global.exception.EmailNotFoundException;
 import com.ticketing.server.user.domain.User;
 import com.ticketing.server.user.domain.repository.UserRepository;
 import com.ticketing.server.user.service.dto.ChangePasswordDTO;
@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
 		User user = userRepository.findByEmail(deleteUserDto.getEmail())
 			.orElseThrow(() -> {
 					log.error("존재하지 않는 이메일 입니다. :: {}", deleteUserDto.getEmail());
-					throw new NotFoundEmailException();
+					throw new EmailNotFoundException();
 				}
 			);
 
@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
 		return userRepository.findByEmailAndIsDeletedFalse(email)
 			.orElseThrow(() -> {
 				log.error("존재하지 않는 이메일 입니다. :: {}", email);
-				throw new NotFoundEmailException();
+				throw new EmailNotFoundException();
 			});
 	}
 
