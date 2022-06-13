@@ -32,7 +32,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/api/user")
 @Slf4j
-
 public class UserController {
 
 	private final UserServiceImpl userService;
