@@ -43,14 +43,14 @@ public class UserController {
 	@PostMapping
 	public ResponseEntity<SignUpResponse> register(@RequestBody @Valid SignUpRequest request) {
 		User user = userService.register(request.toSignUpDto(passwordEncoder));
-		return ResponseEntity.status(HttpStatus.CREATED).body(SignUpResponse.of(user));
+		return ResponseEntity.status(HttpStatus.CREATED).body(SignUpResponse.from(user));
 	}
 
 	@DeleteMapping
 	@Secured("ROLE_GUEST")
 	public ResponseEntity<UserDeleteResponse> deleteUser(@RequestBody @Valid UserDeleteRequest request) {
 		User user = userService.delete(request.toDeleteUserDto(passwordEncoder));
-		return ResponseEntity.status(HttpStatus.OK).body(UserDeleteResponse.of(user));
+		return ResponseEntity.status(HttpStatus.OK).body(UserDeleteResponse.from(user));
 	}
 
 	@PutMapping("/password")
@@ -62,7 +62,7 @@ public class UserController {
 		}
 
 		User user = userService.changePassword(request.toChangePasswordDto(passwordEncoder));
-		return ResponseEntity.status(HttpStatus.OK).body(UserChangePasswordResponse.of(user));
+		return ResponseEntity.status(HttpStatus.OK).body(UserChangePasswordResponse.from(user));
 	}
 
 	@PostMapping("/login")
