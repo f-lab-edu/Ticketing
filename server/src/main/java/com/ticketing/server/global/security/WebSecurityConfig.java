@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -55,10 +56,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers(HttpMethod.POST, "/api/user/login").permitAll()
 			.antMatchers(HttpMethod.POST, "/api/user/refresh").permitAll()
 			.antMatchers(HttpMethod.POST, "/api/user").permitAll()
+			.antMatchers("/api/movie/**").permitAll()
 			.antMatchers("/l7check").permitAll()
-			.antMatchers("/actuator/health").permitAll()
+			.antMatchers("/actuator/**").permitAll()
+			.antMatchers("/api/v3/", "/swagger-ui/**", "/swagger/", "/swagger-resources/**", "/v3/api-docs").permitAll()
 			.anyRequest().authenticated()
-
 			.and()
 			.apply(new JwtSecurityConfig(jwtFilter));
 	}

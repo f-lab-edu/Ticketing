@@ -1,9 +1,8 @@
 package com.ticketing.server.movie.application;
 
 import com.ticketing.server.movie.application.response.MovieListResponse;
-import com.ticketing.server.movie.domain.Movie;
+import com.ticketing.server.movie.service.dto.MovieDTO;
 import com.ticketing.server.movie.service.interfaces.MovieService;
-import com.ticketing.server.user.service.interfaces.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;
@@ -24,13 +23,10 @@ public class MovieController {
 
     private final MovieService movieService;
 
-    private final UserService userService;
-
     @GetMapping("/list")
     @ApiOperation(value = "영화 목록 조회")
     public ResponseEntity<MovieListResponse> getMovies() {
-        List<Movie> movies = movieService.getMovies();
-        return ResponseEntity.status(HttpStatus.OK).body(MovieListResponse.from(movies));
+        return ResponseEntity.status(HttpStatus.OK).body(MovieListResponse.from(movieService.getMovies()));
     }
 
 }

@@ -28,4 +28,6 @@ public abstract class AbstractEntity {
 	@LastModifiedDate
 	private LocalDateTime updatedAt;
 
+	private LocalDateTime deletedAt;
+
 }
