@@ -13,7 +13,7 @@ public class UserDeleteResponse {
 
 	private String email;
 
-	public static UserDeleteResponse of(User user) {
+	public static UserDeleteResponse from(User user) {
 		return new UserDeleteResponse(user.getName(), user.getEmail());
 	}
 

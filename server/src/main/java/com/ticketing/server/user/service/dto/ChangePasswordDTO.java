@@ -6,13 +6,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class ChangePasswordDTO implements PasswordMatches {
 
-	public ChangePasswordDTO(String email, String oldPassword, String newPassword, PasswordEncoder passwordEncoder) {
-		this.email = email;
-		this.oldPassword = oldPassword;
-		this.newPassword = newPassword;
-		this.passwordEncoder = passwordEncoder;
-	}
-
 	@NotEmpty(message = "{validation.not.empty.email}")
 	@Email(message = "{validation.email}")
 	private String email;
@@ -24,6 +17,13 @@ public class ChangePasswordDTO implements PasswordMatches {
 	private String newPassword;
 
 	private PasswordEncoder passwordEncoder;
+
+	public ChangePasswordDTO(String email, String oldPassword, String newPassword, PasswordEncoder passwordEncoder) {
+		this.email = email;
+		this.oldPassword = oldPassword;
+		this.newPassword = newPassword;
+		this.passwordEncoder = passwordEncoder;
+	}
 
 	public String getEmail() {
 		return email;

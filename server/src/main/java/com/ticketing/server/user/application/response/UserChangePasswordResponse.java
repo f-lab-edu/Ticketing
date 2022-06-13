@@ -13,7 +13,7 @@ public class UserChangePasswordResponse {
 
 	private String email;
 
-	public static UserChangePasswordResponse of(User user) {
+	public static UserChangePasswordResponse from(User user) {
 		return new UserChangePasswordResponse(user.getName(), user.getEmail());
 	}
 

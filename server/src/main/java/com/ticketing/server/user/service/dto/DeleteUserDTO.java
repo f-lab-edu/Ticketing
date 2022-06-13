@@ -6,12 +6,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class DeleteUserDTO implements PasswordMatches {
 
-	public DeleteUserDTO(String email, String inputPassword, PasswordEncoder passwordEncoder) {
-		this.email = email;
-		this.inputPassword = inputPassword;
-		this.passwordEncoder = passwordEncoder;
-	}
-
 	@NotEmpty(message = "{validation.not.empty.email}")
 	@Email(message = "{validation.email}")
 	private String email;
@@ -20,6 +14,12 @@ public class DeleteUserDTO implements PasswordMatches {
 	private String inputPassword;
 
 	private PasswordEncoder passwordEncoder;
+
+	public DeleteUserDTO(String email, String inputPassword, PasswordEncoder passwordEncoder) {
+		this.email = email;
+		this.inputPassword = inputPassword;
+		this.passwordEncoder = passwordEncoder;
+	}
 
 	@Override
 	public boolean passwordMatches(String password) {
