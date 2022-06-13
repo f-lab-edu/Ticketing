@@ -13,7 +13,7 @@ public class SignUpResponse {
 
 	private String email;
 
-	public static SignUpResponse of(User user) {
+	public static SignUpResponse from(User user) {
 		return new SignUpResponse(user.getName(), user.getEmail());
 	}
 
