@@ -1,11 +1,9 @@
 package com.ticketing.server.movie.application;
 
 import com.ticketing.server.movie.application.response.MovieListResponse;
-import com.ticketing.server.movie.service.dto.MovieDTO;
 import com.ticketing.server.movie.service.interfaces.MovieService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

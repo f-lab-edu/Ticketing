@@ -3,9 +3,7 @@ package com.ticketing.server.movie.service.dto;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public class MovieDTO {
-
-    private long id;
+public class MovieDto {
 
     private String title;
 

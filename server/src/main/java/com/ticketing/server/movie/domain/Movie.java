@@ -1,7 +1,7 @@
 package com.ticketing.server.movie.domain;
 
 import com.ticketing.server.global.dto.repository.AbstractEntity;
-import com.ticketing.server.movie.service.dto.MovieDTO;
+import com.ticketing.server.movie.service.dto.MovieDto;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
@@ -22,8 +22,8 @@ public class Movie extends AbstractEntity {
     @NotNull
     private Integer runningTime;
 
-    public MovieDTO toDTO() {
-        return new MovieDTO(this.getId(), this.title);
+    public MovieDto toDto() {
+        return new MovieDto(this.title);
     }
 
 }
