@@ -10,7 +10,7 @@ import org.springframework.context.annotation.PropertySource;
 @Getter
 @RequiredArgsConstructor
 @ConstructorBinding
-@ConfigurationProperties("jwt")
+@ConfigurationProperties(value = "jwt")
 @PropertySource(value = "classpath:application.yml", factory = YamlPropertySourceFactory.class)
 public class JwtProperties {
 
