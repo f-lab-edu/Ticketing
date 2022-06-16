@@ -18,7 +18,7 @@ public class MovieServiceImpl implements MovieService {
     private final MovieRepository movieRepository;
 
     public List<MovieDto> getMovies() {
-        List<Movie> movies = movieRepository.findByDeletedAt(null);
+        List<Movie> movies = movieRepository.findValidMovies();
 
         return movies.stream()
             .map(movie -> movie.toDto())
