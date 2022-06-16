@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -12,6 +13,9 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 
     Optional<Movie> findByTitle(String title);
 
-    List<Movie> findByDeletedAt(LocalDateTime localDateTime);
+    @Query(value = "SELECT * "
+        + "FROM movie "
+        + "WHERE deleted_at IS NULL", nativeQuery = true)
+    List<Movie> findValidMovies();
 
 }
