@@ -18,6 +18,10 @@ spring:
       maximum-pool-size: 10 # default 10
       max-lifetime: 1800000 # default 30 minutes
 
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
 jasypt:
   encryptor:
     bean: jasyptStringEncryptor
@@ -29,3 +33,8 @@ jwt:
   secret-key: Zi1sYWItdGlja2V0aW5nLXByb2plY3Qtc3ByaW5nLWJvb3Qtc2VjdXJpdHktand0LXNlY3JldC1rZXktZi1sYWItdGlja2V0aW5nLXByb2plY3Qtc3ByaW5nLWJvb3Qtc2VjdXJpdHktand0LXNlY3JldC1rZXkK
   access-token-validity-in-seconds: 60 # 1분
   refresh-token-validity-in-seconds: 259200 # 3일
+
+springfox:
+  documentation:
+    swagger:
+      use-model-v3: false

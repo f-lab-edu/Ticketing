@@ -27,7 +27,7 @@ public class MovieRepositoryTest {
     @Order(1)
     @Test
     @Rollback(value = false)
-    @DisplayName("Movie Repository - test saving movie")
+    @DisplayName("Movie Repository Test - saving movie")
     void shouldAbleToSaveMovie() {
         // given
         Movie movie = new Movie("범죄도시 2", 106);
