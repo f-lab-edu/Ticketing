@@ -23,14 +23,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class User extends AbstractEntity {
 
-	public User(String name, String email, String password, UserGrade grade, String phone) {
-		this.name = name;
-		this.email = email;
-		this.password = password;
-		this.grade = grade;
-		this.phone = phone;
-	}
-
 	@Column(name = "name")
 	@NotEmpty(message = "{validation.not.empty.name}")
 	private String name;
@@ -57,6 +49,14 @@ public class User extends AbstractEntity {
 	private boolean isDeleted = false;
 
 	private LocalDateTime deletedAt;
+
+	public User(String name, String email, String password, UserGrade grade, String phone) {
+		this.name = name;
+		this.email = email;
+		this.password = password;
+		this.grade = grade;
+		this.phone = phone;
+	}
 
 	public User delete(DeleteUserDTO deleteUser) {
 		if (isDeleted) {
