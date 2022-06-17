@@ -10,6 +10,7 @@ import com.ticketing.server.user.application.response.TokenDto;
 import com.ticketing.server.user.application.response.UserChangePasswordResponse;
 import com.ticketing.server.user.application.response.UserDeleteResponse;
 import com.ticketing.server.user.domain.User;
+import com.ticketing.server.user.domain.UserGrade;
 import com.ticketing.server.user.service.UserServiceImpl;
 import com.ticketing.server.user.service.interfaces.AuthenticationService;
 import javax.servlet.http.HttpServletResponse;
@@ -32,7 +33,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/api/user")
 @Slf4j
-
 public class UserController {
 
 	private final UserServiceImpl userService;
@@ -47,14 +47,14 @@ public class UserController {
 	}
 
 	@DeleteMapping
-	@Secured("ROLE_GUEST")
+	@Secured(UserGrade.ROLES.GUEST)
 	public ResponseEntity<UserDeleteResponse> deleteUser(@RequestBody @Valid UserDeleteRequest request) {
 		User user = userService.delete(request.toDeleteUserDto(passwordEncoder));
 		return ResponseEntity.status(HttpStatus.OK).body(UserDeleteResponse.from(user));
 	}
 
 	@PutMapping("/password")
-	@Secured("ROLE_GUEST")
+	@Secured(UserGrade.ROLES.GUEST)
 	public ResponseEntity<UserChangePasswordResponse> changePassword(@RequestBody @Valid UserModifyPasswordRequest request) {
 		if (request.oldEqualNew()) {
 			log.error("기존 패스워드와 동일한 패스워드로 변경할 수 없습니다.");
