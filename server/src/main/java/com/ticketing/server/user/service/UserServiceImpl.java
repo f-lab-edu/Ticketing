@@ -56,6 +56,12 @@ public class UserServiceImpl implements UserService {
 		return user.changePassword(changePasswordDto);
 	}
 
+	@Override
+	public User findByEmail(String email) {
+		return userRepository.findByEmail(email)
+			.orElseThrow(EmailNotFoundException::new);
+	}
+
 	private User findNotDeletedUserByEmail(String email) {
 		return userRepository.findByEmailAndIsDeletedFalse(email)
 			.orElseThrow(() -> {

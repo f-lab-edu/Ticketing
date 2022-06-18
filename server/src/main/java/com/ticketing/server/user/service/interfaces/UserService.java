@@ -14,4 +14,5 @@ public interface UserService {
 
 	User changePassword(@Valid ChangePasswordDTO changePasswordDto);
 
+	User findByEmail(String email);
 }
