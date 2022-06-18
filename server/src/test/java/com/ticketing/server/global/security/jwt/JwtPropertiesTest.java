@@ -27,7 +27,7 @@ class JwtPropertiesTest {
 		// when
 		// then
 		assertAll(
-			() -> assertThat(jwtProperties.getAccessHeader()).isEqualTo("ACCESS_TOKEN")
+			() -> assertThat(jwtProperties.getAccessHeader()).isEqualTo("Authorization")
 			, () -> assertThat(jwtProperties.getRefreshHeader()).isEqualTo("REFRESH_TOKEN")
 			, () -> assertThat(jwtProperties.getPrefix()).isEqualTo("Bearer")
 			, () -> assertThat(jwtProperties.getAccessTokenValidityInSeconds()).isEqualTo(60)
