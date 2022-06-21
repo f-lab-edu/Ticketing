@@ -5,8 +5,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 
 public interface AuthenticationService {
 
-	TokenDto login(UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken);
+	TokenDto generateTokenDto(UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken);
 
-	TokenDto reissueAccessToken(String bearerRefreshToken);
+	TokenDto reissueTokenDto(String bearerRefreshToken);
 
 }

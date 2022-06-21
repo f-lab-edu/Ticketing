@@ -70,7 +70,7 @@ class AuthenticationServiceImplTest {
 		when(jwtProperties.hasTokenStartsWith(refreshToken)).thenReturn(true);
 
 		// when
-		TokenDto tokenDto = authenticationService.reissueAccessToken(refreshToken);
+		TokenDto tokenDto = authenticationService.reissueTokenDto(refreshToken);
 
 		// then
 		assertAll(
