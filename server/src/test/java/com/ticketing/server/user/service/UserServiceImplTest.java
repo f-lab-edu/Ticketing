@@ -2,6 +2,7 @@ package com.ticketing.server.user.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -92,7 +93,10 @@ class UserServiceImplTest {
 		User user = userService.delete(deleteUserDto);
 
 		// then
-		assertThat(user).isNotNull();
+		assertAll(
+			() -> assertThat(user.isDeleted()).isTrue(),
+			() -> assertThat(user.getDeletedAt()).isNotNull()
+		);
 	}
 
 	@Test

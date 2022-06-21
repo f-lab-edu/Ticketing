@@ -9,6 +9,7 @@ import com.ticketing.server.user.application.response.SignUpResponse;
 import com.ticketing.server.user.application.response.TokenDto;
 import com.ticketing.server.user.application.response.UserChangePasswordResponse;
 import com.ticketing.server.user.application.response.UserDeleteResponse;
+import com.ticketing.server.user.application.response.UserDetailResponse;
 import com.ticketing.server.user.domain.User;
 import com.ticketing.server.user.service.UserServiceImpl;
 import com.ticketing.server.user.service.interfaces.AuthenticationService;
@@ -19,8 +20,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,6 +47,13 @@ public class UserController {
 	public ResponseEntity<SignUpResponse> register(@RequestBody @Valid SignUpRequest request) {
 		User user = userService.register(request.toSignUpDto(passwordEncoder));
 		return ResponseEntity.status(HttpStatus.CREATED).body(SignUpResponse.from(user));
+	}
+
+	@GetMapping("/info")
+	@Secured("ROLE_GUEST")
+	public ResponseEntity<UserDetailResponse> myInfo(@AuthenticationPrincipal UserDetails userRequest) {
+		User user = userService.findByEmail(userRequest.getUsername());
+		return ResponseEntity.status(HttpStatus.OK).body(UserDetailResponse.from(user));
 	}
 
 	@DeleteMapping
