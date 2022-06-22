@@ -61,12 +61,6 @@ public class UserController {
 	public ResponseEntity<UserChangePasswordResponse> changePassword(
 		@AuthenticationPrincipal UserDetails userRequest,
 		@RequestBody @Valid UserChangePasswordRequest request) {
-
-		if (request.oldEqualNew()) {
-			log.error("기존 패스워드와 동일한 패스워드로 변경할 수 없습니다.");
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-		}
-
 		User user = userService.changePassword(request.toChangePasswordDto(userRequest.getUsername(), passwordEncoder));
 		return ResponseEntity.status(HttpStatus.OK).body(UserChangePasswordResponse.from(user));
 	}

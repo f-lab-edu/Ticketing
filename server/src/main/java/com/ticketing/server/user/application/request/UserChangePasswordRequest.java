@@ -1,5 +1,6 @@
 package com.ticketing.server.user.application.request;
 
+import com.ticketing.server.global.validator.constraints.FieldsValueNotMatch;
 import com.ticketing.server.user.service.dto.ChangePasswordDTO;
 import javax.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
@@ -10,6 +11,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldsValueNotMatch(
+	field = "oldPassword",
+	fieldMatch = "newPassword",
+	message = "{validation.password.not.change}"
+)
 public class UserChangePasswordRequest {
 
 	@NotEmpty(message = "{validation.not.empty.oldpassword}")
@@ -20,10 +26,6 @@ public class UserChangePasswordRequest {
 
 	public ChangePasswordDTO toChangePasswordDto(String email, PasswordEncoder passwordEncoder) {
 		return new ChangePasswordDTO(email, oldPassword, newPassword, passwordEncoder);
-	}
-
-	public boolean oldEqualNew() {
-		return oldPassword.equals(newPassword);
 	}
 
 }
