@@ -27,7 +27,10 @@ import org.springframework.web.context.WebApplicationContext;
 
 @SpringBootTest
 @Transactional
-class UserControllerTest {
+class AuthControllerTest {
+
+	private static final String LOGIN_URL = "/api/auth/token";
+	private static final String REGISTER_URL = "/api/users";
 
 	@Autowired
 	WebApplicationContext context;
@@ -53,7 +56,7 @@ class UserControllerTest {
 		LoginRequest request = new LoginRequest("ticketing@gmail.com", "qwe123");
 
 		// when
-		ResultActions actions = mvc.perform(post("/api/user/login")
+		ResultActions actions = mvc.perform(post(LOGIN_URL)
 			.content(asJsonString(request))
 			.contentType(MediaType.APPLICATION_JSON));
 
@@ -69,7 +72,7 @@ class UserControllerTest {
 		LoginRequest request = new LoginRequest("ticketing@gmail.com", "qwe1234");
 
 		// when
-		ResultActions actions = mvc.perform(post("/api/user/login")
+		ResultActions actions = mvc.perform(post(LOGIN_URL)
 			.content(asJsonString(request))
 			.contentType(MediaType.APPLICATION_JSON));
 
@@ -91,7 +94,7 @@ class UserControllerTest {
 
 		SignUpRequest signUpRequest = new SignUpRequest("ticketing", "ticketing@gmail.com", "qwe123", "010-2240-7920");
 
-		mvc.perform(post("/api/user")
+		mvc.perform(post(REGISTER_URL)
 			.content(asJsonString(signUpRequest))
 			.contentType(MediaType.APPLICATION_JSON));
 	}

@@ -29,7 +29,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 	@Override
 	@Transactional
-	public TokenDto login(UsernamePasswordAuthenticationToken authenticationToken) {
+	public TokenDto generateTokenDto(UsernamePasswordAuthenticationToken authenticationToken) {
 		// 회원인증
 		Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
@@ -50,7 +50,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 	@Override
 	@Transactional
-	public TokenDto reissueAccessToken(String bearerRefreshToken) {
+	public TokenDto reissueTokenDto(String bearerRefreshToken) {
 		String refreshToken = resolveToken(bearerRefreshToken);
 
 		// 토큰 검증

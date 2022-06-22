@@ -1,4 +1,4 @@
-package com.ticketing.server.global.security.service;
+package com.ticketing.server.user.service;
 
 import com.ticketing.server.user.domain.User;
 import com.ticketing.server.user.domain.repository.UserRepository;
