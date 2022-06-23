@@ -1,6 +1,9 @@
 package com.ticketing.server.user.service;
 
-import com.ticketing.server.global.exception.EmailNotFoundException;
+import static com.ticketing.server.global.exception.ErrorCode.DUPLICATE_EMAIL;
+import static com.ticketing.server.global.exception.ErrorCode.EMAIL_NOT_FOUND;
+
+import com.ticketing.server.global.exception.TicketingException;
 import com.ticketing.server.user.domain.User;
 import com.ticketing.server.user.domain.repository.UserRepository;
 import com.ticketing.server.user.service.dto.ChangePasswordDTO;
@@ -28,18 +31,17 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	public User register(@Valid SignUpDTO signUpDto) {
 		Optional<User> user = userRepository.findByEmail(signUpDto.getEmail());
-		if (user.isPresent()) {
-			log.error("이미 존재하는 이메일이기 때문에 신규 회원가입을 진행할 수 없습니다. :: {}", signUpDto.getEmail());
-			throw new IllegalArgumentException("이미 존재하는 이메일이기 때문에 신규 회원가입을 진행할 수 없습니다.");
+		if (user.isEmpty()) {
+			return userRepository.save(signUpDto.toUser());
 		}
 
-		return userRepository.save(signUpDto.toUser());
+		throw new TicketingException(DUPLICATE_EMAIL);
 	}
 
 	@Override
 	@Transactional
 	public User delete(@Valid DeleteUserDTO deleteUserDto) {
-		User user = findByEmail(deleteUserDto.getEmail());
+		User user = findNotDeletedUserByEmail(deleteUserDto.getEmail());
 		return user.delete(deleteUserDto);
 	}
 
@@ -53,19 +55,16 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User findByEmail(String email) {
 		return userRepository.findByEmail(email)
-			.orElseThrow(() -> {
-					log.error("존재하지 않는 이메일 입니다. :: {}", email);
-					throw new EmailNotFoundException();
-				}
-			);
+			.orElseThrow(UserServiceImpl::throwEmailNotFound);
 	}
 
 	private User findNotDeletedUserByEmail(String email) {
 		return userRepository.findByEmailAndIsDeletedFalse(email)
-			.orElseThrow(() -> {
-				log.error("존재하지 않는 이메일 입니다. :: {}", email);
-				throw new EmailNotFoundException();
-			});
+			.orElseThrow(UserServiceImpl::throwEmailNotFound);
+	}
+
+	private static RuntimeException throwEmailNotFound() {
+		throw new TicketingException(EMAIL_NOT_FOUND);
 	}
 
 }

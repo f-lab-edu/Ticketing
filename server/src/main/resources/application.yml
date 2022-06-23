@@ -21,6 +21,7 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+    throw-exception-if-no-handler-found: true
 
 jasypt:
   encryptor:

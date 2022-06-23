@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import com.ticketing.server.global.exception.EmailNotFoundException;
+import com.ticketing.server.global.exception.TicketingException;
 import com.ticketing.server.user.domain.User;
 import com.ticketing.server.user.domain.UserGrade;
 import com.ticketing.server.user.domain.repository.UserRepository;
@@ -54,7 +54,7 @@ class UserServiceImplTest {
 		// when
 		// then
 		assertThatThrownBy(() -> userService.register(signUpDto))
-			.isInstanceOf(IllegalArgumentException.class);
+			.isInstanceOf(TicketingException.class);
 	}
 
 	@Test
@@ -75,19 +75,19 @@ class UserServiceImplTest {
 	@DisplayName("회원탈퇴 시 이메일이 존재하지 않을 경우")
 	void deleteFail() {
 		// given
-		when(userRepository.findByEmail("ticketing@gmail.com")).thenReturn(Optional.empty());
+		when(userRepository.findByEmailAndIsDeletedFalse("ticketing@gmail.com")).thenReturn(Optional.empty());
 
 		// when
 		// then
 		assertThatThrownBy(() -> userService.delete(deleteUserDto))
-			.isInstanceOf(EmailNotFoundException.class);
+			.isInstanceOf(TicketingException.class);
 	}
 
 	@Test
 	@DisplayName("회원탈퇴 성공했을 경우")
 	void deleteSuccess() {
 		// given
-		when(userRepository.findByEmail("ticketing@gmail.com")).thenReturn(Optional.of(user));
+		when(userRepository.findByEmailAndIsDeletedFalse("ticketing@gmail.com")).thenReturn(Optional.of(user));
 
 		// when
 		User user = userService.delete(deleteUserDto);
@@ -108,7 +108,7 @@ class UserServiceImplTest {
 		// when
 		// then
 		assertThatThrownBy(() -> userService.changePassword(changePasswordDto))
-			.isInstanceOf(EmailNotFoundException.class);
+			.isInstanceOf(TicketingException.class);
 	}
 
 	@Test
