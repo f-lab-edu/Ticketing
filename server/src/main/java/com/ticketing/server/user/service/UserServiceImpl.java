@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
 	public User register(@Valid SignUpDTO signUpDto) {
 		Optional<User> user = userRepository.findByEmail(signUpDto.getEmail());
 		if (user.isPresent()) {
-			log.error("이미 존재하는 이메일이기 때문에 신규 회원가입을 진행할 수 없습니다. :: {}", signUpDto);
+			log.error("이미 존재하는 이메일이기 때문에 신규 회원가입을 진행할 수 없습니다. :: {}", signUpDto.getEmail());
 			throw new IllegalArgumentException("이미 존재하는 이메일이기 때문에 신규 회원가입을 진행할 수 없습니다.");
 		}
 
