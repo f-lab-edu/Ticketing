@@ -4,8 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.ticketing.server.global.exception.AlreadyDeletedException;
-import com.ticketing.server.global.exception.PasswordMismatchException;
+import com.ticketing.server.global.exception.TicketingException;
 import com.ticketing.server.user.service.dto.ChangePasswordDTO;
 import com.ticketing.server.user.service.dto.DeleteUserDTO;
 import com.ticketing.server.user.service.dto.DeleteUserDtoTest;
@@ -45,7 +44,7 @@ class UserTest {
 		// when
 		// then
 		assertThatThrownBy(() -> user.delete(deleteUser))
-			.isInstanceOf(PasswordMismatchException.class);
+			.isInstanceOf(TicketingException.class);
 	}
 
 	@ParameterizedTest
@@ -60,7 +59,8 @@ class UserTest {
 
 		// then
 		assertThatThrownBy(() -> user.delete(deleteUserDto))
-			.isInstanceOf(AlreadyDeletedException.class);
+			.isInstanceOf(TicketingException.class);
+
 	}
 
 	@ParameterizedTest
@@ -90,7 +90,7 @@ class UserTest {
 		// when
 		// then
 		assertThatThrownBy(() -> user.changePassword(changePasswordDto))
-			.isInstanceOf(PasswordMismatchException.class);
+			.isInstanceOf(TicketingException.class);
 	}
 
 	@Test

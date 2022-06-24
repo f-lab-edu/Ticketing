@@ -1,8 +1,10 @@
 package com.ticketing.server.user.service;
 
-import com.ticketing.server.global.exception.token.TokenNotFindException;
-import com.ticketing.server.global.exception.token.TokenTypeException;
-import com.ticketing.server.global.exception.token.UnavailableRefreshTokenException;
+import static com.ticketing.server.global.exception.ErrorCode.REFRESH_TOKEN_NOT_FOUND;
+import static com.ticketing.server.global.exception.ErrorCode.TOKEN_TYPE;
+import static com.ticketing.server.global.exception.ErrorCode.UNAVAILABLE_REFRESH_TOKEN;
+
+import com.ticketing.server.global.exception.TicketingException;
 import com.ticketing.server.global.redis.RefreshRedisRepository;
 import com.ticketing.server.global.redis.RefreshToken;
 import com.ticketing.server.global.security.jwt.JwtProperties;
@@ -60,11 +62,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 		// Redis 에 토큰이 있는지 검증
 		RefreshToken findTokenEntity = refreshRedisRepository.findByEmail(authentication.getName())
-			.orElseThrow(TokenNotFindException::new);
+			.orElseThrow(() -> new TicketingException(REFRESH_TOKEN_NOT_FOUND));
 
 		// redis 토큰과 input 토큰이 일치한지 확인
 		if (!refreshToken.equals(findTokenEntity.getToken())) {
-			throw new UnavailableRefreshTokenException();
+			throw new TicketingException(UNAVAILABLE_REFRESH_TOKEN);
 		}
 
 		// 토큰 발급
@@ -81,7 +83,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		if (StringUtils.hasText(bearerToken) && jwtProperties.hasTokenStartsWith(bearerToken)) {
 			return bearerToken.substring(7);
 		}
-		throw new TokenTypeException();
+		throw new TicketingException(TOKEN_TYPE);
 	}
 
 }
