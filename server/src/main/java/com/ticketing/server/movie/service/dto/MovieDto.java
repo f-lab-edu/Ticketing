@@ -1,12 +1,12 @@
 package com.ticketing.server.movie.service.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 @AllArgsConstructor
+@Getter
 public class MovieDto {
 
-    @JsonProperty
     private String title;
 
 }
