@@ -11,7 +11,7 @@ import lombok.Getter;
 
 @Entity
 @Getter
-public class MovieTimes extends AbstractEntity {
+public class MovieTime extends AbstractEntity {
 
 	@NotNull
 	@ManyToOne
