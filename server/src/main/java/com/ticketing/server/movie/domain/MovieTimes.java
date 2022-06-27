@@ -2,7 +2,7 @@ package com.ticketing.server.movie.domain;
 
 import com.ticketing.server.global.dto.repository.AbstractEntity;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -30,9 +30,9 @@ public class MovieTimes extends AbstractEntity {
 	private Integer round;
 
 	@NotNull
-	private LocalDateTime startAt;
+	private LocalTime startAt;
 
 	@NotNull
-	private LocalDateTime endAt;
+	private LocalTime endAt;
 
 }
