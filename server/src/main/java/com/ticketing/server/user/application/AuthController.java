@@ -1,6 +1,7 @@
 package com.ticketing.server.user.application;
 
 import com.ticketing.server.user.application.request.LoginRequest;
+import com.ticketing.server.user.application.response.LogoutResponse;
 import com.ticketing.server.user.application.response.TokenDto;
 import com.ticketing.server.user.service.interfaces.AuthenticationService;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,6 +41,14 @@ public class AuthController {
 		return ResponseEntity.status(HttpStatus.OK)
 			.headers(getHttpHeaders())
 			.body(tokenDto);
+	}
+
+	@PostMapping("/logout")
+	public ResponseEntity<LogoutResponse> logout(@AuthenticationPrincipal UserDetails userRequest) {
+		authenticationService.deleteRefreshToken(userRequest.getUsername());
+
+		return ResponseEntity.status(HttpStatus.OK)
+			.body(LogoutResponse.from(userRequest.getUsername()));
 	}
 
 	private HttpHeaders getHttpHeaders() {

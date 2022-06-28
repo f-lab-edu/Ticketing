@@ -9,4 +9,6 @@ public interface AuthenticationService {
 
 	TokenDto reissueTokenDto(String bearerRefreshToken);
 
+	boolean deleteRefreshToken(String email);
+
 }

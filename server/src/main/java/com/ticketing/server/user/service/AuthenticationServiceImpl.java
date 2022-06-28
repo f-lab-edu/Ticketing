@@ -11,6 +11,7 @@ import com.ticketing.server.global.security.jwt.JwtProperties;
 import com.ticketing.server.global.security.jwt.JwtProvider;
 import com.ticketing.server.user.application.response.TokenDto;
 import com.ticketing.server.user.service.interfaces.AuthenticationService;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -77,6 +78,19 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		refreshRedisRepository.save(findTokenEntity);
 
 		return tokenDto;
+	}
+
+	@Override
+	@Transactional
+	public boolean deleteRefreshToken(String email) {
+		Optional<RefreshToken> findTokenEntity = refreshRedisRepository.findByEmail(email);
+
+		if (findTokenEntity.isPresent()) {
+			refreshRedisRepository.delete(findTokenEntity.get());
+			return true;
+		}
+
+		return false;
 	}
 
 	private String resolveToken(String bearerToken) {
