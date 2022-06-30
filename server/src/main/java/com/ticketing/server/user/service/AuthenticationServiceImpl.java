@@ -9,6 +9,7 @@ import com.ticketing.server.global.redis.RefreshRedisRepository;
 import com.ticketing.server.global.redis.RefreshToken;
 import com.ticketing.server.global.security.jwt.JwtProperties;
 import com.ticketing.server.global.security.jwt.JwtProvider;
+import com.ticketing.server.user.application.response.LogoutResponse;
 import com.ticketing.server.user.application.response.TokenDto;
 import com.ticketing.server.user.service.interfaces.AuthenticationService;
 import lombok.RequiredArgsConstructor;
@@ -77,6 +78,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		refreshRedisRepository.save(findTokenEntity);
 
 		return tokenDto;
+	}
+
+	@Override
+	@Transactional
+	public LogoutResponse deleteRefreshToken(String email) {
+		return refreshRedisRepository.findByEmail(email)
+			.map(tokenDto -> {
+				refreshRedisRepository.delete(tokenDto);
+				return LogoutResponse.from(tokenDto);
+			}).orElseGet(() -> LogoutResponse.from(email));
 	}
 
 	private String resolveToken(String bearerToken) {
