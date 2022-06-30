@@ -10,6 +10,7 @@ import com.ticketing.server.movie.domain.repository.MovieTimeRepository;
 import com.ticketing.server.movie.service.dto.MovieTimeDto;
 import com.ticketing.server.movie.service.interfaces.MovieTimeService;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -30,10 +31,13 @@ public class MovieTimeServiceImpl implements MovieTimeService {
         Movie movie = movieRepository.findByTitle(title)
             .orElseThrow(MovieTimeServiceImpl::throwMovieNotFound);
 
-        List<MovieTime> movieTimes = movieTimeRepository.findByMovieAndRunningDate(movie, runningDate);
+        LocalDateTime startOfDay = runningDate.atStartOfDay();
+        LocalDateTime endOfDay = startOfDay.plusHours(30);
+
+        List<MovieTime> movieTimes = movieTimeRepository.findValidMovieTimes(movie.getId(), startOfDay, endOfDay);
 
         return movieTimes.stream()
-            .map(movieTime -> movieTime.toDto())
+            .map(MovieTimeDto::from)
             .collect(Collectors.toList());
 
     }
