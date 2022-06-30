@@ -2,11 +2,12 @@ package com.ticketing.server.movie.service.dto;
 
 import com.ticketing.server.movie.domain.MovieTime;
 import java.time.LocalDateTime;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@AllArgsConstructor
 @Getter
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class MovieTimeDto {
 
     private long movieTimeId;
