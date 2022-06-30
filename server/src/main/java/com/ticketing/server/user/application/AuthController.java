@@ -45,10 +45,10 @@ public class AuthController {
 
 	@PostMapping("/logout")
 	public ResponseEntity<LogoutResponse> logout(@AuthenticationPrincipal UserDetails userRequest) {
-		authenticationService.deleteRefreshToken(userRequest.getUsername());
+		LogoutResponse logoutResponse = authenticationService.deleteRefreshToken(userRequest.getUsername());
 
 		return ResponseEntity.status(HttpStatus.OK)
-			.body(LogoutResponse.from(userRequest.getUsername()));
+			.body(logoutResponse);
 	}
 
 	private HttpHeaders getHttpHeaders() {

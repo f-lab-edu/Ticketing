@@ -9,9 +9,9 @@ import com.ticketing.server.global.redis.RefreshRedisRepository;
 import com.ticketing.server.global.redis.RefreshToken;
 import com.ticketing.server.global.security.jwt.JwtProperties;
 import com.ticketing.server.global.security.jwt.JwtProvider;
+import com.ticketing.server.user.application.response.LogoutResponse;
 import com.ticketing.server.user.application.response.TokenDto;
 import com.ticketing.server.user.service.interfaces.AuthenticationService;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -82,15 +82,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 	@Override
 	@Transactional
-	public boolean deleteRefreshToken(String email) {
-		Optional<RefreshToken> findTokenEntity = refreshRedisRepository.findByEmail(email);
-
-		if (findTokenEntity.isPresent()) {
-			refreshRedisRepository.delete(findTokenEntity.get());
-			return true;
-		}
-
-		return false;
+	public LogoutResponse deleteRefreshToken(String email) {
+		return refreshRedisRepository.findByEmail(email)
+			.map(tokenDto -> {
+				refreshRedisRepository.delete(tokenDto);
+				return LogoutResponse.from(tokenDto);
+			}).orElseGet(() -> LogoutResponse.from(email));
 	}
 
 	private String resolveToken(String bearerToken) {
