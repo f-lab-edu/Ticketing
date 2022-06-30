@@ -1,6 +1,6 @@
 package com.ticketing.server.movie.service.dto;
 
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -14,8 +14,8 @@ public class MovieTimeDto {
 
     private Integer round;
 
-    private LocalTime startAt;
+    private LocalDateTime startAt;
 
-    private LocalTime endAt;
+    private LocalDateTime endAt;
 
 }

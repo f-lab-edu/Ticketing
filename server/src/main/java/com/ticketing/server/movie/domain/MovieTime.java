@@ -2,8 +2,7 @@ package com.ticketing.server.movie.domain;
 
 import com.ticketing.server.global.dto.repository.AbstractEntity;
 import com.ticketing.server.movie.service.dto.MovieTimeDto;
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -25,16 +24,13 @@ public class MovieTime extends AbstractEntity {
 	private Theater theater;
 
 	@NotNull
-	private LocalDate runningDate;
-
-	@NotNull
 	private Integer round;
 
 	@NotNull
-	private LocalTime startAt;
+	private LocalDateTime startAt;
 
 	@NotNull
-	private LocalTime endAt;
+	private LocalDateTime endAt;
 
 	public MovieTimeDto toDto() {
 		return new MovieTimeDto(this.getId(), this.round, this.theater.getTheaterNumber(), this.startAt, this.endAt);
