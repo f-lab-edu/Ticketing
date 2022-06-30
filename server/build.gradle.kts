@@ -74,12 +74,7 @@ val intTestImplementation by configurations.getting {
 }
 
 configurations["intTestRuntimeOnly"].extendsFrom(configurations.runtimeOnly.get())
-
-dependencies {
-	intTestImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
-	intTestImplementation("org.springframework.boot:spring-boot-starter-test")
-	intTestImplementation("org.springframework.security:spring-security-test")
-}
+configurations["intTestImplementation"].extendsFrom(configurations.testImplementation.get())
 
 val integrationTest = task<Test>("integrationTest") {
 	description = "Runs integration tests."
