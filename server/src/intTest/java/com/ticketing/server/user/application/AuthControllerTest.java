@@ -31,6 +31,7 @@ class AuthControllerTest {
 
 	private static final String LOGIN_URL = "/api/auth/token";
 	private static final String REGISTER_URL = "/api/users";
+	private static final String USER_EMAIL = "ticketing@gmail.com";
 
 	@Autowired
 	WebApplicationContext context;
@@ -53,7 +54,7 @@ class AuthControllerTest {
 	@DisplayName("로그인 인증 성공")
 	void loginSuccess() throws Exception {
 		// given
-		LoginRequest request = new LoginRequest("ticketing@gmail.com", "qwe123");
+		LoginRequest request = new LoginRequest(USER_EMAIL, "qwe123");
 
 		// when
 		ResultActions actions = mvc.perform(post(LOGIN_URL)
@@ -69,7 +70,7 @@ class AuthControllerTest {
 	@DisplayName("로그인 패스워드 인증 실패")
 	void loginPasswordFail() throws Exception {
 		// given
-		LoginRequest request = new LoginRequest("ticketing@gmail.com", "qwe1234");
+		LoginRequest request = new LoginRequest(USER_EMAIL, "qwe1234");
 
 		// when
 		ResultActions actions = mvc.perform(post(LOGIN_URL)
@@ -81,10 +82,6 @@ class AuthControllerTest {
 			.andExpect(status().isUnauthorized());
 	}
 
-	private String asJsonString(Object object) throws JsonProcessingException {
-		return objectMapper.writeValueAsString(object);
-	}
-
 	@BeforeEach
 	void init() throws Exception {
 		mvc = MockMvcBuilders
@@ -92,7 +89,7 @@ class AuthControllerTest {
 			.apply(springSecurity())
 			.build();
 
-		SignUpRequest signUpRequest = new SignUpRequest("ticketing", "ticketing@gmail.com", "qwe123", "010-2240-7920");
+		SignUpRequest signUpRequest = new SignUpRequest("ticketing", USER_EMAIL, "qwe123", "010-1234-5678");
 
 		mvc.perform(post(REGISTER_URL)
 			.content(asJsonString(signUpRequest))
@@ -102,6 +99,10 @@ class AuthControllerTest {
 	@AfterEach
 	void tearDown() {
 		refreshRedisRepository.deleteAll();
+	}
+
+	private String asJsonString(Object object) throws JsonProcessingException {
+		return objectMapper.writeValueAsString(object);
 	}
 
 }
