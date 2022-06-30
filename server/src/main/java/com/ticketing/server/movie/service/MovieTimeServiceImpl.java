@@ -32,6 +32,7 @@ public class MovieTimeServiceImpl implements MovieTimeService {
             .orElseThrow(MovieTimeServiceImpl::throwMovieNotFound);
 
         LocalDateTime startOfDay = runningDate.atStartOfDay();
+        // 영화 시작 시간이 다음날 06시 이전까지 모두 가져오기 위한 날짜
         LocalDateTime endOfDay = startOfDay.plusHours(30);
 
         List<MovieTime> movieTimes = movieTimeRepository.findValidMovieTimes(movie.getId(), startOfDay, endOfDay);
