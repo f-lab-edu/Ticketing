@@ -32,8 +32,4 @@ public class MovieTime extends AbstractEntity {
 	@NotNull
 	private LocalDateTime endAt;
 
-//	public MovieTimeDto toDto() {
-//		return new MovieTimeDto(this.getId(), this.round, this.theater.getTheaterNumber(), this.startAt, this.endAt);
-//	}
-
 }
