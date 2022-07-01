@@ -21,7 +21,7 @@ public class MovieServiceImpl implements MovieService {
         List<Movie> movies = movieRepository.findValidMovies();
 
         return movies.stream()
-            .map(movie -> movie.toDto())
+            .map(MovieDto::from)
             .collect(Collectors.toList());
 
     }

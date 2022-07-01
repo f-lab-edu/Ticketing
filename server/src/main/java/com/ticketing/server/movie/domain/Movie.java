@@ -22,8 +22,4 @@ public class Movie extends AbstractEntity {
     @NotNull
     private Integer runningTime;
 
-    public MovieDto toDto() {
-        return new MovieDto(this.title);
-    }
-
 }
