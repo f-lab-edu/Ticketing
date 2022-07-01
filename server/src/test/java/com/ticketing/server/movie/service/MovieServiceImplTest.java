@@ -42,7 +42,6 @@ public class MovieServiceImplTest {
 
         // then
         assertTrue(movieDtoList.isEmpty());
-
     }
 
     @Test
