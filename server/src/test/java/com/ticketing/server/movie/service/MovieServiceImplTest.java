@@ -49,7 +49,7 @@ public class MovieServiceImplTest {
     void shouldAbleToGetMovies() {
         // given
         movie = new Movie("범죄도시2", 106);
-        movieDto = movie.toDto();
+        movieDto = MovieDto.from(movie);
         movies.add(movie);
         movieDtos.add(movieDto);
 
