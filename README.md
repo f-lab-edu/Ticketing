@@ -1,5 +1,5 @@
 # 🍿 Ticketing
-영화 예매 서비스
+영화 예매 사이트를 대용량 트래픽에 대응할 수 있도록 설계.
 
 <br/>
 
@@ -11,8 +11,32 @@
 
 <br/><br/>
 
-## 🎯 프로젝트 목표
+## 🎯 프로젝트 주요 관심사
+- OOP(객체 지향 프로그래밍)의 장점을 최대한 활용
+- 테스트 코드를 통한 믿을 수 있는 코드 작성
+- 대용량 트래픽을 고려한 확장 가능한 설계 및 성능 튜닝
+- 코드리뷰를 통해 코드 품질 향상
+- 코드 컨벤션 준수하여 코드 통일성 유지
 
+<br/><br/>
+
+## 🛠 기술스택
+- Java 11
+- Spring Boot 2.6.7 (당시 최신 GA 버전)
+- Gradle Kotlin DSL
+- Spring Security
+- Junit 5
+- Hibernate / SpringJPA
+- MySQL 8.0
+- Redis
+
+<br/><br/>
+
+## Wiki
+- [Git Branch 전략](https://github.com/f-lab-edu/Ticketing/wiki#-git-branch-%EC%A0%84%EB%9E%B5)
+- [Code Convention](https://github.com/f-lab-edu/Ticketing/wiki#-code-convention)
+- [패키지 구조](https://github.com/f-lab-edu/Ticketing/wiki#-%ED%8C%A8%ED%82%A4%EC%A7%80-%EA%B5%AC%EC%A1%B0)
+- [Use Case](https://github.com/f-lab-edu/Ticketing/wiki/Use-Case)
 
 <br/><br/>
 
@@ -51,7 +75,6 @@ erDiagram
         bigint id PK "상영시간표 ID"
         bigint movie_id FK "영화 ID"
         bigint theater_id FK "상영관 ID"
-        date running_date "상영 날짜"
         int round "회차"
         time start_at "시작 시간"
         time end_at "종료 시간"
