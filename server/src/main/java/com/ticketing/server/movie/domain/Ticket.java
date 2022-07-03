@@ -20,7 +20,7 @@ public class Ticket extends AbstractEntity {
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "movie_times_id", referencedColumnName = "id", updatable = false)
-	private MovieTimes movieTimes;
+	private MovieTime movieTime;
 
 	@ManyToOne
 	@JoinColumn(name = "payment_id", referencedColumnName = "id", updatable = false)

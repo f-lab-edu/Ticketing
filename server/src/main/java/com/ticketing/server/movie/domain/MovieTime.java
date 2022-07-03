@@ -1,7 +1,7 @@
 package com.ticketing.server.movie.domain;
 
 import com.ticketing.server.global.dto.repository.AbstractEntity;
-import java.time.LocalDate;
+import com.ticketing.server.movie.service.dto.MovieTimeDto;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -11,7 +11,7 @@ import lombok.Getter;
 
 @Entity
 @Getter
-public class MovieTimes extends AbstractEntity {
+public class MovieTime extends AbstractEntity {
 
 	@NotNull
 	@ManyToOne
@@ -22,9 +22,6 @@ public class MovieTimes extends AbstractEntity {
 	@ManyToOne
 	@JoinColumn(name = "theater_id", referencedColumnName = "id", updatable = false)
 	private Theater theater;
-
-	@NotNull
-	private LocalDate runningDate;
 
 	@NotNull
 	private Integer round;
