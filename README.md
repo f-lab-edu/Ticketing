@@ -8,8 +8,7 @@
 - 기획 및 설계 : 22.04.13 ~ 
 - 프로젝트 구현 :   
 
-
-<br/><br/>
+<br/>
 
 ## 🎯 프로젝트 주요 관심사
 - OOP(객체 지향 프로그래밍)의 장점을 최대한 활용
@@ -18,7 +17,7 @@
 - 코드리뷰를 통해 코드 품질 향상
 - 코드 컨벤션 준수하여 코드 통일성 유지
 
-<br/><br/>
+<br/>
 
 ## 🛠 기술스택
 - Java 11
@@ -30,7 +29,7 @@
 - MySQL 8.0
 - Redis
 
-<br/><br/>
+<br/>
 
 ## Wiki
 - [Git Branch 전략](https://github.com/f-lab-edu/Ticketing/wiki#-git-branch-%EC%A0%84%EB%9E%B5)
@@ -38,7 +37,7 @@
 - [패키지 구조](https://github.com/f-lab-edu/Ticketing/wiki#-%ED%8C%A8%ED%82%A4%EC%A7%80-%EA%B5%AC%EC%A1%B0)
 - [Use Case](https://github.com/f-lab-edu/Ticketing/wiki/Use-Case)
 
-<br/><br/>
+<br/>
 
 ## 🧩 ERD
 
@@ -117,5 +116,3 @@ erDiagram
         datetime updated_at "수정일시"
     }
 ```
-
-<br/><br/>
