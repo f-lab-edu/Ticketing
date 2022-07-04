@@ -10,7 +10,7 @@ import lombok.Getter;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class MovieTimeDto {
 
-    private long movieTimeId;
+    private Long movieTimeId;
 
     private Integer theaterNumber;
 
