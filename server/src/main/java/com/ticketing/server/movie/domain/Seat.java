@@ -6,9 +6,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@NoArgsConstructor
 public class Seat extends AbstractEntity {
 
 	@NotNull
@@ -22,4 +24,14 @@ public class Seat extends AbstractEntity {
 	@NotNull
 	private Integer seatRow;
 
+	public Seat(Integer seatColumn, Integer seatRow, Theater theater) {
+		this.seatColumn = seatColumn;
+		this.seatRow = seatRow;
+		setTheater(theater);
+	}
+
+	private void setTheater(Theater theater) {
+		this.theater = theater;
+		theater.addSeat(this);
+	}
 }

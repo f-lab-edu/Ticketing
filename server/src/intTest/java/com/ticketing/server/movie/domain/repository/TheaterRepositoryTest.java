@@ -20,7 +20,7 @@ public class TheaterRepositoryTest {
     @DisplayName("Theater Repository Test - saving theater")
     void ShouldAbleToSaveTheater() {
         // given
-        Theater theater = new Theater(1, 100);
+        Theater theater = new Theater(1);
 
         // when
         Theater savedTheater = theaterRepository.save(theater);

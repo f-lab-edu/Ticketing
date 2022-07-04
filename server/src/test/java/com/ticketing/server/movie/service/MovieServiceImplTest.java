@@ -49,7 +49,7 @@ public class MovieServiceImplTest {
     @DisplayName("Movie Service Test - get movies")
     void shouldAbleToGetMovies() {
         // given
-        movie = new Movie("범죄도시2", 106);
+        movie = new Movie("범죄도시2", 106L);
         movieDto = movieDto.from(movie);
         movies.add(movie);
         movieDtos.add(movieDto);
