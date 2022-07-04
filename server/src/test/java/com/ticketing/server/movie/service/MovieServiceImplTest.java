@@ -35,7 +35,8 @@ public class MovieServiceImplTest {
     @DisplayName("Movie Service Test - get movies when there is no movie")
     void shouldGetEmptyList() {
         // given
-        when(movieRepository.findValidMovies()).thenReturn(Collections.emptyList());
+        when(movieRepository.findValidMovies())
+            .thenReturn(Collections.emptyList());
 
         // when
         List<MovieDto> movieDtoList = movieService.getMovies();
@@ -49,11 +50,12 @@ public class MovieServiceImplTest {
     void shouldAbleToGetMovies() {
         // given
         movie = new Movie("범죄도시2", 106);
-        movieDto = movie.toDto();
+        movieDto = movieDto.from(movie);
         movies.add(movie);
         movieDtos.add(movieDto);
 
-        when(movieRepository.findValidMovies()).thenReturn(movies);
+        when(movieRepository.findValidMovies())
+            .thenReturn(movies);
 
         // when
         List<MovieDto> movieDtoList = movieService.getMovies();

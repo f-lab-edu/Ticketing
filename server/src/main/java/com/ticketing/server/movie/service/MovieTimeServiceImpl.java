@@ -34,7 +34,7 @@ public class MovieTimeServiceImpl implements MovieTimeService {
         LocalDateTime startOfDay = runningDate.atStartOfDay().plusHours(6);
         LocalDateTime endOfDay = startOfDay.plusDays(1);
 
-        List<MovieTime> movieTimes = movieTimeRepository.findValidMovieTimes(movie.getId(), startOfDay, endOfDay);
+        List<MovieTime> movieTimes = movieTimeRepository.findValidMovieTimes(movie, startOfDay, endOfDay);
 
         return movieTimes.stream()
             .map(MovieTimeDto::from)
