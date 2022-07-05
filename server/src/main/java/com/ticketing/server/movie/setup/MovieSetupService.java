@@ -19,7 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class MovieSetupService {
+public class
+MovieSetupService {
 
 	private final MovieRepository movieRepository;
 	private final MovieTimeRepository movieTimeRepository;
@@ -53,9 +54,9 @@ public class MovieSetupService {
 		);
 
 		for (Theater theater : theaters) {
-			for (int i = 1; i <= 2; i++) {
-				for (int j = 1; j <= 10; j++) {
-					new Seat(i, j, theater);
+			for (int row = 1; row <= 2; row++) {
+				for (int col = 1; col <= 10; col++) {
+					new Seat(row, col, theater);
 				}
 			}
 		}

@@ -4,6 +4,7 @@ import com.ticketing.server.user.application.request.SignUpRequest;
 import com.ticketing.server.user.application.request.UserChangePasswordRequest;
 import com.ticketing.server.user.application.request.UserDeleteRequest;
 import com.ticketing.server.user.application.response.SignUpResponse;
+import com.ticketing.server.user.application.response.SimplePaymentDetailsResponse;
 import com.ticketing.server.user.application.response.UserChangePasswordResponse;
 import com.ticketing.server.user.application.response.UserDeleteResponse;
 import com.ticketing.server.user.application.response.UserDetailResponse;
@@ -63,6 +64,13 @@ public class UserController {
 		@RequestBody @Valid UserChangePasswordRequest request) {
 		User user = userService.changePassword(request.toChangePasswordDto(userRequest.getUsername(), passwordEncoder));
 		return ResponseEntity.status(HttpStatus.OK).body(UserChangePasswordResponse.from(user));
+	}
+
+	@GetMapping("/payments")
+	@Secured("ROLE_GUEST")
+	public ResponseEntity<SimplePaymentDetailsResponse> getPayments(@AuthenticationPrincipal UserDetails userRequest) {
+		SimplePaymentDetailsResponse paymentDetails = userService.findSimplePaymentDetails(userRequest.getUsername());
+		return ResponseEntity.status(HttpStatus.OK).body(paymentDetails);
 	}
 
 }

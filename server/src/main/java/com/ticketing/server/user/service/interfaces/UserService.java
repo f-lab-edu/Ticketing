@@ -1,5 +1,6 @@
 package com.ticketing.server.user.service.interfaces;
 
+import com.ticketing.server.user.application.response.SimplePaymentDetailsResponse;
 import com.ticketing.server.user.domain.User;
 import com.ticketing.server.user.service.dto.ChangePasswordDTO;
 import com.ticketing.server.user.service.dto.DeleteUserDTO;
@@ -15,4 +16,7 @@ public interface UserService {
 	User changePassword(@Valid ChangePasswordDTO changePasswordDto);
 
 	User findByEmail(String email);
+
+	SimplePaymentDetailsResponse findSimplePaymentDetails(String email);
+
 }
