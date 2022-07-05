@@ -1,9 +1,6 @@
 package com.ticketing.server.user.service;
 
-import static com.ticketing.server.global.exception.ErrorCode.DUPLICATE_EMAIL;
-import static com.ticketing.server.global.exception.ErrorCode.EMAIL_NOT_FOUND;
-
-import com.ticketing.server.global.exception.TicketingException;
+import com.ticketing.server.global.exception.ErrorCode;
 import com.ticketing.server.user.api.PaymentClient;
 import com.ticketing.server.user.api.dto.request.SimplePaymentsRequest;
 import com.ticketing.server.user.api.dto.response.SimplePaymentsResponse;
@@ -40,7 +37,7 @@ public class UserServiceImpl implements UserService {
 			return userRepository.save(signUpDto.toUser());
 		}
 
-		throw new TicketingException(DUPLICATE_EMAIL);
+		throw ErrorCode.throwDuplicateEmail();
 	}
 
 	@Override
@@ -60,7 +57,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User findByEmail(String email) {
 		return userRepository.findByEmail(email)
-			.orElseThrow(UserServiceImpl::throwEmailNotFound);
+			.orElseThrow(ErrorCode::throwEmailNotFound);
 	}
 
 	@Override
@@ -73,11 +70,7 @@ public class UserServiceImpl implements UserService {
 
 	private User findNotDeletedUserByEmail(String email) {
 		return userRepository.findByEmailAndIsDeletedFalse(email)
-			.orElseThrow(UserServiceImpl::throwEmailNotFound);
-	}
-
-	private static RuntimeException throwEmailNotFound() {
-		throw new TicketingException(EMAIL_NOT_FOUND);
+			.orElseThrow(ErrorCode::throwEmailNotFound);
 	}
 
 }
