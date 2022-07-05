@@ -42,7 +42,7 @@ public class MovieTimeServiceImplTest {
     @DisplayName("MovieTime Service Test - get empty list when there is no valid movie times")
     void shouldGetEmptyList() {
         // given
-        Movie movie = new Movie(title, 106);
+        Movie movie = new Movie(title, 106L);
 
         when(movieRepository.findByTitle(title))
             .thenReturn(Optional.of(movie));
@@ -61,11 +61,10 @@ public class MovieTimeServiceImplTest {
     @DisplayName("MovieTime Service Test - get list when there is valid movie times")
     void shouldGetMovieTimeList() {
         // given
-        Movie movie = new Movie(title, 106);
-        Theater theater = new Theater(1, 100);
-        MovieTime movieTime = new MovieTime(movie, theater, 1,
-            LocalDateTime.of(2022, 7, 1, 17, 0, 0),
-            LocalDateTime.of(2022, 7, 1, 18, 56, 0)
+        Movie movie = new Movie(title, 106L);
+        Theater theater = new Theater(1);
+        MovieTime movieTime = MovieTime.of(movie, theater, 1,
+            LocalDateTime.of(2022, 7, 1, 17, 0, 0)
         );
 
         movieTimes.add(movieTime);

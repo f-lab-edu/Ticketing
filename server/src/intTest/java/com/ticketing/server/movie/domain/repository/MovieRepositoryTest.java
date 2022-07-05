@@ -30,7 +30,7 @@ public class MovieRepositoryTest {
     @DisplayName("Movie Repository Test - saving movie")
     void shouldAbleToSaveMovie() {
         // given
-        Movie movie = new Movie("범죄도시 2", 106);
+        Movie movie = new Movie("범죄도시 2", 106L);
 
         // when
         Movie savedMovie = movieRepository.save(movie);
