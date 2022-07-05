@@ -85,7 +85,7 @@ erDiagram
         bigint id PK "티켓 ID"
         bigint seat_id FK "좌석 ID"
         bigint movie_times_id FK "상영시간표 ID"
-        bigint payment_id FK "결제 ID"
+        bigint payment_id "결제 ID"
         varchar status "상태 - 구매가능/예약진행중/판매완료"
         int ticket_price "가격"
         datetime created_at "등록일시"
@@ -94,7 +94,8 @@ erDiagram
     TICKET }|--|| PAYMENT : ""
     PAYMENT {
         bigint id PK "결제 ID"
-        bigint user_id FK "유저ID"
+        bigint user_id "유저ID"
+        varchar movie_title "영화제목"
         varchar type "결제 타입 - 예) 네이버페이, 카카오페이"
         varchar status "상태 - 완료/환불/실패"
         varchar failed_message "실패사유 - 컬럼명을 알아보기 쉬운가?"
