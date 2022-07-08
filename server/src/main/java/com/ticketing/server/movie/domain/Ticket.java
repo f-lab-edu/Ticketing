@@ -1,7 +1,6 @@
 package com.ticketing.server.movie.domain;
 
 import com.ticketing.server.global.dto.repository.AbstractEntity;
-import com.ticketing.server.payment.domain.Payment;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -26,9 +25,7 @@ public class Ticket extends AbstractEntity {
 	@JoinColumn(name = "movie_times_id", referencedColumnName = "id", updatable = false)
 	private MovieTime movieTime;
 
-	@ManyToOne
-	@JoinColumn(name = "payment_id", referencedColumnName = "id", updatable = false)
-	private Payment payment;
+	private Long paymentId;
 
 	@NotNull
 	@Enumerated(EnumType.STRING)

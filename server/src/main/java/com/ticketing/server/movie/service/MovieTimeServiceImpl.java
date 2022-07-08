@@ -1,8 +1,6 @@
 package com.ticketing.server.movie.service;
 
-import static com.ticketing.server.global.exception.ErrorCode.MOVIE_NOT_FOUND;
-
-import com.ticketing.server.global.exception.TicketingException;
+import com.ticketing.server.global.exception.ErrorCode;
 import com.ticketing.server.movie.domain.Movie;
 import com.ticketing.server.movie.domain.MovieTime;
 import com.ticketing.server.movie.domain.repository.MovieRepository;
@@ -22,28 +20,24 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class MovieTimeServiceImpl implements MovieTimeService {
 
-    private final MovieRepository movieRepository;
+	private final MovieRepository movieRepository;
 
-    private final MovieTimeRepository movieTimeRepository;
+	private final MovieTimeRepository movieTimeRepository;
 
-    @Override
-    public List<MovieTimeDto> getMovieTimes(String title, LocalDate runningDate) {
-        Movie movie = movieRepository.findByTitle(title)
-            .orElseThrow(MovieTimeServiceImpl::throwMovieNotFound);
+	@Override
+	public List<MovieTimeDto> getMovieTimes(String title, LocalDate runningDate) {
+		Movie movie = movieRepository.findByTitle(title)
+			.orElseThrow(ErrorCode::throwMovieNotFound);
 
-        LocalDateTime startOfDay = runningDate.atStartOfDay().plusHours(6);
-        LocalDateTime endOfDay = startOfDay.plusDays(1);
+		LocalDateTime startOfDay = runningDate.atStartOfDay().plusHours(6);
+		LocalDateTime endOfDay = startOfDay.plusDays(1);
 
-        List<MovieTime> movieTimes = movieTimeRepository.findValidMovieTimes(movie, startOfDay, endOfDay);
+		List<MovieTime> movieTimes = movieTimeRepository.findValidMovieTimes(movie, startOfDay, endOfDay);
 
-        return movieTimes.stream()
-            .map(MovieTimeDto::from)
-            .collect(Collectors.toList());
+		return movieTimes.stream()
+			.map(MovieTimeDto::from)
+			.collect(Collectors.toList());
 
-    }
-
-    private static RuntimeException throwMovieNotFound() {
-        throw new TicketingException(MOVIE_NOT_FOUND);
-    }
+	}
 
 }

@@ -1,5 +1,7 @@
 package com.ticketing.server.user.service;
 
+import static com.ticketing.server.payment.domain.PaymentStatus.COMPLETED;
+import static com.ticketing.server.payment.domain.PaymentType.KAKAO_PAY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -7,6 +9,13 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import com.ticketing.server.global.exception.TicketingException;
+import com.ticketing.server.payment.domain.Payment;
+import com.ticketing.server.payment.service.dto.CreatePaymentDto;
+import com.ticketing.server.payment.service.dto.SimplePaymentDto;
+import com.ticketing.server.user.api.PaymentClient;
+import com.ticketing.server.user.api.dto.request.SimplePaymentsRequest;
+import com.ticketing.server.user.api.dto.response.SimplePaymentsResponse;
+import com.ticketing.server.user.application.response.SimplePaymentDetailsResponse;
 import com.ticketing.server.user.domain.User;
 import com.ticketing.server.user.domain.UserGrade;
 import com.ticketing.server.user.domain.repository.UserRepository;
@@ -14,6 +23,8 @@ import com.ticketing.server.user.service.dto.ChangePasswordDTO;
 import com.ticketing.server.user.service.dto.DeleteUserDTO;
 import com.ticketing.server.user.service.dto.DeleteUserDtoTest;
 import com.ticketing.server.user.service.dto.SignUpDTO;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -33,6 +44,9 @@ class UserServiceImplTest {
 
 	@Mock
 	UserRepository userRepository;
+
+	@Mock
+	PaymentClient paymentClient;
 
 	@InjectMocks
 	UserServiceImpl userService;
@@ -122,6 +136,32 @@ class UserServiceImplTest {
 
 		// then
 		assertThat(user).isNotNull();
+	}
+
+	@Test
+	@DisplayName("회원 결제목록 조회")
+	void findSimplePaymentDetailsSuccess() {
+	    // given
+		List<SimplePaymentDto> paymentDtos = Arrays.asList(
+			SimplePaymentDto.from(
+				Payment.from(
+					CreatePaymentDto.of(1L, "범죄도시2", KAKAO_PAY, COMPLETED, "004-323-77542", 15_000))),
+			SimplePaymentDto.from(
+				Payment.from(
+					CreatePaymentDto.of(1L, "토르", KAKAO_PAY, COMPLETED, "004-323-77544", 30_000)))
+		);
+
+		when(userRepository.findByEmailAndIsDeletedFalse("ticketing@gmail.com")).thenReturn(Optional.of(user));
+		when(paymentClient.getSimplePayments(any())).thenReturn(SimplePaymentsResponse.from(1L, paymentDtos));
+
+	    // when
+		SimplePaymentDetailsResponse paymentDetails = userService.findSimplePaymentDetails("ticketing@gmail.com");
+
+		// then
+		assertAll(
+			() -> assertThat(paymentDetails.getEmail()).isEqualTo("ticketing@gmail.com")
+			, () -> assertThat(paymentDetails.getPayments()).hasSize(2)
+		);
 	}
 
 }

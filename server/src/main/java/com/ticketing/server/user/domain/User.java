@@ -1,10 +1,7 @@
 package com.ticketing.server.user.domain;
 
-import static com.ticketing.server.global.exception.ErrorCode.DELETED_EMAIL;
-import static com.ticketing.server.global.exception.ErrorCode.MISMATCH_PASSWORD;
-
 import com.ticketing.server.global.dto.repository.AbstractEntity;
-import com.ticketing.server.global.exception.TicketingException;
+import com.ticketing.server.global.exception.ErrorCode;
 import com.ticketing.server.global.validator.constraints.Phone;
 import com.ticketing.server.user.service.dto.ChangePasswordDTO;
 import com.ticketing.server.user.service.dto.DeleteUserDTO;
@@ -62,7 +59,7 @@ public class User extends AbstractEntity {
 
 	public User delete(DeleteUserDTO deleteUser) {
 		if (isDeleted) {
-			throw new TicketingException(DELETED_EMAIL);
+			throw ErrorCode.throwDeletedEmail();
 		}
 
 		checkPassword(deleteUser);
@@ -81,7 +78,7 @@ public class User extends AbstractEntity {
 
 	public void checkPassword(PasswordMatches passwordMatches) {
 		if (!passwordMatches.passwordMatches(password)) {
-			throw new TicketingException(MISMATCH_PASSWORD);
+			throw ErrorCode.throwMismatchPassword();
 		}
 	}
 

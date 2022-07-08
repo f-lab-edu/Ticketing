@@ -19,14 +19,14 @@ public class Seat extends AbstractEntity {
 	private Theater theater;
 
 	@NotNull
-	private Integer seatColumn;
-
-	@NotNull
 	private Integer seatRow;
 
-	public Seat(Integer seatColumn, Integer seatRow, Theater theater) {
-		this.seatColumn = seatColumn;
+	@NotNull
+	private Integer seatColumn;
+
+	public Seat(Integer seatRow, Integer seatColumn, Theater theater) {
 		this.seatRow = seatRow;
+		this.seatColumn = seatColumn;
 		setTheater(theater);
 	}
 
