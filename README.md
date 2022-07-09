@@ -52,7 +52,7 @@ erDiagram
         datetime created_at "등록일시"
         datetime updated_at "수정일시"
     }
-    THEATER ||--o{ MOVIE_TIMES : ""
+    THEATER ||--o{ MOVIE_TIME : ""
     THEATER ||--|{ SEAT : ""
     THEATER {
         bigint id PK "상영관 ID"
@@ -84,7 +84,7 @@ erDiagram
     TICKET {
         bigint id PK "티켓 ID"
         bigint seat_id FK "좌석 ID"
-        bigint movie_times_id FK "상영시간표 ID"
+        bigint movie_time_id FK "상영시간표 ID"
         bigint payment_id "결제 ID"
         varchar status "상태 - 구매가능/예약진행중/판매완료"
         int ticket_price "가격"
