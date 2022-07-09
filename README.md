@@ -44,7 +44,7 @@
 
 ``` mermaid
 erDiagram
-    MOVIE ||--o{ MOVIE_TIMES : ""
+    MOVIE ||--o{ MOVIE_TIME : ""
     MOVIE {
         bigint id PK "영화 ID"
         varchar title "영화제목"
