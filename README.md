@@ -70,8 +70,8 @@ erDiagram
         datetime created_at "등록일시"
         datetime updated_at "수정일시"
     }
-    MOVIE_TIMES ||--o{ TICKET : ""
-    MOVIE_TIMES {
+    MOVIE_TIME ||--o{ TICKET : ""
+    MOVIE_TIME {
         bigint id PK "상영시간표 ID"
         bigint movie_id FK "영화 ID"
         bigint theater_id FK "상영관 ID"
