@@ -25,6 +25,7 @@ public enum ErrorCode {
 
 	/* 409 CONFLICT : Resource 의 현재 상태와 충돌. 보통 중복된 데이터 존재 */
 	DUPLICATE_EMAIL(CONFLICT, "이메일이 이미 존재합니다."),
+	DUPLICATE_MOVIE(CONFLICT, "해당 영화 정보가 이미 존재합니다."),
 	DELETED_EMAIL(CONFLICT, "이미 삭제된 이메일 입니다.");
 
 	private final HttpStatus httpStatus;
@@ -63,6 +64,10 @@ public enum ErrorCode {
 	/* 409 CONFLICT : Resource 의 현재 상태와 충돌. 보통 중복된 데이터 존재 */
 	public static TicketingException throwDuplicateEmail() {
 		throw new TicketingException(DUPLICATE_EMAIL);
+	}
+
+	public static TicketingException throwDuplicateMovie() {
+		throw new TicketingException(DUPLICATE_MOVIE);
 	}
 
 	public static TicketingException throwDeletedEmail() {

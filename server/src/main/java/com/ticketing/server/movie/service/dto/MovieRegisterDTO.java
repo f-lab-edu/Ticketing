@@ -1,5 +1,6 @@
 package com.ticketing.server.movie.service.dto;
 
+import com.ticketing.server.movie.domain.Movie;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -17,4 +18,7 @@ public class MovieRegisterDTO {
 	@NotNull(message = "{validation.not.null.runningTime}")
 	private Long runningTime;
 
+	public Movie toMovie() {
+		return new Movie(this.title, this.runningTime);
+	}
 }

@@ -2,6 +2,7 @@ package com.ticketing.server.movie.application;
 
 import com.ticketing.server.movie.application.request.MovieRegisterRequest;
 import com.ticketing.server.movie.application.response.MovieListResponse;
+import com.ticketing.server.movie.application.response.MovieTitleResponse;
 import com.ticketing.server.movie.service.interfaces.MovieService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -29,14 +30,24 @@ public class MovieController {
 	@PostMapping()
 	@ApiOperation(value = "영화 정보 등록")
 	@Secured("ROLE_STAFF")
-	public ResponseEntity<MovieIdResponse> registerMovie(@RequestBody @Valid MovieRegisterRequest request) {
-		return
+	public ResponseEntity<MovieTitleResponse> registerMovie(@RequestBody @Valid MovieRegisterRequest request) {
+		return ResponseEntity.status(HttpStatus.OK)
+			.body(
+				MovieTitleResponse.from(
+					movieService.registerMovie(request.toMovieRegisterDTO())
+				)
+			);
 	}
 
 	@GetMapping()
 	@ApiOperation(value = "영화 목록 조회")
 	public ResponseEntity<MovieListResponse> getMovies() {
-		return ResponseEntity.status(HttpStatus.OK).body(MovieListResponse.from(movieService.getMovies()));
+		return ResponseEntity.status(HttpStatus.OK)
+			.body(
+				MovieListResponse.from(
+					movieService.getMovies()
+				)
+			);
 	}
 
 }
