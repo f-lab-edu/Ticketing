@@ -21,14 +21,14 @@ public class MovieServiceImpl implements MovieService {
 
 	private final MovieRepository movieRepository;
 
-	public Movie registerMovie(MovieRegisterDTO movieRegisterDto) {
+	public MovieDTO registerMovie(MovieRegisterDTO movieRegisterDto) {
 		Optional<Movie> movie = movieRepository.findByTitle(movieRegisterDto.getTitle());
 
 		if(movie.isEmpty()) {
 			return movieRepository.save(movieRegisterDto.toMovie());
 		}
 
-		throw ErrorCode.
+		throw ErrorCode.throwDuplicateMovie();
 	}
 
 	public List<MovieDTO> getMovies() {
