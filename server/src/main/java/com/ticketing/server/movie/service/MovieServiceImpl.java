@@ -1,8 +1,9 @@
 package com.ticketing.server.movie.service;
 
+import com.ticketing.server.movie.application.request.MovieRegisterRequest;
 import com.ticketing.server.movie.domain.Movie;
 import com.ticketing.server.movie.domain.repository.MovieRepository;
-import com.ticketing.server.movie.service.dto.MovieDto;
+import com.ticketing.server.movie.service.dto.MovieDTO;
 import com.ticketing.server.movie.service.interfaces.MovieService;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,11 +18,15 @@ public class MovieServiceImpl implements MovieService {
 
     private final MovieRepository movieRepository;
 
-    public List<MovieDto> getMovies() {
+	public Movie registerMovie(MovieRegisterRequest request) {
+
+	}
+
+    public List<MovieDTO> getMovies() {
         List<Movie> movies = movieRepository.findValidMovies();
 
         return movies.stream()
-            .map(MovieDto::from)
+            .map(MovieDTO::from)
             .collect(Collectors.toList());
 
     }

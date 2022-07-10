@@ -1,6 +1,6 @@
 package com.ticketing.server.movie.application.response;
 
-import com.ticketing.server.movie.service.dto.MovieDto;
+import com.ticketing.server.movie.service.dto.MovieDTO;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -13,7 +13,7 @@ public class MovieTitleResponse {
 	@ApiModelProperty(value = "영화 제목")
 	private String title;
 
-	public static MovieTitleResponse from(MovieDto movieDto) {
+	public static MovieTitleResponse from(MovieDTO movieDto) {
 		return new MovieTitleResponse(movieDto.getTitle());
 	}
 

@@ -8,7 +8,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class MovieTimeDto {
+public class MovieTimeDTO {
 
     private Long movieTimeId;
 
@@ -20,8 +20,8 @@ public class MovieTimeDto {
 
     private LocalDateTime endAt;
 
-    public static MovieTimeDto from(MovieTime movieTime) {
-        return new MovieTimeDto(movieTime.getId(), movieTime.getTheater().getTheaterNumber(),
+    public static MovieTimeDTO from(MovieTime movieTime) {
+        return new MovieTimeDTO(movieTime.getId(), movieTime.getTheater().getTheaterNumber(),
             movieTime.getRound(), movieTime.getStartAt(), movieTime.getEndAt());
     }
 

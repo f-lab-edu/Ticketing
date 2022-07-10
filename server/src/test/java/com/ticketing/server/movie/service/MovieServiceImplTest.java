@@ -5,11 +5,10 @@ import static org.mockito.Mockito.when;
 
 import com.ticketing.server.movie.domain.Movie;
 import com.ticketing.server.movie.domain.repository.MovieRepository;
-import com.ticketing.server.movie.service.dto.MovieDto;
+import com.ticketing.server.movie.service.dto.MovieDTO;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,9 +20,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 public class MovieServiceImplTest {
 
     Movie movie;
-    MovieDto movieDto;
+    MovieDTO movieDto;
     List<Movie> movies = new ArrayList<>();
-    List<MovieDto> movieDtos = new ArrayList<>();
+    List<MovieDTO> movieDTOS = new ArrayList<>();
 
     @Mock
     MovieRepository movieRepository;
@@ -39,10 +38,10 @@ public class MovieServiceImplTest {
             .thenReturn(Collections.emptyList());
 
         // when
-        List<MovieDto> movieDtoList = movieService.getMovies();
+        List<MovieDTO> movieDTOList = movieService.getMovies();
 
         // then
-        assertTrue(movieDtoList.isEmpty());
+        assertTrue(movieDTOList.isEmpty());
     }
 
     @Test
@@ -52,16 +51,16 @@ public class MovieServiceImplTest {
         movie = new Movie("범죄도시2", 106L);
         movieDto = movieDto.from(movie);
         movies.add(movie);
-        movieDtos.add(movieDto);
+        movieDTOS.add(movieDto);
 
         when(movieRepository.findValidMovies())
             .thenReturn(movies);
 
         // when
-        List<MovieDto> movieDtoList = movieService.getMovies();
+        List<MovieDTO> movieDTOList = movieService.getMovies();
 
         // then
-        assertTrue(!movieDtoList.isEmpty());
+        assertTrue(!movieDTOList.isEmpty());
     }
 
 }
