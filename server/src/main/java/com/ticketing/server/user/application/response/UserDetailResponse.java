@@ -1,21 +1,27 @@
 package com.ticketing.server.user.application.response;
 
-import com.ticketing.server.user.domain.User;
 import com.ticketing.server.user.domain.UserGrade;
+import com.ticketing.server.user.service.dto.UserDetailDTO;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserDetailResponse {
 
-	private String name;
-	private String email;
-	private UserGrade grade;
-	private String phone;
+	private final String name;
+	private final String email;
+	private final UserGrade grade;
+	private final String phone;
 
-	public static UserDetailResponse from(User user) {
-		return new UserDetailResponse(user.getName(), user.getEmail(), user.getGrade(), user.getPhone());
+	public UserDetailResponse(UserDetailDTO userDetailDto) {
+		this(
+			userDetailDto.getName(),
+			userDetailDto.getEmail(),
+			userDetailDto.getGrade(),
+			userDetailDto.getPhone()
+		);
 	}
 
 }

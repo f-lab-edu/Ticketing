@@ -7,15 +7,15 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class SimplePaymentDto {
+public class SimplePaymentDTO {
 
 	private Long paymentId;
 	private String movieTitle;
 	private String paymentNumber;
 	private Integer totalPrice;
 
-	public static SimplePaymentDto from(Payment payment) {
-		return new SimplePaymentDto(
+	public SimplePaymentDTO(Payment payment) {
+		this(
 			payment.getId(),
 			payment.getMovieTitle(),
 			payment.getPaymentNumber(),

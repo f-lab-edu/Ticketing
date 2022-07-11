@@ -6,7 +6,7 @@ import com.ticketing.server.user.domain.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class SignUpDtoTest {
+class SignUpDTOTest {
 
 	@Test
 	@DisplayName("toUser 메소드로 User 객체 생성")
@@ -15,7 +15,7 @@ class SignUpDtoTest {
 		SignUpDTO signUp = new SignUpDTO("유저1", "ticketing@gmail.com", "123456", "010-1234-5678");
 
 		// when
-		User user = signUp.toUser();
+		User user = signUp.toUser(111L);
 
 		// then
 		assertThat(user).isInstanceOf(User.class);

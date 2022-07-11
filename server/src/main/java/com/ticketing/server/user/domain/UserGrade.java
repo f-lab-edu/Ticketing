@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 public enum UserGrade {
 	ADMIN(ROLES.ADMIN, null),
 	STAFF(ROLES.STAFF, ROLES.ADMIN),
-	GUEST(ROLES.GUEST, ROLES.STAFF);
+	USER(ROLES.USER, ROLES.STAFF);
 
 	private final String roleName;
 	private final String parentName;
@@ -15,7 +15,7 @@ public enum UserGrade {
 
 		public static final String ADMIN = "ROLE_ADMIN";
 		public static final String STAFF = "ROLE_STAFF";
-		public static final String GUEST = "ROLE_GUEST";
+		public static final String USER = "ROLE_USER";
 
 		private ROLES() {
 		}

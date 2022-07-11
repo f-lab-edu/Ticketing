@@ -7,12 +7,13 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Theater extends AbstractEntity {
 
 	@NotNull
@@ -20,6 +21,11 @@ public class Theater extends AbstractEntity {
 
 	@OneToMany(mappedBy = "theater", cascade = CascadeType.ALL)
 	private List<Seat> seats = new ArrayList<>();
+
+	Theater(Long id, Integer theaterNumber) {
+		this.id = id;
+		this.theaterNumber = theaterNumber;
+	}
 
 	public Theater(Integer theaterNumber) {
 		this.theaterNumber = theaterNumber;

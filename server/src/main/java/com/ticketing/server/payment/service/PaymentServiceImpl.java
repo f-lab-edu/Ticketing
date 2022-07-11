@@ -1,26 +1,37 @@
 package com.ticketing.server.payment.service;
 
 import com.ticketing.server.payment.domain.repository.PaymentRepository;
-import com.ticketing.server.payment.service.dto.SimplePaymentDto;
+import com.ticketing.server.payment.service.dto.SimplePaymentDTO;
+import com.ticketing.server.payment.service.dto.SimplePaymentsDTO;
 import com.ticketing.server.payment.service.interfaces.PaymentService;
-import com.ticketing.server.user.api.dto.response.SimplePaymentsResponse;
 import java.util.stream.Collectors;
+import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
+@Validated
+@Slf4j
 public class PaymentServiceImpl implements PaymentService {
 
 	private final PaymentRepository paymentRepository;
 
 	@Override
-	public SimplePaymentsResponse findSimplePayments(Long userId) {
-		return paymentRepository.findByUserId(userId)
+	public SimplePaymentsDTO findSimplePayments(@NotNull Long userAlternateId) {
+		return paymentRepository.findByUserAlternateId(userAlternateId)
 			.stream()
-			.map(SimplePaymentDto::from)
-			.collect(Collectors.collectingAndThen(Collectors.toList()
-				, list -> SimplePaymentsResponse.from(userId, list)));
+			.map(SimplePaymentDTO::new)
+			.collect(Collectors
+				.collectingAndThen(
+					Collectors.toList()
+					, payments -> new SimplePaymentsDTO(userAlternateId, payments)
+				)
+			);
 	}
 
 }

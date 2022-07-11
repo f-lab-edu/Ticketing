@@ -32,7 +32,7 @@ jwt:
   refresh-header: REFRESH_TOKEN
   prefix: Bearer
   secret-key: Zi1sYWItdGlja2V0aW5nLXByb2plY3Qtc3ByaW5nLWJvb3Qtc2VjdXJpdHktand0LXNlY3JldC1rZXktZi1sYWItdGlja2V0aW5nLXByb2plY3Qtc3ByaW5nLWJvb3Qtc2VjdXJpdHktand0LXNlY3JldC1rZXkK
-  access-token-validity-in-seconds: 60 # 1분
+  access-token-validity-in-seconds: 1800 # 30분
   refresh-token-validity-in-seconds: 259200 # 3일
 
 springfox:

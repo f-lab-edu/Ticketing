@@ -19,7 +19,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-		return userRepository.findByEmailAndIsDeletedFalse(email)
+		return userRepository.findByEmailAndDeletedAtNull(email)
 			.map(this::createUserDetails)
 			.orElseThrow(ErrorCode::throwEmailNotFound);
 	}
@@ -33,4 +33,5 @@ public class CustomUserDetailsService implements UserDetailsService {
 			, Collections.singleton(grantedAuthority)
 		);
 	}
+
 }
