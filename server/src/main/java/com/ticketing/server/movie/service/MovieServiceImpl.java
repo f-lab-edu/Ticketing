@@ -1,7 +1,6 @@
 package com.ticketing.server.movie.service;
 
 import com.ticketing.server.global.exception.ErrorCode;
-import com.ticketing.server.movie.application.request.MovieRegisterRequest;
 import com.ticketing.server.movie.domain.Movie;
 import com.ticketing.server.movie.domain.repository.MovieRepository;
 import com.ticketing.server.movie.service.dto.MovieDTO;
@@ -21,16 +20,18 @@ public class MovieServiceImpl implements MovieService {
 
 	private final MovieRepository movieRepository;
 
+	@Override
 	public MovieDTO registerMovie(MovieRegisterDTO movieRegisterDto) {
 		Optional<Movie> movie = movieRepository.findByTitle(movieRegisterDto.getTitle());
 
 		if(movie.isEmpty()) {
-			return movieRepository.save(movieRegisterDto.toMovie());
+			return MovieDTO.from(movieRepository.save(movieRegisterDto.toMovie()));
 		}
 
 		throw ErrorCode.throwDuplicateMovie();
 	}
 
+	@Override
 	public List<MovieDTO> getMovies() {
 		List<Movie> movies = movieRepository.findValidMovies();
 
