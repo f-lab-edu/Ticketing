@@ -1,18 +1,17 @@
 package com.ticketing.server.user.service;
 
 import com.ticketing.server.global.exception.ErrorCode;
-import com.ticketing.server.user.api.PaymentClient;
-import com.ticketing.server.user.api.dto.request.SimplePaymentsRequest;
-import com.ticketing.server.user.api.dto.response.SimplePaymentsResponse;
-import com.ticketing.server.user.application.response.SimplePaymentDetailsResponse;
+import com.ticketing.server.user.domain.SequenceGenerator;
 import com.ticketing.server.user.domain.User;
 import com.ticketing.server.user.domain.repository.UserRepository;
 import com.ticketing.server.user.service.dto.ChangePasswordDTO;
 import com.ticketing.server.user.service.dto.DeleteUserDTO;
 import com.ticketing.server.user.service.dto.SignUpDTO;
+import com.ticketing.server.user.service.dto.UserDetailDTO;
 import com.ticketing.server.user.service.interfaces.UserService;
 import java.util.Optional;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -27,14 +26,14 @@ import org.springframework.validation.annotation.Validated;
 public class UserServiceImpl implements UserService {
 
 	private final UserRepository userRepository;
-	private final PaymentClient paymentClient;
+	private final SequenceGenerator sequenceGenerator;
 
 	@Override
 	@Transactional
 	public User register(@Valid SignUpDTO signUpDto) {
 		Optional<User> user = userRepository.findByEmail(signUpDto.getEmail());
 		if (user.isEmpty()) {
-			return userRepository.save(signUpDto.toUser());
+			return userRepository.save(signUpDto.toUser(sequenceGenerator.generateId()));
 		}
 
 		throw ErrorCode.throwDuplicateEmail();
@@ -55,21 +54,16 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User findByEmail(String email) {
-		return userRepository.findByEmail(email)
+	public UserDetailDTO findDetailByEmail(@NotNull String email) {
+		User user = userRepository.findByEmail(email)
 			.orElseThrow(ErrorCode::throwEmailNotFound);
+
+		return new UserDetailDTO(user);
 	}
 
 	@Override
-	public SimplePaymentDetailsResponse findSimplePaymentDetails(String email) {
-		User user = findNotDeletedUserByEmail(email);
-		SimplePaymentsResponse simplePayments = paymentClient.getSimplePayments(SimplePaymentsRequest.from(user));
-
-		return SimplePaymentDetailsResponse.of(email, simplePayments);
-	}
-
-	private User findNotDeletedUserByEmail(String email) {
-		return userRepository.findByEmailAndIsDeletedFalse(email)
+	public User findNotDeletedUserByEmail(@NotNull String email) {
+		return userRepository.findByEmailAndDeletedAtNull(email)
 			.orElseThrow(ErrorCode::throwEmailNotFound);
 	}
 

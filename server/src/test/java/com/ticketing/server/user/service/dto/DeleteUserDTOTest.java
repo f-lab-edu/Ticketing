@@ -6,7 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-public class DeleteUserDtoTest {
+public class DeleteUserDTOTest {
 
 	public static PasswordEncoder CUSTOM_PASSWORD_ENCODER = new CustomPasswordEncoder();
 

@@ -1,10 +1,10 @@
 package com.ticketing.server.user.api;
 
-import com.ticketing.server.user.api.dto.request.SimplePaymentsRequest;
-import com.ticketing.server.user.api.dto.response.SimplePaymentsResponse;
+import com.ticketing.server.payment.application.response.SimplePaymentsResponse;
+import javax.validation.constraints.NotNull;
 
 public interface PaymentClient {
 
-	SimplePaymentsResponse getSimplePayments(SimplePaymentsRequest request);
+	SimplePaymentsResponse getPayments(@NotNull Long alternateId);
 
 }

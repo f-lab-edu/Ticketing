@@ -5,9 +5,11 @@ import com.ticketing.server.user.domain.User;
 import com.ticketing.server.user.domain.UserGrade;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
+@AllArgsConstructor
 public class SignUpDTO {
 
 	@NotEmpty(message = "{validation.not.empty.name}")
@@ -24,15 +26,8 @@ public class SignUpDTO {
 	@Phone
 	private String phone;
 
-	public SignUpDTO(String name, String email, String password, String phone) {
-		this.name = name;
-		this.email = email;
-		this.password = password;
-		this.phone = phone;
-	}
-
-	public User toUser() {
-		return new User(this.name, this.email, password, UserGrade.GUEST, this.phone);
+	public User toUser(long alternateId) {
+		return new User(alternateId, this.name, this.email, password, UserGrade.USER, this.phone);
 	}
 
 	@Override

@@ -6,25 +6,27 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MovieTime extends AbstractEntity {
 
 	@NotNull
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "movie_id", referencedColumnName = "id", updatable = false)
 	private Movie movie;
 
 	@NotNull
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "theater_id", referencedColumnName = "id", updatable = false)
 	private Theater theater;
 
@@ -40,19 +42,30 @@ public class MovieTime extends AbstractEntity {
 	@OneToMany(mappedBy = "movieTime", cascade = CascadeType.ALL)
 	private List<Ticket> tickets = new ArrayList<>();
 
-	private MovieTime(Movie movie, Theater theater, int round, LocalDateTime startAt, LocalDateTime endAt) {
+	public MovieTime(Movie movie, Theater theater, int round, LocalDateTime startAt) {
 		this.movie = movie;
 		this.theater = theater;
 		this.round = round;
 		this.startAt = startAt;
-		this.endAt = endAt;
+		this.endAt = generateEndAt(startAt);
 	}
 
-	public static MovieTime of(Movie movie, Theater theater, int round, LocalDateTime startAt) {
-		Long runningTime = movie.getRunningTime();
-		LocalDateTime endAt = startAt.plusMinutes(runningTime);
+	MovieTime(Long id, Movie movie, Theater theater, int round, LocalDateTime startAt) {
+		this.id = id;
+		this.movie = movie;
+		this.theater = theater;
+		this.round = round;
+		this.startAt = startAt;
+		this.endAt = generateEndAt(startAt);
+	}
 
-		return new MovieTime(movie, theater, round, startAt, endAt);
+	private LocalDateTime generateEndAt(LocalDateTime startAt) {
+		Long runningTime = movie.getRunningTime();
+		return startAt.plusMinutes(runningTime);
+	}
+
+	public String getMovieTitle() {
+		return this.movie.getTitle();
 	}
 
 	public List<Seat> getSeats() {

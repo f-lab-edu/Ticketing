@@ -63,7 +63,7 @@ public class MovieTimeServiceImplTest {
         // given
         Movie movie = new Movie(title, 106L);
         Theater theater = new Theater(1);
-        MovieTime movieTime = MovieTime.of(movie, theater, 1,
+        MovieTime movieTime = new MovieTime(movie, theater, 1,
             LocalDateTime.of(2022, 7, 1, 17, 0, 0)
         );
 

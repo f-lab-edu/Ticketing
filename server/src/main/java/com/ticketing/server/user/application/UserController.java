@@ -3,14 +3,16 @@ package com.ticketing.server.user.application;
 import com.ticketing.server.user.application.request.SignUpRequest;
 import com.ticketing.server.user.application.request.UserChangePasswordRequest;
 import com.ticketing.server.user.application.request.UserDeleteRequest;
+import com.ticketing.server.user.application.response.PaymentsResponse;
 import com.ticketing.server.user.application.response.SignUpResponse;
-import com.ticketing.server.user.application.response.SimplePaymentDetailsResponse;
 import com.ticketing.server.user.application.response.UserChangePasswordResponse;
 import com.ticketing.server.user.application.response.UserDeleteResponse;
 import com.ticketing.server.user.application.response.UserDetailResponse;
 import com.ticketing.server.user.domain.User;
 import com.ticketing.server.user.domain.UserGrade;
-import com.ticketing.server.user.service.UserServiceImpl;
+import com.ticketing.server.user.service.dto.UserDetailDTO;
+import com.ticketing.server.user.service.interfaces.UserApisService;
+import com.ticketing.server.user.service.interfaces.UserService;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +36,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class UserController {
 
-	private final UserServiceImpl userService;
+	private final UserApisService userApisService;
+	private final UserService userService;
 	private final PasswordEncoder passwordEncoder;
 
 	@PostMapping
@@ -44,21 +47,21 @@ public class UserController {
 	}
 
 	@GetMapping("/details")
-	@Secured("ROLE_GUEST")
+	@Secured(UserGrade.ROLES.USER)
 	public ResponseEntity<UserDetailResponse> details(@AuthenticationPrincipal UserDetails userRequest) {
-		User user = userService.findByEmail(userRequest.getUsername());
-		return ResponseEntity.status(HttpStatus.OK).body(UserDetailResponse.from(user));
+		UserDetailDTO userDetail = userService.findDetailByEmail(userRequest.getUsername());
+		return ResponseEntity.status(HttpStatus.OK).body(userDetail.toResponse());
 	}
 
 	@DeleteMapping
-	@Secured(UserGrade.ROLES.GUEST)
+	@Secured(UserGrade.ROLES.USER)
 	public ResponseEntity<UserDeleteResponse> deleteUser(@RequestBody @Valid UserDeleteRequest request) {
 		User user = userService.delete(request.toDeleteUserDto(passwordEncoder));
 		return ResponseEntity.status(HttpStatus.OK).body(UserDeleteResponse.from(user));
 	}
 
 	@PutMapping("/password")
-	@Secured(UserGrade.ROLES.GUEST)
+	@Secured(UserGrade.ROLES.USER)
 	public ResponseEntity<UserChangePasswordResponse> changePassword(
 		@AuthenticationPrincipal UserDetails userRequest,
 		@RequestBody @Valid UserChangePasswordRequest request) {
@@ -67,9 +70,9 @@ public class UserController {
 	}
 
 	@GetMapping("/payments")
-	@Secured("ROLE_GUEST")
-	public ResponseEntity<SimplePaymentDetailsResponse> getPayments(@AuthenticationPrincipal UserDetails userRequest) {
-		SimplePaymentDetailsResponse paymentDetails = userService.findSimplePaymentDetails(userRequest.getUsername());
+	@Secured(UserGrade.ROLES.USER)
+	public ResponseEntity<PaymentsResponse> getPayments(@AuthenticationPrincipal UserDetails userRequest) {
+		PaymentsResponse paymentDetails = userApisService.findPaymentsByEmail(userRequest.getUsername());
 		return ResponseEntity.status(HttpStatus.OK).body(paymentDetails);
 	}
 

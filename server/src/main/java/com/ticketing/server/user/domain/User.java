@@ -14,42 +14,54 @@ import javax.persistence.Enumerated;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends AbstractEntity {
 
-	@Column(name = "name")
+	@Column(name = "alternate_key", unique = true, nullable = false)
+	@NotNull(message = "{validation.not.null.alternate.key}")
+	private Long alternateId;
+
+	@Column(name = "name", nullable = false)
 	@NotEmpty(message = "{validation.not.empty.name}")
 	private String name;
 
-	@Column(name = "email")
+	@Column(name = "email", unique = true, nullable = false)
 	@NotEmpty(message = "{validation.not.empty.email}")
 	@Email(message = "{validation.email}")
 	private String email;
 
-	@Column(name = "password")
+	@Column(name = "password", nullable = false)
 	@NotEmpty(message = "{validation.not.empty.password}")
 	private String password;
 
-	@Column(name = "grade")
-	@NotNull(message = "{validation.not.empty.grade}")
+	@Column(name = "grade", nullable = false)
+	@NotNull(message = "{validation.not.null.grade}")
 	@Enumerated(value = EnumType.STRING)
-	private UserGrade grade = UserGrade.GUEST;
+	private UserGrade grade = UserGrade.USER;
 
-	@Column(name = "phone")
+	@Column(name = "phone", nullable = false)
 	@NotEmpty(message = "{validation.not.empty.phone}")
 	@Phone
 	private String phone;
 
-	private boolean isDeleted = false;
+	public User(Long alternateId, String name, String email, String password, UserGrade grade, String phone) {
+		this.alternateId = alternateId;
+		this.name = name;
+		this.email = email;
+		this.password = password;
+		this.grade = grade;
+		this.phone = phone;
+	}
 
-	private LocalDateTime deletedAt;
-
-	public User(String name, String email, String password, UserGrade grade, String phone) {
+	User(Long id, Long alternateId, String name, String email, String password, UserGrade grade, String phone) {
+		this.id = id;
+		this.alternateId = alternateId;
 		this.name = name;
 		this.email = email;
 		this.password = password;
@@ -58,13 +70,12 @@ public class User extends AbstractEntity {
 	}
 
 	public User delete(DeleteUserDTO deleteUser) {
-		if (isDeleted) {
+		if (deletedAt != null) {
 			throw ErrorCode.throwDeletedEmail();
 		}
 
 		checkPassword(deleteUser);
 
-		isDeleted = true;
 		deletedAt = LocalDateTime.now();
 		return this;
 	}

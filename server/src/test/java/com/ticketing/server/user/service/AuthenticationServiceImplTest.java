@@ -53,7 +53,7 @@ class AuthenticationServiceImplTest {
 	@BeforeEach
 	void init() {
 		useJwtProvider = new JwtProvider(useJwtProperties);
-		SimpleGrantedAuthority grantedAuthority = new SimpleGrantedAuthority(UserGrade.GUEST.name());
+		SimpleGrantedAuthority grantedAuthority = new SimpleGrantedAuthority(UserGrade.USER.name());
 		authenticationToken =
 			new UsernamePasswordAuthenticationToken("ticketing@gmail.com", "123456", Collections.singleton(grantedAuthority));
 	}

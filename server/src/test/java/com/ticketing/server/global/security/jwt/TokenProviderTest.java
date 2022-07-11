@@ -38,7 +38,7 @@ class TokenProviderTest {
 	@DisplayName("토큰 생성 성공")
 	void createTokenSuccess() {
 		// given
-		SimpleGrantedAuthority grantedAuthority = new SimpleGrantedAuthority(UserGrade.GUEST.name());
+		SimpleGrantedAuthority grantedAuthority = new SimpleGrantedAuthority(UserGrade.USER.name());
 		UsernamePasswordAuthenticationToken authenticationToken =
 			new UsernamePasswordAuthenticationToken("ticketing@gmail.com", "123456", Collections.singleton(grantedAuthority));
 
@@ -53,7 +53,7 @@ class TokenProviderTest {
 	@DisplayName("토큰 복호화 성공")
 	void getAuthentication() {
 		// given
-		SimpleGrantedAuthority grantedAuthority = new SimpleGrantedAuthority(UserGrade.GUEST.name());
+		SimpleGrantedAuthority grantedAuthority = new SimpleGrantedAuthority(UserGrade.USER.name());
 		UsernamePasswordAuthenticationToken authenticationToken =
 			new UsernamePasswordAuthenticationToken("ticketing@gmail.com", "123456", Collections.singleton(grantedAuthority));
 
