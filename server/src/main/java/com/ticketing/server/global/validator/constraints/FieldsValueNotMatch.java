@@ -15,7 +15,7 @@ import javax.validation.Payload;
 @Documented
 public @interface FieldsValueNotMatch {
 
-	String message();
+	String message() default "validation.password.not.change";
 
 	String field();
 

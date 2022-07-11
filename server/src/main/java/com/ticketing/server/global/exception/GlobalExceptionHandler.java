@@ -9,6 +9,7 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 import static org.springframework.http.HttpStatus.UNSUPPORTED_MEDIA_TYPE;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -53,7 +54,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
 		List<String> errors = generateErrors(ex);
 		ErrorResponse response = new ErrorResponse(BAD_REQUEST, ex.getLocalizedMessage(), errors);
-		return handleExceptionInternal(ex, response, headers, response.getStatus(), request);
+
+		return ResponseEntity.status(response.getStatus()).headers(headers).body(response);
 	}
 
 	/***
@@ -66,7 +68,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
 		List<String> errors = generateErrors(ex);
 		ErrorResponse response = new ErrorResponse(BAD_REQUEST, ex.getLocalizedMessage(), errors);
-		return handleExceptionInternal(ex, response, headers, response.getStatus(), request);
+		return ResponseEntity.status(response.getStatus()).headers(headers).body(response);
 	}
 
 	/**
@@ -238,7 +240,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 		List<ObjectError> allErrors = ex.getBindingResult().getAllErrors();
 
 		for (ObjectError error : allErrors) {
-			errors.add(((FieldError) error).getField() + ": " + error.getDefaultMessage());
+			errors.add(error.getDefaultMessage());
 		}
 		return errors;
 	}
