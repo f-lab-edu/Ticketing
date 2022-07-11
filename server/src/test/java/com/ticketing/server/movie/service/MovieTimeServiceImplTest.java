@@ -9,7 +9,7 @@ import com.ticketing.server.movie.domain.MovieTime;
 import com.ticketing.server.movie.domain.Theater;
 import com.ticketing.server.movie.domain.repository.MovieRepository;
 import com.ticketing.server.movie.domain.repository.MovieTimeRepository;
-import com.ticketing.server.movie.service.dto.MovieTimeDto;
+import com.ticketing.server.movie.service.dto.MovieTimeDTO;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -51,10 +51,10 @@ public class MovieTimeServiceImplTest {
             .thenReturn(Collections.emptyList());
 
         // when
-        List<MovieTimeDto> movieTimeDtoList = movieTimeService.getMovieTimes(title, LocalDate.now());
+        List<MovieTimeDTO> movieTimeDTOList = movieTimeService.getMovieTimes(title, LocalDate.now());
 
         // then
-        assertTrue(movieTimeDtoList.isEmpty());
+        assertTrue(movieTimeDTOList.isEmpty());
     }
 
     @Test
@@ -76,10 +76,10 @@ public class MovieTimeServiceImplTest {
             .thenReturn(movieTimes);
 
         // when
-        List<MovieTimeDto> movieTimeDtoList = movieTimeService.getMovieTimes(title, LocalDate.of(2022, 07, 01));
+        List<MovieTimeDTO> movieTimeDTOList = movieTimeService.getMovieTimes(title, LocalDate.of(2022, 07, 01));
 
         // then
-        assertTrue(!movieTimeDtoList.isEmpty());
+        assertTrue(!movieTimeDTOList.isEmpty());
     }
 
 }

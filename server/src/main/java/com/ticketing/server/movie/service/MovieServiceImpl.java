@@ -1,10 +1,13 @@
 package com.ticketing.server.movie.service;
 
+import com.ticketing.server.global.exception.ErrorCode;
 import com.ticketing.server.movie.domain.Movie;
 import com.ticketing.server.movie.domain.repository.MovieRepository;
-import com.ticketing.server.movie.service.dto.MovieDto;
+import com.ticketing.server.movie.service.dto.MovieDTO;
+import com.ticketing.server.movie.service.dto.MovieRegisterDTO;
 import com.ticketing.server.movie.service.interfaces.MovieService;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,15 +18,27 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class MovieServiceImpl implements MovieService {
 
-    private final MovieRepository movieRepository;
+	private final MovieRepository movieRepository;
 
-    public List<MovieDto> getMovies() {
-        List<Movie> movies = movieRepository.findValidMovies();
+	@Override
+	public MovieDTO registerMovie(MovieRegisterDTO movieRegisterDto) {
+		Optional<Movie> movie = movieRepository.findByTitle(movieRegisterDto.getTitle());
 
-        return movies.stream()
-            .map(MovieDto::from)
-            .collect(Collectors.toList());
+		if(movie.isEmpty()) {
+			return MovieDTO.from(movieRepository.save(movieRegisterDto.toMovie()));
+		}
 
-    }
+		throw ErrorCode.throwDuplicateMovie();
+	}
+
+	@Override
+	public List<MovieDTO> getMovies() {
+		List<Movie> movies = movieRepository.findValidMovies();
+
+		return movies.stream()
+			.map(MovieDTO::from)
+			.collect(Collectors.toList());
+
+	}
 
 }
