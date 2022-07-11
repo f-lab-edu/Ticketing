@@ -7,12 +7,12 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class MovieDto {
+public class MovieDTO {
 
     private String title;
 
-    public static MovieDto from(Movie movie) {
-        return new MovieDto(movie.getTitle());
+    public static MovieDTO from(Movie movie) {
+        return new MovieDTO(movie.getTitle());
     }
 
 }
