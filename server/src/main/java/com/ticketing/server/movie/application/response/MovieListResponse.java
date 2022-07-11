@@ -12,10 +12,10 @@ import lombok.Getter;
 public class MovieListResponse {
 
     @ApiModelProperty(value = "영화 제목")
-    private List<MovieDTO> movieDTOS;
+    private List<MovieDTO> movieDtos;
 
-    public static MovieListResponse from(List<MovieDTO> movieDTOS) {
-        return new MovieListResponse(movieDTOS);
+    public static MovieListResponse from(List<MovieDTO> movieDtos) {
+        return new MovieListResponse(movieDtos);
     }
 
 }
