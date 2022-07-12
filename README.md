@@ -37,6 +37,7 @@
 - [패키지 구조](https://github.com/f-lab-edu/Ticketing/wiki#-%ED%8C%A8%ED%82%A4%EC%A7%80-%EA%B5%AC%EC%A1%B0)
 - [Use Case](https://github.com/f-lab-edu/Ticketing/wiki/Use-Case)
 - [Prototype](https://github.com/f-lab-edu/Ticketing/wiki/Prototype)
+- [Issue Posting](https://github.com/f-lab-edu/Ticketing/wiki/Issue-Posting)
 
 <br/>
 
