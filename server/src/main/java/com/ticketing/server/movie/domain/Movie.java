@@ -16,7 +16,6 @@ import lombok.NoArgsConstructor;
 public class Movie extends AbstractEntity {
 
 	@NotNull
-	@Column(unique = true)
 	private String title;
 
 	@NotNull

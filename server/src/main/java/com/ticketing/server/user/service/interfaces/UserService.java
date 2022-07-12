@@ -2,6 +2,7 @@ package com.ticketing.server.user.service.interfaces;
 
 import com.ticketing.server.user.domain.ChangeGradeDTO;
 import com.ticketing.server.user.domain.User;
+import com.ticketing.server.user.domain.UserGrade;
 import com.ticketing.server.user.service.dto.ChangedPasswordUserDTO;
 import com.ticketing.server.user.service.dto.DeletedUserDTO;
 import com.ticketing.server.user.service.dto.ChangePasswordDTO;
