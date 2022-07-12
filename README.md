@@ -49,6 +49,7 @@ erDiagram
         bigint id PK "영화 ID"
         varchar title "영화제목"
         int running_time "러닝타임"
+        datetime deleted_at "삭제일시"
         datetime created_at "등록일시"
         datetime updated_at "수정일시"
     }
@@ -58,6 +59,7 @@ erDiagram
         bigint id PK "상영관 ID"
         int theater_number "상영관 번호"
         int seat_count "좌석수"
+        datetime deleted_at "삭제일시"
         datetime created_at "등록일시"
         datetime updated_at "수정일시"
     }
@@ -67,6 +69,7 @@ erDiagram
         bigint theater_id FK "상영관 ID"
         int column "열"
         int row "행"
+        datetime deleted_at "삭제일시"
         datetime created_at "등록일시"
         datetime updated_at "수정일시"
     }
@@ -78,6 +81,7 @@ erDiagram
         int round "회차"
         time start_at "시작 시간"
         time end_at "종료 시간"
+        datetime deleted_at "삭제일시"
         datetime created_at "등록일시"
         datetime updated_at "수정일시"
     }
@@ -88,6 +92,7 @@ erDiagram
         bigint payment_id "결제 ID"
         varchar status "상태 - 구매가능/예약진행중/판매완료"
         int ticket_price "가격"
+        datetime deleted_at "삭제일시"
         datetime created_at "등록일시"
         datetime updated_at "수정일시"
     }
@@ -101,6 +106,7 @@ erDiagram
         varchar failed_message "실패사유 - 컬럼명을 알아보기 쉬운가?"
         varchar payment_number "예매번호"
         int total_price "결제 금액"
+        datetime deleted_at "삭제일시"
         datetime created_at "결제일시"
         datetime updated_at "수정일시"
     }
@@ -113,7 +119,6 @@ erDiagram
         varchar password "비밀번호"
         varchar grade "등급 - 고객/임직원"
         varchar phone "휴대폰 번호"
-        boolean is_deleted "탈퇴여부"
         datetime deleted_at "탈퇴일시"
         datetime created_at "가입일시"
         datetime updated_at "수정일시"
