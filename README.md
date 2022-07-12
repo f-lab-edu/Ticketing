@@ -94,7 +94,7 @@ erDiagram
     TICKET }|--|| PAYMENT : ""
     PAYMENT {
         bigint id PK "결제 ID"
-        bigint user_id "유저ID"
+        bigint user_alternate_id "유저 대체ID"
         varchar movie_title "영화제목"
         varchar type "결제 타입 - 예) 네이버페이, 카카오페이"
         varchar status "상태 - 완료/환불/실패"
@@ -107,6 +107,7 @@ erDiagram
     USER ||--o{ PAYMENT : ""
     USER {
         bigint id "회원"
+        bigint alternate_id "대체ID"
         varchar name "이름"
         varchar email "이메일"
         varchar password "비밀번호"
