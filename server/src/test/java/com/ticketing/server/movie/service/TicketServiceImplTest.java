@@ -11,7 +11,7 @@ import com.ticketing.server.global.exception.TicketingException;
 import com.ticketing.server.movie.domain.Ticket;
 import com.ticketing.server.movie.domain.repository.TicketRepository;
 import com.ticketing.server.movie.service.dto.TicketDetailsDTO;
-import com.ticketing.server.payment.application.response.TicketDetailDTO;
+import com.ticketing.server.payment.service.dto.TicketDetailDTO;
 import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;

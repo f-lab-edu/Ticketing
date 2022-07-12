@@ -4,7 +4,7 @@ import com.ticketing.server.global.exception.ErrorCode;
 import com.ticketing.server.movie.domain.repository.TicketRepository;
 import com.ticketing.server.movie.service.dto.TicketDetailsDTO;
 import com.ticketing.server.movie.service.interfaces.TicketService;
-import com.ticketing.server.payment.application.response.TicketDetailDTO;
+import com.ticketing.server.payment.service.dto.TicketDetailDTO;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.constraints.NotNull;

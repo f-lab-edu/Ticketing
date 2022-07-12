@@ -2,7 +2,9 @@ package com.ticketing.server.user.application;
 
 import com.ticketing.server.user.application.request.LoginRequest;
 import com.ticketing.server.user.application.response.LogoutResponse;
-import com.ticketing.server.user.application.response.TokenDto;
+import com.ticketing.server.user.service.dto.TokenDTO;
+import com.ticketing.server.user.application.response.TokenResponse;
+import com.ticketing.server.user.service.dto.DeleteRefreshTokenDTO;
 import com.ticketing.server.user.service.interfaces.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,29 +28,29 @@ public class AuthController {
 	private final AuthenticationService authenticationService;
 
 	@PostMapping("/token")
-	public ResponseEntity<TokenDto> login(@RequestBody LoginRequest loginRequest) {
-		TokenDto tokenDto = authenticationService.generateTokenDto(loginRequest.toAuthentication());
+	public ResponseEntity<TokenResponse> login(@RequestBody LoginRequest loginRequest) {
+		TokenDTO tokenDto = authenticationService.generateTokenDto(loginRequest.toAuthentication());
 
 		return ResponseEntity.status(HttpStatus.OK)
 			.headers(getHttpHeaders())
-			.body(tokenDto);
+			.body(tokenDto.toResponse());
 	}
 
 	@PostMapping("/refresh")
-	public ResponseEntity<TokenDto> refreshToken(@RequestParam("refreshToken") String refreshToken) {
-		TokenDto tokenDto = authenticationService.reissueTokenDto(refreshToken);
+	public ResponseEntity<TokenResponse> refreshToken(@RequestParam("refreshToken") String refreshToken) {
+		TokenDTO tokenDto = authenticationService.reissueTokenDto(refreshToken);
 
 		return ResponseEntity.status(HttpStatus.OK)
 			.headers(getHttpHeaders())
-			.body(tokenDto);
+			.body(tokenDto.toResponse());
 	}
 
 	@PostMapping("/logout")
 	public ResponseEntity<LogoutResponse> logout(@AuthenticationPrincipal UserDetails userRequest) {
-		LogoutResponse logoutResponse = authenticationService.deleteRefreshToken(userRequest.getUsername());
+		DeleteRefreshTokenDTO refreshToken = authenticationService.deleteRefreshToken(userRequest.getUsername());
 
 		return ResponseEntity.status(HttpStatus.OK)
-			.body(logoutResponse);
+			.body(refreshToken.toResponse());
 	}
 
 	private HttpHeaders getHttpHeaders() {

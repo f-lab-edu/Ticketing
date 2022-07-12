@@ -1,10 +1,10 @@
 package com.ticketing.server.user.service.interfaces;
 
-import com.ticketing.server.user.application.response.PaymentsResponse;
+import com.ticketing.server.user.service.dto.PaymentsDTO;
 import javax.validation.constraints.NotNull;
 
 public interface UserApisService {
 
-	PaymentsResponse findPaymentsByEmail(@NotNull String email);
+	PaymentsDTO findPaymentsByEmail(@NotNull String email);
 
 }

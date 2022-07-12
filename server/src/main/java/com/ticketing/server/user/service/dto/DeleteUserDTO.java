@@ -2,24 +2,20 @@ package com.ticketing.server.user.service.dto;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+@AllArgsConstructor
 public class DeleteUserDTO implements PasswordMatches {
 
 	@NotEmpty(message = "{validation.not.empty.email}")
 	@Email(message = "{validation.email}")
-	private String email;
+	private final String email;
 
 	@NotEmpty(message = "{validation.not.empty.password}")
-	private String inputPassword;
+	private final String inputPassword;
 
-	private PasswordEncoder passwordEncoder;
-
-	public DeleteUserDTO(String email, String inputPassword, PasswordEncoder passwordEncoder) {
-		this.email = email;
-		this.inputPassword = inputPassword;
-		this.passwordEncoder = passwordEncoder;
-	}
+	private final PasswordEncoder passwordEncoder;
 
 	@Override
 	public boolean passwordMatches(String password) {

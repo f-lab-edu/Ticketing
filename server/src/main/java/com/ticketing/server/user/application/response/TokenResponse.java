@@ -5,10 +5,11 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class LogoutResponse {
+public class TokenResponse {
 
-	private final Long refreshTokenId;
-	private final String email;
+	private final String accessToken;
 	private final String refreshToken;
+	private final String tokenType;
+	private final long expiresIn;
 
 }

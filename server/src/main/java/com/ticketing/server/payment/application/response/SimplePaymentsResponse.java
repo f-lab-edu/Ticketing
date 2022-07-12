@@ -10,7 +10,6 @@ import lombok.Getter;
 public class SimplePaymentsResponse {
 
 	private final Long userAlternateId;
-
 	private final List<SimplePaymentDTO> payments;
 
 }

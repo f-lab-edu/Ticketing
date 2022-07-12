@@ -7,21 +7,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public class UserDetailResponse {
 
 	private final String name;
 	private final String email;
 	private final UserGrade grade;
 	private final String phone;
-
-	public UserDetailResponse(UserDetailDTO userDetailDto) {
-		this(
-			userDetailDto.getName(),
-			userDetailDto.getEmail(),
-			userDetailDto.getGrade(),
-			userDetailDto.getPhone()
-		);
-	}
 
 }

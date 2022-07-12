@@ -10,7 +10,7 @@ import com.ticketing.server.global.redis.RefreshRedisRepository;
 import com.ticketing.server.global.redis.RefreshToken;
 import com.ticketing.server.global.security.jwt.JwtProperties;
 import com.ticketing.server.global.security.jwt.JwtProvider;
-import com.ticketing.server.user.application.response.TokenDto;
+import com.ticketing.server.user.service.dto.TokenDTO;
 import com.ticketing.server.user.domain.UserGrade;
 import java.util.Collections;
 import java.util.Optional;
@@ -70,7 +70,7 @@ class AuthenticationServiceImplTest {
 		when(jwtProperties.hasTokenStartsWith(refreshToken)).thenReturn(true);
 
 		// when
-		TokenDto tokenDto = authenticationService.reissueTokenDto(refreshToken);
+		TokenDTO tokenDto = authenticationService.reissueTokenDto(refreshToken);
 
 		// then
 		assertAll(

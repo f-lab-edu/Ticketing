@@ -1,20 +1,15 @@
 package com.ticketing.server.user.application.response;
 
-import com.ticketing.server.user.domain.User;
-import lombok.AccessLevel;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public class UserChangePasswordResponse {
 
-	private String name;
-
-	private String email;
-
-	public static UserChangePasswordResponse from(User user) {
-		return new UserChangePasswordResponse(user.getName(), user.getEmail());
-	}
+	private final String name;
+	private final String email;
+	private final LocalDateTime updatedAt;
 
 }

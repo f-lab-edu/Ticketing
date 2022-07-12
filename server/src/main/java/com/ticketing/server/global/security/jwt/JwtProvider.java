@@ -1,6 +1,6 @@
 package com.ticketing.server.global.security.jwt;
 
-import com.ticketing.server.user.application.response.TokenDto;
+import com.ticketing.server.user.service.dto.TokenDTO;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -42,12 +42,12 @@ public class JwtProvider {
 		this.refreshTokenValidityInMilliseconds = jwtProperties.getRefreshTokenValidityInSeconds() * 1000L;
 	}
 
-	public TokenDto generateTokenDto(Authentication authentication) {
+	public TokenDTO generateTokenDto(Authentication authentication) {
 		String accessToken = createAccessToken(authentication);
 		String refreshToken = createRefreshToken(authentication);
 		long expiresIn = accessTokenValidityInMilliseconds / 1000L;
 
-		return TokenDto.of(accessToken, refreshToken, prefix, expiresIn);
+		return new TokenDTO(accessToken, refreshToken, prefix, expiresIn);
 	}
 
 	private String createAccessToken(Authentication authentication) {

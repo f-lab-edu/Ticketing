@@ -11,9 +11,9 @@ import com.ticketing.server.payment.application.response.SimplePaymentsResponse;
 import com.ticketing.server.payment.service.dto.CreatePaymentDTO;
 import com.ticketing.server.payment.service.dto.SimplePaymentDTO;
 import com.ticketing.server.user.api.PaymentClient;
-import com.ticketing.server.user.application.response.PaymentsResponse;
 import com.ticketing.server.user.domain.User;
 import com.ticketing.server.user.domain.UserGrade;
+import com.ticketing.server.user.service.dto.PaymentsDTO;
 import com.ticketing.server.user.service.interfaces.UserService;
 import java.util.Arrays;
 import java.util.Collections;
@@ -53,12 +53,12 @@ class UserApisServiceImplTest {
 		when(paymentClient.getPayments(any())).thenReturn(new SimplePaymentsResponse(1L, Collections.emptyList()));
 
 		// when
-		PaymentsResponse paymentDetails = userApisService.findPaymentsByEmail("ticketing@gmail.com");
+		PaymentsDTO paymentsDto = userApisService.findPaymentsByEmail("ticketing@gmail.com");
 
 		// then
 		assertAll(
-			() -> assertThat(paymentDetails.getEmail()).isEqualTo("ticketing@gmail.com")
-			, () -> assertThat(paymentDetails.getPayments()).hasSize(0)
+			() -> assertThat(paymentsDto.getEmail()).isEqualTo("ticketing@gmail.com")
+			, () -> assertThat(paymentsDto.getPayments()).isEmpty()
 		);
 	}
 
@@ -77,12 +77,12 @@ class UserApisServiceImplTest {
 		when(paymentClient.getPayments(any())).thenReturn(new SimplePaymentsResponse(1L, payments));
 
 		// when
-		PaymentsResponse paymentDetails = userApisService.findPaymentsByEmail("ticketing@gmail.com");
+		PaymentsDTO patmentsDto = userApisService.findPaymentsByEmail("ticketing@gmail.com");
 
 		// then
 		assertAll(
-			() -> assertThat(paymentDetails.getEmail()).isEqualTo("ticketing@gmail.com")
-			, () -> assertThat(paymentDetails.getPayments()).hasSize(2)
+			() -> assertThat(patmentsDto.getEmail()).isEqualTo("ticketing@gmail.com")
+			, () -> assertThat(patmentsDto.getPayments()).hasSize(2)
 		);
 	}
 

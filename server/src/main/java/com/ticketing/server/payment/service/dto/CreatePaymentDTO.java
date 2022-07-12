@@ -10,12 +10,12 @@ import lombok.Getter;
 @AllArgsConstructor
 public class CreatePaymentDTO {
 
-	private Long userAlternateId;
-	private String movieTitle;
-	private PaymentType type;
-	private PaymentStatus status;
-	private String paymentNumber;
-	private Integer totalPrice;
+	private final Long userAlternateId;
+	private final String movieTitle;
+	private final PaymentType type;
+	private final PaymentStatus status;
+	private final String paymentNumber;
+	private final Integer totalPrice;
 
 	public Payment toEntity() {
 		return new Payment

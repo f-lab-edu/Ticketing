@@ -5,8 +5,8 @@ import com.ticketing.server.global.redis.RefreshRedisRepository;
 import com.ticketing.server.global.redis.RefreshToken;
 import com.ticketing.server.global.security.jwt.JwtProperties;
 import com.ticketing.server.global.security.jwt.JwtProvider;
-import com.ticketing.server.user.application.response.LogoutResponse;
-import com.ticketing.server.user.application.response.TokenDto;
+import com.ticketing.server.user.service.dto.TokenDTO;
+import com.ticketing.server.user.service.dto.DeleteRefreshTokenDTO;
 import com.ticketing.server.user.service.interfaces.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,14 +28,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 	@Override
 	@Transactional
-	public TokenDto generateTokenDto(UsernamePasswordAuthenticationToken authenticationToken) {
+	public TokenDTO generateTokenDto(UsernamePasswordAuthenticationToken authenticationToken) {
 		// 회원인증
 		Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
 		String email = authenticationToken.getName();
 
 		// 토큰 발급
-		TokenDto tokenDto = jwtProvider.generateTokenDto(authentication);
+		TokenDTO tokenDto = jwtProvider.generateTokenDto(authentication);
 
 		// refresh 토큰이 있으면 수정, 없으면 생성
 		refreshRedisRepository.findByEmail(email)
@@ -49,7 +49,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 	@Override
 	@Transactional
-	public TokenDto reissueTokenDto(String bearerRefreshToken) {
+	public TokenDTO reissueTokenDto(String bearerRefreshToken) {
 		String refreshToken = resolveToken(bearerRefreshToken);
 
 		// 토큰 검증
@@ -67,7 +67,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		}
 
 		// 토큰 발급
-		TokenDto tokenDto = jwtProvider.generateTokenDto(authentication);
+		TokenDTO tokenDto = jwtProvider.generateTokenDto(authentication);
 
 		// 토큰 최신화
 		findTokenEntity.changeToken(tokenDto.getRefreshToken());
@@ -78,12 +78,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 	@Override
 	@Transactional
-	public LogoutResponse deleteRefreshToken(String email) {
+	public DeleteRefreshTokenDTO deleteRefreshToken(String email) {
 		return refreshRedisRepository.findByEmail(email)
 			.map(tokenDto -> {
 				refreshRedisRepository.delete(tokenDto);
-				return LogoutResponse.from(tokenDto);
-			}).orElseGet(() -> LogoutResponse.from(email));
+				return new DeleteRefreshTokenDTO(tokenDto);
+			}).orElseGet(
+				() -> new DeleteRefreshTokenDTO(email)
+			);
 	}
 
 	private String resolveToken(String bearerToken) {

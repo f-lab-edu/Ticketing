@@ -1,10 +1,11 @@
 package com.ticketing.server.payment.application;
 
 import com.ticketing.server.payment.application.response.PaymentDetailResponse;
+import com.ticketing.server.payment.application.response.SimplePaymentsResponse;
+import com.ticketing.server.payment.service.dto.PaymentDetailDTO;
 import com.ticketing.server.payment.service.dto.SimplePaymentsDTO;
 import com.ticketing.server.payment.service.interfaces.PaymentApisService;
 import com.ticketing.server.payment.service.interfaces.PaymentService;
-import com.ticketing.server.payment.application.response.SimplePaymentsResponse;
 import com.ticketing.server.user.domain.UserGrade;
 import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -29,14 +30,18 @@ public class PaymentController {
 	@Secured(UserGrade.ROLES.USER)
 	public ResponseEntity<SimplePaymentsResponse> simplePayments(@NotNull Long userAlternateId) {
 		SimplePaymentsDTO simplePayments = paymentService.findSimplePayments(userAlternateId);
-		return ResponseEntity.status(HttpStatus.OK).body(simplePayments.toResponse());
+
+		return ResponseEntity.status(HttpStatus.OK)
+			.body(simplePayments.toResponse());
 	}
 
 	@GetMapping("/detail")
 	@Secured(UserGrade.ROLES.USER)
 	public ResponseEntity<PaymentDetailResponse> detail(@NotNull Long paymentId) {
-		PaymentDetailResponse paymentDetail = paymentApisService.findPaymentDetail(paymentId);
-		return ResponseEntity.status(HttpStatus.OK).body(paymentDetail);
+		PaymentDetailDTO paymentDetail = paymentApisService.findPaymentDetail(paymentId);
+
+		return ResponseEntity.status(HttpStatus.OK)
+			.body(paymentDetail.toResponse());
 	}
 
 }

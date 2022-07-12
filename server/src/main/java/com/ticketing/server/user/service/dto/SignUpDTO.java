@@ -13,18 +13,18 @@ import lombok.Getter;
 public class SignUpDTO {
 
 	@NotEmpty(message = "{validation.not.empty.name}")
-	private String name;
+	private final String name;
 
 	@NotEmpty(message = "{validation.not.empty.email}")
 	@Email(message = "{validation.email}")
-	private String email;
+	private final String email;
 
 	@NotEmpty(message = "{validation.not.empty.password}")
-	private String password;
+	private final String password;
 
 	@NotEmpty(message = "{validation.not.empty.phone}")
 	@Phone
-	private String phone;
+	private final String phone;
 
 	public User toUser(long alternateId) {
 		return new User(alternateId, this.name, this.email, password, UserGrade.USER, this.phone);
