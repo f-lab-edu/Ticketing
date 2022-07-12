@@ -2,7 +2,9 @@ package com.ticketing.server.user.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
+import com.ticketing.server.global.exception.ErrorCode;
 import com.ticketing.server.global.exception.TicketingException;
 import com.ticketing.server.user.service.dto.ChangePasswordDTO;
 import com.ticketing.server.user.service.dto.DeleteUserDTO;
@@ -31,6 +33,37 @@ public class UserTest {
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 		validator = factory.getValidator();
 		users = provideCorrectUsers().collect(Collectors.toMap(User::getEmail, user -> user));
+	}
+
+	@Test
+	@DisplayName("동일한 권한으로 변경 시 예외처리")
+	void changeGradeFail() {
+		// given
+		User user = users.get("ticketing1@gmail.com");
+
+		// when
+		// then
+		assertThatThrownBy(() -> user.changeGrade(UserGrade.USER))
+			.isInstanceOf(TicketingException.class)
+			.extracting("errorCode")
+			.isEqualTo(ErrorCode.UNABLE_CHANGE_GRADE);
+	}
+
+	@Test
+	@DisplayName("권한 변경 성공")
+	void changeGradeSuccess() {
+		// given
+		User user = users.get("ticketing1@gmail.com");
+
+		// when
+		ChangeGradeDTO changeGradeDto = user.changeGrade(UserGrade.ADMIN);
+
+		// then
+		assertAll(
+			() -> assertThat(changeGradeDto.getEmail()).isEqualTo("ticketing1@gmail.com"),
+			() -> assertThat(changeGradeDto.getBeforeGrade()).isEqualTo(UserGrade.USER),
+			() -> assertThat(changeGradeDto.getAfterGrade()).isEqualTo(UserGrade.ADMIN)
+		);
 	}
 
 	@ParameterizedTest
