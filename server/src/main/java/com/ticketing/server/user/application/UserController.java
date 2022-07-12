@@ -1,6 +1,10 @@
 package com.ticketing.server.user.application;
 
+import static com.ticketing.server.user.domain.UserGrade.ROLES.ADMIN;
+import static com.ticketing.server.user.domain.UserGrade.ROLES.USER;
+
 import com.ticketing.server.user.application.request.SignUpRequest;
+import com.ticketing.server.user.application.request.UserChangeGradeRequest;
 import com.ticketing.server.user.application.request.UserChangePasswordRequest;
 import com.ticketing.server.user.application.request.UserDeleteRequest;
 import com.ticketing.server.user.application.response.PaymentsResponse;
@@ -53,7 +57,7 @@ public class UserController {
 	}
 
 	@GetMapping("/details")
-	@Secured(UserGrade.ROLES.USER)
+	@Secured(USER)
 	public ResponseEntity<UserDetailResponse> details(@AuthenticationPrincipal UserDetails userRequest) {
 		UserDetailDTO userDetail = userService.findDetailByEmail(userRequest.getUsername());
 
@@ -62,7 +66,7 @@ public class UserController {
 	}
 
 	@DeleteMapping
-	@Secured(UserGrade.ROLES.USER)
+	@Secured(USER)
 	public ResponseEntity<UserDeleteResponse> deleteUser(@RequestBody @Valid UserDeleteRequest request) {
 		DeletedUserDTO deletedUserDto = userService.delete(request.toDeleteUserDto(passwordEncoder));
 
@@ -71,7 +75,7 @@ public class UserController {
 	}
 
 	@PutMapping("/password")
-	@Secured(UserGrade.ROLES.USER)
+	@Secured(USER)
 	public ResponseEntity<UserChangePasswordResponse> changePassword(
 		@AuthenticationPrincipal UserDetails userRequest,
 		@RequestBody @Valid UserChangePasswordRequest request) {
@@ -82,8 +86,15 @@ public class UserController {
 			.body(changedUserDto.toResponse());
 	}
 
+	@PostMapping("/grade")
+	@Secured(ADMIN)
+	public ResponseEntity<UserChangeGradeResponse> changeGrade(@RequestBody @Valid UserChangeGradeRequest request) {
+		ChangeGradeDTO changeGradeDto = userService.changeGrade(request.getEmail(), request.getAfterGrade());
+		return ResponseEntity.status(HttpStatus.OK).body(changeGradeDto.toResponse());
+	}
+
 	@GetMapping("/payments")
-	@Secured(UserGrade.ROLES.USER)
+	@Secured(USER)
 	public ResponseEntity<PaymentsResponse> getPayments(@AuthenticationPrincipal UserDetails userRequest) {
 		PaymentsDTO paymentsDto = userApisService.findPaymentsByEmail(userRequest.getUsername());
 

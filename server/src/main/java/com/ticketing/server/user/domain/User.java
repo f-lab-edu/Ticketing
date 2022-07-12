@@ -93,4 +93,14 @@ public class User extends AbstractEntity {
 		}
 	}
 
+	public ChangeGradeDTO changeGrade(UserGrade afterGrade) {
+		if (grade.equals(afterGrade)) {
+			throw ErrorCode.throwUnableChangeGrade();
+		}
+		final UserGrade beforeGrade = this.grade;
+
+		this.grade = afterGrade;
+		return new ChangeGradeDTO(email, beforeGrade, afterGrade);
+	}
+
 }
