@@ -1,6 +1,6 @@
 package com.ticketing.server.movie.application.response;
 
-import com.ticketing.server.payment.application.response.TicketDetailDTO;
+import com.ticketing.server.payment.service.dto.TicketDetailDTO;
 import java.util.List;
 import lombok.Getter;
 

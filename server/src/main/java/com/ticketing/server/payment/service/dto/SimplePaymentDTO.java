@@ -9,10 +9,10 @@ import lombok.Getter;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class SimplePaymentDTO {
 
-	private Long paymentId;
-	private String movieTitle;
-	private String paymentNumber;
-	private Integer totalPrice;
+	private final Long paymentId;
+	private final String movieTitle;
+	private final String paymentNumber;
+	private final Integer totalPrice;
 
 	public SimplePaymentDTO(Payment payment) {
 		this(

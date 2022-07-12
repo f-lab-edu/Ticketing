@@ -8,8 +8,12 @@ import com.ticketing.server.user.application.response.SignUpResponse;
 import com.ticketing.server.user.application.response.UserChangePasswordResponse;
 import com.ticketing.server.user.application.response.UserDeleteResponse;
 import com.ticketing.server.user.application.response.UserDetailResponse;
-import com.ticketing.server.user.domain.User;
 import com.ticketing.server.user.domain.UserGrade;
+import com.ticketing.server.user.service.dto.ChangedPasswordUserDTO;
+import com.ticketing.server.user.service.dto.DeletedUserDTO;
+import com.ticketing.server.user.service.dto.PaymentsDTO;
+import com.ticketing.server.user.service.dto.ChangePasswordDTO;
+import com.ticketing.server.user.service.dto.CreatedUserDTO;
 import com.ticketing.server.user.service.dto.UserDetailDTO;
 import com.ticketing.server.user.service.interfaces.UserApisService;
 import com.ticketing.server.user.service.interfaces.UserService;
@@ -42,22 +46,28 @@ public class UserController {
 
 	@PostMapping
 	public ResponseEntity<SignUpResponse> register(@RequestBody @Valid SignUpRequest request) {
-		User user = userService.register(request.toSignUpDto(passwordEncoder));
-		return ResponseEntity.status(HttpStatus.CREATED).body(SignUpResponse.from(user));
+		CreatedUserDTO createdUserDto = userService.register(request.toSignUpDto(passwordEncoder));
+
+		return ResponseEntity.status(HttpStatus.CREATED)
+			.body(createdUserDto.toResponse());
 	}
 
 	@GetMapping("/details")
 	@Secured(UserGrade.ROLES.USER)
 	public ResponseEntity<UserDetailResponse> details(@AuthenticationPrincipal UserDetails userRequest) {
 		UserDetailDTO userDetail = userService.findDetailByEmail(userRequest.getUsername());
-		return ResponseEntity.status(HttpStatus.OK).body(userDetail.toResponse());
+
+		return ResponseEntity.status(HttpStatus.OK)
+			.body(userDetail.toResponse());
 	}
 
 	@DeleteMapping
 	@Secured(UserGrade.ROLES.USER)
 	public ResponseEntity<UserDeleteResponse> deleteUser(@RequestBody @Valid UserDeleteRequest request) {
-		User user = userService.delete(request.toDeleteUserDto(passwordEncoder));
-		return ResponseEntity.status(HttpStatus.OK).body(UserDeleteResponse.from(user));
+		DeletedUserDTO deletedUserDto = userService.delete(request.toDeleteUserDto(passwordEncoder));
+
+		return ResponseEntity.status(HttpStatus.OK)
+			.body(deletedUserDto.toResponse());
 	}
 
 	@PutMapping("/password")
@@ -65,15 +75,20 @@ public class UserController {
 	public ResponseEntity<UserChangePasswordResponse> changePassword(
 		@AuthenticationPrincipal UserDetails userRequest,
 		@RequestBody @Valid UserChangePasswordRequest request) {
-		User user = userService.changePassword(request.toChangePasswordDto(userRequest.getUsername(), passwordEncoder));
-		return ResponseEntity.status(HttpStatus.OK).body(UserChangePasswordResponse.from(user));
+		ChangePasswordDTO changePasswordDto = request.toChangePasswordDto(userRequest.getUsername(), passwordEncoder);
+		ChangedPasswordUserDTO changedUserDto = userService.changePassword(changePasswordDto);
+
+		return ResponseEntity.status(HttpStatus.OK)
+			.body(changedUserDto.toResponse());
 	}
 
 	@GetMapping("/payments")
 	@Secured(UserGrade.ROLES.USER)
 	public ResponseEntity<PaymentsResponse> getPayments(@AuthenticationPrincipal UserDetails userRequest) {
-		PaymentsResponse paymentDetails = userApisService.findPaymentsByEmail(userRequest.getUsername());
-		return ResponseEntity.status(HttpStatus.OK).body(paymentDetails);
+		PaymentsDTO paymentsDto = userApisService.findPaymentsByEmail(userRequest.getUsername());
+
+		return ResponseEntity.status(HttpStatus.OK)
+			.body(paymentsDto.toResponse());
 	}
 
 }

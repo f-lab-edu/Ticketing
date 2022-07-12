@@ -5,7 +5,10 @@ import com.ticketing.server.user.domain.SequenceGenerator;
 import com.ticketing.server.user.domain.User;
 import com.ticketing.server.user.domain.repository.UserRepository;
 import com.ticketing.server.user.service.dto.ChangePasswordDTO;
+import com.ticketing.server.user.service.dto.ChangedPasswordUserDTO;
+import com.ticketing.server.user.service.dto.CreatedUserDTO;
 import com.ticketing.server.user.service.dto.DeleteUserDTO;
+import com.ticketing.server.user.service.dto.DeletedUserDTO;
 import com.ticketing.server.user.service.dto.SignUpDTO;
 import com.ticketing.server.user.service.dto.UserDetailDTO;
 import com.ticketing.server.user.service.interfaces.UserService;
@@ -30,10 +33,11 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional
-	public User register(@Valid SignUpDTO signUpDto) {
-		Optional<User> user = userRepository.findByEmail(signUpDto.getEmail());
-		if (user.isEmpty()) {
-			return userRepository.save(signUpDto.toUser(sequenceGenerator.generateId()));
+	public CreatedUserDTO register(@Valid SignUpDTO signUpDto) {
+		Optional<User> optionalUser = userRepository.findByEmail(signUpDto.getEmail());
+		if (optionalUser.isEmpty()) {
+			User user = userRepository.save(signUpDto.toUser(sequenceGenerator.generateId()));
+			return new CreatedUserDTO(user);
 		}
 
 		throw ErrorCode.throwDuplicateEmail();
@@ -41,16 +45,20 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional
-	public User delete(@Valid DeleteUserDTO deleteUserDto) {
-		User user = findNotDeletedUserByEmail(deleteUserDto.getEmail());
-		return user.delete(deleteUserDto);
+	public DeletedUserDTO delete(@Valid DeleteUserDTO deleteUserDto) {
+		User user = findNotDeletedUserByEmail(deleteUserDto.getEmail())
+			.delete(deleteUserDto);
+
+		return new DeletedUserDTO(user);
 	}
 
 	@Override
 	@Transactional
-	public User changePassword(@Valid ChangePasswordDTO changePasswordDto) {
-		User user = findNotDeletedUserByEmail(changePasswordDto.getEmail());
-		return user.changePassword(changePasswordDto);
+	public ChangedPasswordUserDTO changePassword(@Valid ChangePasswordDTO changePasswordDto) {
+		User user = findNotDeletedUserByEmail(changePasswordDto.getEmail())
+			.changePassword(changePasswordDto);
+
+		return new ChangedPasswordUserDTO(user);
 	}
 
 	@Override

@@ -1,20 +1,15 @@
 package com.ticketing.server.user.application.response;
 
-import com.ticketing.server.user.domain.User;
-import lombok.AccessLevel;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public class UserDeleteResponse {
 
-	private String name;
-
-	private String email;
-
-	public static UserDeleteResponse from(User user) {
-		return new UserDeleteResponse(user.getName(), user.getEmail());
-	}
+	private final String name;
+	private final String email;
+	private final LocalDateTime deletedAt;
 
 }

@@ -2,8 +2,8 @@ package com.ticketing.server.user.service;
 
 import com.ticketing.server.payment.application.response.SimplePaymentsResponse;
 import com.ticketing.server.user.api.PaymentClient;
-import com.ticketing.server.user.application.response.PaymentsResponse;
 import com.ticketing.server.user.domain.User;
+import com.ticketing.server.user.service.dto.PaymentsDTO;
 import com.ticketing.server.user.service.interfaces.UserApisService;
 import com.ticketing.server.user.service.interfaces.UserService;
 import javax.validation.constraints.NotNull;
@@ -24,11 +24,11 @@ public class UserApisServiceImpl implements UserApisService {
 	private final UserService userService;
 
 	@Override
-	public PaymentsResponse findPaymentsByEmail(@NotNull String email) {
+	public PaymentsDTO findPaymentsByEmail(@NotNull String email) {
 		User user = userService.findNotDeletedUserByEmail(email);
 		SimplePaymentsResponse simplePayments = paymentClient.getPayments(user.getAlternateId());
 
-		return new PaymentsResponse(user.getEmail(), simplePayments);
+		return new PaymentsDTO(user, simplePayments);
 	}
 
 }

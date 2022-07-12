@@ -11,11 +11,11 @@ import lombok.Getter;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserDetailDTO {
 
-	private Long alternateId;
-	private String name;
-	private String email;
-	private UserGrade grade;
-	private String phone;
+	private final Long alternateId;
+	private final String name;
+	private final String email;
+	private final UserGrade grade;
+	private final String phone;
 
 	public UserDetailDTO(User user) {
 		this(
@@ -28,6 +28,7 @@ public class UserDetailDTO {
 	}
 
 	public UserDetailResponse toResponse() {
-		return new UserDetailResponse(this);
+		return new UserDetailResponse(name, email, grade, phone);
 	}
+
 }

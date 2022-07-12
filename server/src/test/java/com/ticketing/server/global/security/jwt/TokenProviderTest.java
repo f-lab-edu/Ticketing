@@ -3,7 +3,7 @@ package com.ticketing.server.global.security.jwt;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ticketing.server.global.factory.YamlPropertySourceFactory;
-import com.ticketing.server.user.application.response.TokenDto;
+import com.ticketing.server.user.service.dto.TokenDTO;
 import com.ticketing.server.user.domain.UserGrade;
 import java.util.Collections;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,10 +43,10 @@ class TokenProviderTest {
 			new UsernamePasswordAuthenticationToken("ticketing@gmail.com", "123456", Collections.singleton(grantedAuthority));
 
 		// when
-		TokenDto tokenDto = jwtProvider.generateTokenDto(authenticationToken);
+		TokenDTO tokenDto = jwtProvider.generateTokenDto(authenticationToken);
 
 		// then
-		assertThat(tokenDto).isInstanceOf(TokenDto.class);
+		assertThat(tokenDto).isInstanceOf(TokenDTO.class);
 	}
 
 	@Test
@@ -58,7 +58,7 @@ class TokenProviderTest {
 			new UsernamePasswordAuthenticationToken("ticketing@gmail.com", "123456", Collections.singleton(grantedAuthority));
 
 		// when
-		TokenDto tokenDto = jwtProvider.generateTokenDto(authenticationToken);
+		TokenDTO tokenDto = jwtProvider.generateTokenDto(authenticationToken);
 		Authentication authentication = jwtProvider.getAuthentication(tokenDto.getAccessToken());
 
 		// then

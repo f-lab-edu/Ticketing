@@ -1,7 +1,7 @@
 package com.ticketing.server.movie.service.dto;
 
 import com.ticketing.server.movie.application.response.TicketDetailsResponse;
-import com.ticketing.server.payment.application.response.TicketDetailDTO;
+import com.ticketing.server.payment.service.dto.TicketDetailDTO;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

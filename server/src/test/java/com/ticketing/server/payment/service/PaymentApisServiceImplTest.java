@@ -16,7 +16,8 @@ import com.ticketing.server.payment.api.MovieClient;
 import com.ticketing.server.payment.api.UserClient;
 import com.ticketing.server.payment.api.dto.response.UserDetailResponse;
 import com.ticketing.server.payment.application.response.PaymentDetailResponse;
-import com.ticketing.server.payment.application.response.TicketDetailDTO;
+import com.ticketing.server.payment.service.dto.PaymentDetailDTO;
+import com.ticketing.server.payment.service.dto.TicketDetailDTO;
 import com.ticketing.server.payment.domain.repository.PaymentRepository;
 import com.ticketing.server.user.domain.User;
 import com.ticketing.server.user.service.dto.UserDetailDTO;
@@ -104,7 +105,7 @@ class PaymentApisServiceImplTest {
 		when(movieClient.getTicketsByPaymentId(1L)).thenReturn(response);
 
 		// when
-		PaymentDetailResponse paymentDetail = paymentApisService.findPaymentDetail(1L);
+		PaymentDetailDTO paymentDetail = paymentApisService.findPaymentDetail(1L);
 
 		// then
 		assertAll(

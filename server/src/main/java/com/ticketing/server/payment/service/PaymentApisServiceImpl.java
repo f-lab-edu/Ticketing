@@ -5,9 +5,9 @@ import com.ticketing.server.movie.application.response.TicketDetailsResponse;
 import com.ticketing.server.payment.api.MovieClient;
 import com.ticketing.server.payment.api.UserClient;
 import com.ticketing.server.payment.api.dto.response.UserDetailResponse;
-import com.ticketing.server.payment.application.response.PaymentDetailResponse;
 import com.ticketing.server.payment.domain.Payment;
 import com.ticketing.server.payment.domain.repository.PaymentRepository;
+import com.ticketing.server.payment.service.dto.PaymentDetailDTO;
 import com.ticketing.server.payment.service.interfaces.PaymentApisService;
 import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ public class PaymentApisServiceImpl implements PaymentApisService {
 	private final UserClient userClient;
 
 	@Override
-	public PaymentDetailResponse findPaymentDetail(@NotNull Long paymentId) {
+	public PaymentDetailDTO findPaymentDetail(@NotNull Long paymentId) {
 		Payment payment = paymentRepository.findById(paymentId)
 			.orElseThrow(ErrorCode::throwPaymentIdNotFound);
 
@@ -38,7 +38,7 @@ public class PaymentApisServiceImpl implements PaymentApisService {
 		}
 
 		TicketDetailsResponse tickets = movieClient.getTicketsByPaymentId(payment.getId());
-		return new PaymentDetailResponse(payment, tickets);
+		return new PaymentDetailDTO(payment, tickets);
 	}
 
 }

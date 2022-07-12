@@ -1,15 +1,15 @@
 package com.ticketing.server.user.service.interfaces;
 
-import com.ticketing.server.user.application.response.LogoutResponse;
-import com.ticketing.server.user.application.response.TokenDto;
+import com.ticketing.server.user.service.dto.TokenDTO;
+import com.ticketing.server.user.service.dto.DeleteRefreshTokenDTO;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 public interface AuthenticationService {
 
-	TokenDto generateTokenDto(UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken);
+	TokenDTO generateTokenDto(UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken);
 
-	TokenDto reissueTokenDto(String bearerRefreshToken);
+	TokenDTO reissueTokenDto(String bearerRefreshToken);
 
-	LogoutResponse deleteRefreshToken(String email);
+	DeleteRefreshTokenDTO deleteRefreshToken(String email);
 
 }
