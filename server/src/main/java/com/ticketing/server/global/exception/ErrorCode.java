@@ -17,6 +17,7 @@ public enum ErrorCode {
 	MISMATCH_PASSWORD(BAD_REQUEST, "비밀번호가 일치하지 않습니다."),
 	TOKEN_TYPE(BAD_REQUEST, "토큰 타입이 올바르지 않습니다."),
 	UNAVAILABLE_REFRESH_TOKEN(BAD_REQUEST, "사용할 수 없는 토큰 입니다."),
+	UNABLE_CHANGE_GRADE(BAD_REQUEST, "동일한 등급으로 변경할 수 없습니다."),
 
 	/* 403 FORBIDDEN : 접근 권한 제한 */
 	VALID_USER_ID(FORBIDDEN, "해당 정보에 접근 권한이 존재하지 않습니다."),
@@ -48,6 +49,10 @@ public enum ErrorCode {
 
 	public static TicketingException throwUnavailableRefreshToken() {
 		throw new TicketingException(UNAVAILABLE_REFRESH_TOKEN);
+	}
+
+	public static TicketingException throwUnableChangeGrade() {
+		throw new TicketingException(UNABLE_CHANGE_GRADE);
 	}
 
 	/* 403 FORBIDDEN : 접근 권한 제한 */

@@ -1,8 +1,10 @@
 package com.ticketing.server.user.service;
 
 import com.ticketing.server.global.exception.ErrorCode;
+import com.ticketing.server.user.domain.ChangeGradeDTO;
 import com.ticketing.server.user.domain.SequenceGenerator;
 import com.ticketing.server.user.domain.User;
+import com.ticketing.server.user.domain.UserGrade;
 import com.ticketing.server.user.domain.repository.UserRepository;
 import com.ticketing.server.user.service.dto.ChangePasswordDTO;
 import com.ticketing.server.user.service.dto.DeleteUserDTO;
@@ -51,6 +53,13 @@ public class UserServiceImpl implements UserService {
 	public User changePassword(@Valid ChangePasswordDTO changePasswordDto) {
 		User user = findNotDeletedUserByEmail(changePasswordDto.getEmail());
 		return user.changePassword(changePasswordDto);
+	}
+
+	@Override
+	@Transactional
+	public ChangeGradeDTO changeGrade(@NotNull String email, @NotNull UserGrade grade) {
+		User user = findNotDeletedUserByEmail(email);
+		return user.changeGrade(grade);
 	}
 
 	@Override
