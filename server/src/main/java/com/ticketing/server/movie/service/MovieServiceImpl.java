@@ -11,6 +11,7 @@ import com.ticketing.server.movie.service.interfaces.MovieService;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -49,6 +50,7 @@ public class MovieServiceImpl implements MovieService {
 	}
 
 	@Override
+	@Transactional
 	public DeletedMovieDTO deleteMovie(Long id) {
 		Movie movie = movieRepository.findByIdAndDeletedAtNull(id)
 			.orElseThrow(ErrorCode::throwMovieNotFound);

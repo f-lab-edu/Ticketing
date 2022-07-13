@@ -61,6 +61,7 @@ public class MovieController {
 
 	@DeleteMapping()
 	@ApiOperation(value = "영화 정보 삭제")
+	@Secured(STAFF)
 	public ResponseEntity<MovieDeleteResponse> deleteMovie(@RequestBody @Valid MovieDeleteRequest request) {
 		DeletedMovieDTO deletedMovieDto = movieService.deleteMovie(request.getId());
 
