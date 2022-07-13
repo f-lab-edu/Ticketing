@@ -5,6 +5,7 @@ import com.ticketing.server.movie.domain.Movie;
 import com.ticketing.server.movie.domain.repository.MovieRepository;
 import com.ticketing.server.movie.service.dto.DeletedMovieDTO;
 import com.ticketing.server.movie.service.dto.MovieDTO;
+import com.ticketing.server.movie.service.dto.MovieListDTO;
 import com.ticketing.server.movie.service.dto.RegisteredMovieDTO;
 import com.ticketing.server.movie.service.interfaces.MovieService;
 import java.util.List;
@@ -37,12 +38,14 @@ public class MovieServiceImpl implements MovieService {
 	}
 
 	@Override
-	public List<MovieDTO> getMovies() {
+	public MovieListDTO getMovies() {
 		List<Movie> movies = movieRepository.findValidMovies();
 
-		return movies.stream()
+		List<MovieDTO> movieDtos = movies.stream()
 			.map(movie -> movie.toMovieDTO())
 			.collect(Collectors.toList());
+
+		return new MovieListDTO(movieDtos);
 	}
 
 	@Override

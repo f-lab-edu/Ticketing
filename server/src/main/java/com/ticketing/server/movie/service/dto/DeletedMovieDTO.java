@@ -1,6 +1,6 @@
 package com.ticketing.server.movie.service.dto;
 
-import com.ticketing.server.movie.application.response.MovieInfoResponse;
+import com.ticketing.server.movie.application.response.MovieDeleteResponse;
 import com.ticketing.server.movie.domain.Movie;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -21,8 +21,8 @@ public class DeletedMovieDTO {
 		);
 	}
 
-	public MovieInfoResponse toResponse() {
-		return new MovieInfoResponse(id, title);
+	public MovieDeleteResponse toResponse() {
+		return new MovieDeleteResponse(id, title);
 	}
 
 }
