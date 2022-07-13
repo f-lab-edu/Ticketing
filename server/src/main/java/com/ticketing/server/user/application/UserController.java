@@ -13,7 +13,6 @@ import com.ticketing.server.user.application.response.UserChangePasswordResponse
 import com.ticketing.server.user.application.response.UserDeleteResponse;
 import com.ticketing.server.user.application.response.UserDetailResponse;
 import com.ticketing.server.user.domain.ChangeGradeDTO;
-import com.ticketing.server.user.domain.UserGrade;
 import com.ticketing.server.user.service.dto.ChangedPasswordUserDTO;
 import com.ticketing.server.user.service.dto.DeletedUserDTO;
 import com.ticketing.server.user.service.dto.PaymentsDTO;

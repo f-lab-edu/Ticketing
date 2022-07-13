@@ -21,11 +21,15 @@ public class MovieServiceImpl implements MovieService {
 	private final MovieRepository movieRepository;
 
 	@Override
-	public MovieDTO registerMovie(MovieRegisterDTO movieRegisterDto) {
-		Optional<Movie> movie = movieRepository.findByTitle(movieRegisterDto.getTitle());
+	public MovieDTO registerMovie(String title, Long runningTime) {
+		Optional<Movie> movie = movieRepository.findValidMovieWithTitle(title);
 
 		if(movie.isEmpty()) {
-			return MovieDTO.from(movieRepository.save(movieRegisterDto.toMovie()));
+			Movie newMovie = movieRepository.save(
+				new Movie(title, runningTime)
+			);
+
+			return new MovieDTO(newMovie.getId(), newMovie.getTitle());
 		}
 
 		throw ErrorCode.throwDuplicateMovie();

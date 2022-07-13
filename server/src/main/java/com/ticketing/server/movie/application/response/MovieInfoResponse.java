@@ -8,13 +8,16 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class MovieTitleResponse {
+public class MovieInfoResponse {
+
+	@ApiModelProperty(value = "영화 ID")
+	private Long movieId;
 
 	@ApiModelProperty(value = "영화 제목")
 	private String title;
 
-	public static MovieTitleResponse from(MovieDTO movieDto) {
-		return new MovieTitleResponse(movieDto.getTitle());
+	public static MovieInfoResponse from(MovieDTO movieDto) {
+		return new MovieInfoResponse(movieDto.getMovieId(), movieDto.getTitle());
 	}
 
 }
