@@ -12,12 +12,12 @@ import com.ticketing.server.user.application.response.SignUpResponse;
 import com.ticketing.server.user.application.response.UserChangePasswordResponse;
 import com.ticketing.server.user.application.response.UserDeleteResponse;
 import com.ticketing.server.user.application.response.UserDetailResponse;
-import com.ticketing.server.user.domain.UserGrade;
+import com.ticketing.server.user.domain.ChangeGradeDTO;
+import com.ticketing.server.user.service.dto.ChangePasswordDTO;
 import com.ticketing.server.user.service.dto.ChangedPasswordUserDTO;
+import com.ticketing.server.user.service.dto.CreatedUserDTO;
 import com.ticketing.server.user.service.dto.DeletedUserDTO;
 import com.ticketing.server.user.service.dto.PaymentsDTO;
-import com.ticketing.server.user.service.dto.ChangePasswordDTO;
-import com.ticketing.server.user.service.dto.CreatedUserDTO;
 import com.ticketing.server.user.service.dto.UserDetailDTO;
 import com.ticketing.server.user.service.interfaces.UserApisService;
 import com.ticketing.server.user.service.interfaces.UserService;
@@ -44,8 +44,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class UserController {
 
-	private final UserApisService userApisService;
 	private final UserService userService;
+	private final UserApisService userApisService;
 	private final PasswordEncoder passwordEncoder;
 
 	@PostMapping
@@ -90,7 +90,9 @@ public class UserController {
 	@Secured(ADMIN)
 	public ResponseEntity<UserChangeGradeResponse> changeGrade(@RequestBody @Valid UserChangeGradeRequest request) {
 		ChangeGradeDTO changeGradeDto = userService.changeGrade(request.getEmail(), request.getAfterGrade());
-		return ResponseEntity.status(HttpStatus.OK).body(changeGradeDto.toResponse());
+
+		return ResponseEntity.status(HttpStatus.OK)
+			.body(changeGradeDto.toResponse());
 	}
 
 	@GetMapping("/payments")
