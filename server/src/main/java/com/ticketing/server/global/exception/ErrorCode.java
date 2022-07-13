@@ -98,7 +98,7 @@ public enum ErrorCode {
 	public static TicketingException throwDeletedEmail() {
 		throw new TicketingException(DELETED_EMAIL);
 	}
-	
+
 	public static TicketingException throwDeletedMovie() {
 		throw new TicketingException(DELETED_MOVIE);
 	}

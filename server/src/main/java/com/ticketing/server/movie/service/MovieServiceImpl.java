@@ -47,6 +47,11 @@ public class MovieServiceImpl implements MovieService {
 
 	@Override
 	public DeletedMovieDTO deleteMovie(Long id) {
+		Movie movie = movieRepository.findByIdAndDeletedAtNull(id)
+			.orElseThrow(ErrorCode::throwMovieNotFound);
 
+		Movie deletedMovie = movie.delete();
+
+		return new DeletedMovieDTO(deletedMovie);
 	}
 }

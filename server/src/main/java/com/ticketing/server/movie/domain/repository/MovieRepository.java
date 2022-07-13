@@ -13,6 +13,8 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 
     Optional<Movie> findByTitle(String title);
 
+	Optional<Movie> findByIdAndDeletedAtNull(Long id);
+
 	@Query(value = "SELECT m "
 		+ "FROM movie m "
 		+ "WHERE title = :title "
