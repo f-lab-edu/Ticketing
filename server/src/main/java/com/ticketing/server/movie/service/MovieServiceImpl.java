@@ -3,6 +3,7 @@ package com.ticketing.server.movie.service;
 import com.ticketing.server.global.exception.ErrorCode;
 import com.ticketing.server.movie.domain.Movie;
 import com.ticketing.server.movie.domain.repository.MovieRepository;
+import com.ticketing.server.movie.service.dto.DeletedMovieDTO;
 import com.ticketing.server.movie.service.dto.MovieDTO;
 import com.ticketing.server.movie.service.dto.RegisteredMovieDTO;
 import com.ticketing.server.movie.service.interfaces.MovieService;
@@ -43,5 +44,9 @@ public class MovieServiceImpl implements MovieService {
 			.map(movie -> movie.toMovieDTO())
 			.collect(Collectors.toList());
 	}
-	
+
+	@Override
+	public DeletedMovieDTO deleteMovie(Long id) {
+
+	}
 }

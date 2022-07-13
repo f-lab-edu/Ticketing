@@ -33,7 +33,8 @@ public enum ErrorCode {
 	DUPLICATE_EMAIL(CONFLICT, "이메일이 이미 존재합니다."),
 	DUPLICATE_PAYMENT(CONFLICT, "해당 좌석은 현재 판매된 좌석입니다."),
 	DUPLICATE_MOVIE(CONFLICT, "해당 영화 정보가 이미 존재합니다."),
-	DELETED_EMAIL(CONFLICT, "이미 삭제된 이메일 입니다.");
+	DELETED_EMAIL(CONFLICT, "이미 삭제된 이메일 입니다."),
+	DELETED_MOVIE(CONFLICT, "이미 삭제된 영화 입니다.");
 
 	private final HttpStatus httpStatus;
 	private final String detail;
@@ -96,6 +97,10 @@ public enum ErrorCode {
 
 	public static TicketingException throwDeletedEmail() {
 		throw new TicketingException(DELETED_EMAIL);
+	}
+	
+	public static TicketingException throwDeletedMovie() {
+		throw new TicketingException(DELETED_MOVIE);
 	}
 
 }
