@@ -16,7 +16,7 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 	Optional<Movie> findByIdAndDeletedAtNull(Long id);
 
 	@Query(value = "SELECT m "
-		+ "FROM movie m "
+		+ "FROM Movie m "
 		+ "WHERE title = :title "
 		+ "AND deleted_at IS NULL")
 	Optional<Movie> findValidMovieWithTitle(String title);

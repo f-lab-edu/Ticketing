@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 import com.ticketing.server.movie.domain.Movie;
 import com.ticketing.server.movie.domain.repository.MovieRepository;
 import com.ticketing.server.movie.service.dto.MovieDTO;
+import com.ticketing.server.movie.service.dto.MovieListDTO;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -38,10 +39,10 @@ public class MovieServiceImplTest {
             .thenReturn(Collections.emptyList());
 
         // when
-        List<MovieDTO> movieDTOList = movieService.getMovies();
+        MovieListDTO movieListDto = movieService.getMovies();
 
         // then
-        assertTrue(movieDTOList.isEmpty());
+        assertTrue(movieListDto.getMovieDtos().isEmpty());
     }
 
     @Test
@@ -49,18 +50,16 @@ public class MovieServiceImplTest {
     void shouldAbleToGetMovies() {
         // given
         movie = new Movie("범죄도시2", 106L);
-        movieDto = movieDto.from(movie);
         movies.add(movie);
-        movieDTOS.add(movieDto);
 
         when(movieRepository.findValidMovies())
             .thenReturn(movies);
 
         // when
-        List<MovieDTO> movieDTOList = movieService.getMovies();
+	    MovieListDTO movieListDto = movieService.getMovies();
 
         // then
-        assertTrue(!movieDTOList.isEmpty());
+        assertTrue(!movieListDto.getMovieDtos().isEmpty());
     }
 
 }
