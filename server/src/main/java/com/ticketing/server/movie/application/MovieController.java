@@ -5,6 +5,7 @@ import static com.ticketing.server.user.domain.UserGrade.ROLES.STAFF;
 import com.ticketing.server.movie.application.request.MovieRegisterRequest;
 import com.ticketing.server.movie.application.response.MovieListResponse;
 import com.ticketing.server.movie.application.response.MovieInfoResponse;
+import com.ticketing.server.movie.service.dto.RegisteredMovieDTO;
 import com.ticketing.server.movie.service.interfaces.MovieService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -33,11 +34,11 @@ public class MovieController {
 	@ApiOperation(value = "영화 정보 등록")
 	@Secured(STAFF)
 	public ResponseEntity<MovieInfoResponse> registerMovie(@RequestBody @Valid MovieRegisterRequest request) {
+		RegisteredMovieDTO registeredMovieDto = movieService.registerMovie(request.getTitle(), request.getRunningTime());
+
 		return ResponseEntity.status(HttpStatus.OK)
 			.body(
-				MovieInfoResponse.from(
-					movieService.registerMovie(request.getTitle(), request.getRunningTime())
-				)
+				registeredMovieDto.toResponse()
 			);
 	}
 
@@ -46,7 +47,7 @@ public class MovieController {
 	public ResponseEntity<MovieListResponse> getMovies() {
 		return ResponseEntity.status(HttpStatus.OK)
 			.body(
-				MovieListResponse.from(
+				new MovieListResponse(
 					movieService.getMovies()
 				)
 			);
