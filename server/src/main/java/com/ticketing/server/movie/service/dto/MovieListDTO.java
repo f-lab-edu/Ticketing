@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor()
+@AllArgsConstructor
 public class MovieListDTO {
 
 	private final List<MovieDTO> movieDtos;

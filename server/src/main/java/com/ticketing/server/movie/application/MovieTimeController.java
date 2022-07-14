@@ -1,11 +1,13 @@
 package com.ticketing.server.movie.application;
 
 import com.ticketing.server.movie.application.response.MovieTimeListResponse;
+import com.ticketing.server.movie.service.dto.MovieTimeListDTO;
 import com.ticketing.server.movie.service.interfaces.MovieTimeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import java.time.LocalDate;
+import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -24,16 +26,20 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class MovieTimeController {
 
-    private final MovieTimeService movieTimeService;
+	private final MovieTimeService movieTimeService;
 
-    @GetMapping
-    @ApiOperation(value = "영화 시간표 조회")
-    @Validated
-    public ResponseEntity<MovieTimeListResponse> getMovieTimes(
-        @ApiParam(value = "영화 제목", required = true) @RequestParam String title,
-        @ApiParam(value = "상영 날짜", required = true) @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate runningDate) {
-        return ResponseEntity.status(HttpStatus.OK).body(MovieTimeListResponse.from(movieTimeService.getMovieTimes(title, runningDate)));
-    }
+	@GetMapping
+	@ApiOperation(value = "영화 시간표 조회")
+	@Validated
+	public ResponseEntity<MovieTimeListResponse> getMovieTimes(
+		@ApiParam(value = "영화 ID", required = true) @RequestParam @NotNull Long movieId,
+		@ApiParam(value = "상영 날짜", required = true) @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate runningDate) {
+		MovieTimeListDTO movieTimeListDto = movieTimeService.getMovieTimes(movieId, runningDate);
 
+		return ResponseEntity.status(HttpStatus.OK)
+			.body(
+				movieTimeListDto.toResponse()
+			);
+	}
 
 }

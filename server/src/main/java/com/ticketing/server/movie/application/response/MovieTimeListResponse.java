@@ -8,14 +8,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public class MovieTimeListResponse {
 
     @ApiModelProperty(value = "영화 시간표 정보")
-    private List<MovieTimeDTO> movieTimeDTOS;
-
-    public static MovieTimeListResponse from(List<MovieTimeDTO> movieTimeDtos) {
-        return new MovieTimeListResponse(movieTimeDtos);
-    }
+    private List<MovieTimeDTO> movieTimeDtos;
 
 }
