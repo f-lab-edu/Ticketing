@@ -15,11 +15,11 @@ public interface MovieTimeRepository extends JpaRepository<MovieTime, Long> {
 
 	Optional<MovieTime> findByMovieAndTheaterAndRoundAndDeletedAtNull(Movie movie, Theater theater, Integer round);
 
-    @Query(value = "SELECT mt "
-        + "FROM MovieTime mt "
-        + "JOIN FETCH mt.movie "
-        + "WHERE mt.movie = :movie "
-        + "AND mt.startAt BETWEEN :startOfDay AND :endOfDay ")
-    List<MovieTime> findValidMovieTimes(Movie movie, LocalDateTime startOfDay, LocalDateTime endOfDay);
+	@Query(value = "SELECT mt "
+		+ "FROM MovieTime mt " 
+		+ "JOIN FETCH mt.movie "
+		+ "WHERE mt.movie = :movie "
+		+ "AND mt.startAt BETWEEN :startOfDay AND :endOfDay ")
+	List<MovieTime> findValidMovieTimes(Movie movie, LocalDateTime startOfDay, LocalDateTime endOfDay);
 
 }
