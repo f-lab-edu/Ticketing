@@ -3,6 +3,7 @@ package com.ticketing.server.user.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import com.ticketing.server.global.dto.Snowflake;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.HashSet;

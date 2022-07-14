@@ -2,7 +2,7 @@ package com.ticketing.server.user.service;
 
 import com.ticketing.server.global.exception.ErrorCode;
 import com.ticketing.server.user.domain.ChangeGradeDTO;
-import com.ticketing.server.user.domain.SequenceGenerator;
+import com.ticketing.server.global.dto.SequenceGenerator;
 import com.ticketing.server.user.domain.User;
 import com.ticketing.server.user.domain.UserGrade;
 import com.ticketing.server.user.domain.repository.UserRepository;

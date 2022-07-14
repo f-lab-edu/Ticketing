@@ -1,13 +1,13 @@
 package com.ticketing.server.payment.service;
 
-import static com.ticketing.server.payment.domain.PaymentStatus.COMPLETED;
+import static com.ticketing.server.payment.domain.PaymentStatus.SOLD;
 import static com.ticketing.server.payment.domain.PaymentType.KAKAO_PAY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
+import com.ticketing.server.global.redis.PaymentCache;
 import com.ticketing.server.payment.domain.Payment;
 import com.ticketing.server.payment.domain.repository.PaymentRepository;
-import com.ticketing.server.payment.service.dto.CreatePaymentDTO;
 import com.ticketing.server.payment.service.dto.SimplePaymentsDTO;
 import java.util.Arrays;
 import java.util.Collections;
@@ -50,8 +50,32 @@ class PaymentServiceImplTest {
 	void findSimplePaymentsSuccess(Long userAlternateId) {
 		// given
 		List<Payment> payments = Arrays.asList(
-			new CreatePaymentDTO(userAlternateId, "범죄도시2", KAKAO_PAY, COMPLETED, "004-323-77542", 15_000).toEntity(),
-			new CreatePaymentDTO(userAlternateId, "토르", KAKAO_PAY, COMPLETED, "004-323-77544", 30_000).toEntity()
+			new Payment(
+				new PaymentCache(
+					"",
+					"범죄도시2",
+					"T2d03c9130bf237a97001",
+					List.of(3L),
+					userAlternateId,
+					1241242343245L
+				),
+				KAKAO_PAY,
+				SOLD,
+				15_000
+			),
+			new Payment(
+				new PaymentCache(
+					"",
+					"토르",
+					"T2d03c9130bf237a97002",
+					List.of(3L),
+					userAlternateId,
+					12412343212445L
+				),
+				KAKAO_PAY,
+				SOLD,
+				30_000
+			)
 		);
 		when(paymentRepository.findByUserAlternateId(userAlternateId)).thenReturn(payments);
 

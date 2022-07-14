@@ -8,7 +8,7 @@ import static org.mockito.Mockito.when;
 
 import com.ticketing.server.global.exception.ErrorCode;
 import com.ticketing.server.global.exception.TicketingException;
-import com.ticketing.server.user.domain.SequenceGenerator;
+import com.ticketing.server.global.dto.SequenceGenerator;
 import com.ticketing.server.user.domain.User;
 import com.ticketing.server.user.domain.UserGrade;
 import com.ticketing.server.user.domain.repository.UserRepository;

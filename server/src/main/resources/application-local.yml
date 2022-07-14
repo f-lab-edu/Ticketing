@@ -12,3 +12,13 @@ spring:
         format_sql: true
     hibernate:
       ddl-auto: create
+
+api:
+  kakao:
+    pay:
+      url: http://localhost:8080
+      approval: /api/payments/complete
+      cancel: /api/payments/cancel
+      fail: /api/payments/cancel
+      prefix: KakaoAK
+      key: b2472272b813500c51a25e1422261676
