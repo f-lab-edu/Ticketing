@@ -21,4 +21,15 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
 	)
 	List<Ticket> findTicketFetchJoinByPaymentId(@Param("paymentId") Long paymentId);
 
+	@Query(
+		value =
+			"SELECT t "
+				+ "FROM Ticket t "
+				+ "JOIN FETCH t.movieTime mt "
+				+ "JOIN FETCH t.seat s "
+				+ "JOIN FETCH s.theater th "
+				+ "WHERE t.id IN (:ticketIds) "
+	)
+	List<Ticket> findTicketFetchJoinByTicketIds(@Param("ticketIds") List<Long> ticketIds);
+
 }

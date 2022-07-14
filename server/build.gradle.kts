@@ -23,6 +23,8 @@ repositories {
 	mavenCentral()
 }
 
+extra["springCloudVersion"] = "2021.0.3"
+
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-security")
@@ -39,6 +41,8 @@ dependencies {
 	implementation("com.googlecode.json-simple:json-simple:1.1.1")
 	implementation("org.springframework.boot:spring-boot-starter-data-redis")
 	implementation("com.google.code.findbugs:jsr305:3.0.2")
+	implementation ("org.springframework.cloud:spring-cloud-starter-config")
+	implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
 
 	modules {
 		module("org.springframework.boot:spring-boot-starter-logging") {
@@ -56,6 +60,12 @@ dependencies {
 	testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.security:spring-security-test")
+}
+
+dependencyManagement {
+	imports {
+		mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
+	}
 }
 
 tasks.withType<Test> {

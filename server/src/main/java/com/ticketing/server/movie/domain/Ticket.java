@@ -53,6 +53,38 @@ public class Ticket extends AbstractEntity {
 		this.status = TicketStatus.SALE;
 	}
 
+	public Ticket makeReservation() {
+		if (!TicketStatus.SALE.equals(status)) {
+			throw ErrorCode.throwDuplicatePayment();
+		}
+
+		status = TicketStatus.RESERVATION;
+		return this;
+	}
+
+	public Ticket makeSold(Long paymentId) {
+		if (TicketStatus.SOLD.equals(status)) {
+			throw ErrorCode.throwDuplicatePayment();
+		}
+
+		status = TicketStatus.SOLD;
+		this.paymentId = paymentId;
+		return this;
+	}
+
+	public Ticket cancel() {
+		if (!TicketStatus.RESERVATION.equals(status)) {
+			throw ErrorCode.throwBadRequestPaymentCancel();
+		}
+
+		status = TicketStatus.SALE;
+		return this;
+	}
+
+	public Long getMovieTimeId() {
+		return movieTime.getId();
+	}
+
 	public Integer getColumn() {
 		return this.seat.getSeatColumn();
 	}
@@ -84,6 +116,5 @@ public class Ticket extends AbstractEntity {
 
 		this.paymentId = id;
 	}
-
 
 }

@@ -1,6 +1,7 @@
 package com.ticketing.server.payment.domain;
 
 import com.ticketing.server.global.dto.repository.AbstractEntity;
+import com.ticketing.server.global.redis.PaymentCache;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -24,6 +25,10 @@ public class Payment extends AbstractEntity {
 	@Column(name = "movie_title", nullable = false)
 	private String movieTitle;
 
+	@NotEmpty
+	@Column(name = "tid", nullable = false)
+	private String tid;
+
 	@NotNull
 	@Column(name = "type", nullable = false)
 	@Enumerated(value = EnumType.STRING)
@@ -45,9 +50,22 @@ public class Payment extends AbstractEntity {
 	@Column(name = "total_price", nullable = false)
 	private Integer totalPrice;
 
-	public Payment(Long userAlternateId, String movieTitle, PaymentType type, PaymentStatus status, String paymentNumber, Integer totalPrice) {
+	public Payment(PaymentCache paymentCache, PaymentType type, PaymentStatus status, Integer totalAmount) {
+		this(
+			paymentCache.getUserAlternateId(),
+			paymentCache.getMovieTitle(),
+			paymentCache.getTid(),
+			type,
+			status,
+			paymentCache.getPaymentNumber().toString(),
+			totalAmount
+		);
+	}
+
+	private Payment(Long userAlternateId, String movieTitle, String tid, PaymentType type, PaymentStatus status, String paymentNumber, Integer totalPrice) {
 		this.userAlternateId = userAlternateId;
 		this.movieTitle = movieTitle;
+		this.tid = tid;
 		this.type = type;
 		this.status = status;
 		this.paymentNumber = paymentNumber;

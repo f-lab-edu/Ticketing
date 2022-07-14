@@ -1,5 +1,6 @@
 package com.ticketing.server.movie.setup;
 
+import com.ticketing.server.global.redis.PaymentCache;
 import com.ticketing.server.movie.domain.Movie;
 import com.ticketing.server.movie.domain.MovieTime;
 import com.ticketing.server.movie.domain.Seat;
@@ -13,7 +14,6 @@ import com.ticketing.server.payment.domain.Payment;
 import com.ticketing.server.payment.domain.PaymentStatus;
 import com.ticketing.server.payment.domain.PaymentType;
 import com.ticketing.server.payment.domain.repository.PaymentRepository;
-import com.ticketing.server.payment.service.dto.CreatePaymentDTO;
 import com.ticketing.server.user.domain.User;
 import com.ticketing.server.user.domain.UserGrade;
 import com.ticketing.server.user.domain.repository.UserRepository;
@@ -119,8 +119,16 @@ MovieSetupService {
 		List<Ticket> tickets = ticketRepository.findAll();
 		Ticket ticket = tickets.get(0);
 		String title = ticket.getMovieTime().getMovie().getTitle();
-		CreatePaymentDTO createPaymentDto = new CreatePaymentDTO(user.getAlternateId(), title, PaymentType.KAKAO_PAY, PaymentStatus.COMPLETED, "2022-0710-4142", 30_000);
-		Payment payment = createPaymentDto.toEntity();
+		PaymentCache paymentCache = new PaymentCache(
+			user.getEmail(),
+			title,
+			"T2d03c9130bf237a9700",
+			List.of(1L, 2L),
+			user.getAlternateId(),
+			124124231513245L
+		);
+
+		Payment payment = new Payment(paymentCache, PaymentType.KAKAO_PAY, PaymentStatus.SOLD, 30_000);
 
 		paymentRepository.save(payment);
 

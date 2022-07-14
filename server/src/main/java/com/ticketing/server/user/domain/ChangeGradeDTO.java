@@ -1,6 +1,6 @@
 package com.ticketing.server.user.domain;
 
-import com.ticketing.server.user.application.UserChangeGradeResponse;
+import com.ticketing.server.user.application.response.UserChangeGradeResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
