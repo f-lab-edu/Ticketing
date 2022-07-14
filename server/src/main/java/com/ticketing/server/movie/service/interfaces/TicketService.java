@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull;
 
 public interface TicketService {
 
-	TicketListDTO getTickets(Long movieTimeId)
+	TicketListDTO getTickets(Long movieTimeId);
 
 	TicketDetailsDTO findTicketsByPaymentId(@NotNull Long paymentId);
 

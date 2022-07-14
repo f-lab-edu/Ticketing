@@ -26,6 +26,7 @@ public enum ErrorCode {
 	USER_NOT_FOUND(NOT_FOUND, "해당 유저 정보를 찾을 수 없습니다."),
 	EMAIL_NOT_FOUND(NOT_FOUND, "해당 이메일을 찾을 수 없습니다."),
 	MOVIE_NOT_FOUND(NOT_FOUND, "해당 제목의 영화를 찾을 수 없습니다."),
+	MOVIE_TIME_NOT_FOUND(NOT_FOUND, "해당 영화 시간표 정보를 찾을 수 없습니다"),
 	REFRESH_TOKEN_NOT_FOUND(NOT_FOUND, "리프레쉬 토큰을 찾을 수 없습니다."),
 	PAYMENT_ID_NOT_FOUND(NOT_FOUND, "결제정보를 찾을 수 없습니다."),
 	THEATER_NOT_FOUND(NOT_FOUND, "상영관 정보를 찾을 수 없습니다."),
@@ -74,6 +75,10 @@ public enum ErrorCode {
 
 	public static TicketingException throwMovieNotFound() {
 		throw new TicketingException(MOVIE_NOT_FOUND);
+	}
+
+	public static TicketingException throwMovieTimeNotFound() {
+		throw new TicketingException(MOVIE_TIME_NOT_FOUND);
 	}
 
 	public static TicketingException throwRefreshTokenNotFound() {
