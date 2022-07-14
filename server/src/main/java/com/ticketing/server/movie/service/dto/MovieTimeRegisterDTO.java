@@ -13,8 +13,8 @@ public class MovieTimeRegisterDTO {
 	@NotNull(message = "{validation.not.null.movieId}")
 	private Long movieId;
 
-	@NotNull(message = "{validation.not.null.theaterId}")
-	private Long theaterId;
+	@NotNull(message = "{validation.not.null.theaterNumber}")
+	private Integer theaterNumber;
 
 	@NotNull(message = "{validation.not.null.round}")
 	private Integer round;

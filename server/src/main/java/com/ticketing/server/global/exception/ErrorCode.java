@@ -28,6 +28,7 @@ public enum ErrorCode {
 	MOVIE_NOT_FOUND(NOT_FOUND, "해당 제목의 영화를 찾을 수 없습니다."),
 	REFRESH_TOKEN_NOT_FOUND(NOT_FOUND, "리프레쉬 토큰을 찾을 수 없습니다."),
 	PAYMENT_ID_NOT_FOUND(NOT_FOUND, "결제정보를 찾을 수 없습니다."),
+	THEATER_NOT_FOUND(NOT_FOUND, "상영관 정보를 찾을 수 없습니다."),
 
 	/* 409 CONFLICT : Resource 의 현재 상태와 충돌. 보통 중복된 데이터 존재 */
 	DUPLICATE_EMAIL(CONFLICT, "이메일이 이미 존재합니다."),
@@ -80,6 +81,10 @@ public enum ErrorCode {
 
 	public static TicketingException throwPaymentIdNotFound() {
 		throw new TicketingException(PAYMENT_ID_NOT_FOUND);
+	}
+
+	public static TicketingException throwTheaterNotFound() {
+		throw new TicketingException(THEATER_NOT_FOUND);
 	}
 
 	/* 409 CONFLICT : Resource 의 현재 상태와 충돌. 보통 중복된 데이터 존재 */

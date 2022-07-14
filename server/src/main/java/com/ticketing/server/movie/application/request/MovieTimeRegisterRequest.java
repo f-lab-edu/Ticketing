@@ -14,8 +14,8 @@ public class MovieTimeRegisterRequest {
 	@NotNull(message = "{validation.not.null.movieId}")
 	private Long movieId;
 
-	@NotNull(message = "{validation.not.null.theaterId}")
-	private Long theaterId;
+	@NotNull(message = "{validation.not.null.theaterNumber}")
+	private Integer theaterNumber;
 
 	@NotNull(message = "{validation.not.null.round}")
 	private Integer round;
@@ -27,7 +27,7 @@ public class MovieTimeRegisterRequest {
 	private LocalDateTime endAt;
 
 	public MovieTimeRegisterDTO toMovieTimeRegisterDTO() {
-		return new MovieTimeRegisterDTO(movieId, theaterId, round, startAt, endAt);
+		return new MovieTimeRegisterDTO(movieId, theaterNumber, round, startAt, endAt);
 	}
 
 }
