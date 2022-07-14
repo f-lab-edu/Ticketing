@@ -26,6 +26,11 @@ public class MovieTimeServiceImpl implements MovieTimeService {
 	private final MovieTimeRepository movieTimeRepository;
 
 	@Override
+	public RegisteredMovieTimeDTO registerMovieTime() {
+
+	}
+
+	@Override
 	public MovieTimeListDTO getMovieTimes(Long movieId, LocalDate runningDate) {
 		Movie movie = movieRepository.findByIdAndDeletedAtNull(movieId)
 			.orElseThrow(ErrorCode::throwMovieNotFound);
