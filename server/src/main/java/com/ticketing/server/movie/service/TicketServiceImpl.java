@@ -34,7 +34,7 @@ public class TicketServiceImpl implements TicketService {
 		MovieTime movieTime = movieTimeRepository.findById(movieTimeId)
 			.orElseThrow(ErrorCode::throwMovieTimeNotFound);
 
-		List<TicketDTO> tickets = ticketRepository.findValidTickets(movieTimeId)
+		List<TicketDTO> tickets = ticketRepository.findValidTickets(movieTime)
 			.stream()
 			.map(TicketDTO::new)
 			.collect(Collectors.toList());
