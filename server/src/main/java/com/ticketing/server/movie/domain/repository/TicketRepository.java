@@ -11,6 +11,15 @@ import org.springframework.stereotype.Repository;
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
 
 	@Query(
+		value = "SELECT t "
+			+ "FROM Ticket t "
+			+ "JOIN FETCH t.seat s "
+			+ "WHERE t.movieTimeId = :movieTimeId "
+			+ "AND t.deletedAt IS NULL"
+	)
+	List<Ticket> findValidTickets(@Param("movieTimesId") Long movieTimeId);
+
+	@Query(
 		value =
 			"SELECT t "
 			+ "FROM Ticket t "

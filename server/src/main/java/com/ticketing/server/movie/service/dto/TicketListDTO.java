@@ -1,5 +1,6 @@
 package com.ticketing.server.movie.service.dto;
 
+import com.ticketing.server.movie.application.response.TicketListResponse;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

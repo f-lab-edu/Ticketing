@@ -1,8 +1,10 @@
 package com.ticketing.server.movie.service;
 
 import com.ticketing.server.global.exception.ErrorCode;
+import com.ticketing.server.movie.domain.Ticket;
 import com.ticketing.server.movie.domain.repository.TicketRepository;
 import com.ticketing.server.movie.service.dto.TicketDetailsDTO;
+import com.ticketing.server.movie.service.dto.TicketListDTO;
 import com.ticketing.server.movie.service.interfaces.TicketService;
 import com.ticketing.server.payment.service.dto.TicketDetailDTO;
 import java.util.List;
@@ -25,7 +27,7 @@ public class TicketServiceImpl implements TicketService {
 
 	@Override
 	public TicketListDTO getTickets(Long movieTimeId) {
-
+		List<Ticket> tickets = ticketRepository.findValidTickets(movieTimeId);
 	}
 
 	@Override

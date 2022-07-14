@@ -26,7 +26,7 @@ public class Ticket extends AbstractEntity {
 
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "movie_times_id", referencedColumnName = "id", updatable = false)
+	@JoinColumn(name = "movie_time_id", referencedColumnName = "id", updatable = false)
 	private MovieTime movieTime;
 
 	private Long paymentId;
