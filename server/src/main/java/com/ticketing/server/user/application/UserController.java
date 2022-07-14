@@ -9,6 +9,7 @@ import com.ticketing.server.user.application.request.UserChangePasswordRequest;
 import com.ticketing.server.user.application.request.UserDeleteRequest;
 import com.ticketing.server.user.application.response.PaymentsResponse;
 import com.ticketing.server.user.application.response.SignUpResponse;
+import com.ticketing.server.user.application.response.UserChangeGradeResponse;
 import com.ticketing.server.user.application.response.UserChangePasswordResponse;
 import com.ticketing.server.user.application.response.UserDeleteResponse;
 import com.ticketing.server.user.application.response.UserDetailResponse;

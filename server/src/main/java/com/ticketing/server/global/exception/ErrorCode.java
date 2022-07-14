@@ -5,6 +5,7 @@ import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
+import com.ticketing.server.global.redis.PaymentCache;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,11 @@ public enum ErrorCode {
 	TOKEN_TYPE(BAD_REQUEST, "토큰 타입이 올바르지 않습니다."),
 	UNAVAILABLE_REFRESH_TOKEN(BAD_REQUEST, "사용할 수 없는 토큰 입니다."),
 	UNABLE_CHANGE_GRADE(BAD_REQUEST, "동일한 등급으로 변경할 수 없습니다."),
+	INVALID_TICKET_ID(BAD_REQUEST, "잘못된 티켓 ID가 존재합니다."),
+	BAD_REQUEST_MOVIE_TIME(BAD_REQUEST, "동일한 상영시간만 결제 가능합니다."),
+	BAD_REQUEST_PAYMENT_COMPLETE(BAD_REQUEST, "처리할 결제 정보가 존재하지 않습니다."),
+	BAD_REQUEST_PAYMENT_READY(BAD_REQUEST, "이미 진행 중인 결제가 존재합니다."),
+	BAD_REQUEST_PAYMENT_CANCEL(BAD_REQUEST, "취소할 티켓이 존재하지 않습니다."),
 
 	/* 403 FORBIDDEN : 접근 권한 제한 */
 	VALID_USER_ID(FORBIDDEN, "해당 정보에 접근 권한이 존재하지 않습니다."),
@@ -39,7 +45,7 @@ public enum ErrorCode {
 	DELETED_MOVIE(CONFLICT, "이미 삭제된 영화 입니다.");
 
 	private final HttpStatus httpStatus;
-	private final String detail;
+	private String detail;
 
 	/* 400 BAD_REQUEST : 잘못된 요청 */
 	public static TicketingException throwMismatchPassword() {
@@ -56,6 +62,26 @@ public enum ErrorCode {
 
 	public static TicketingException throwUnableChangeGrade() {
 		throw new TicketingException(UNABLE_CHANGE_GRADE);
+	}
+
+	public static TicketingException throwInvalidTicketId() {
+		throw new TicketingException(INVALID_TICKET_ID);
+	}
+
+	public static TicketingException throwBadRequestMovieTime() {
+		throw new TicketingException(BAD_REQUEST_MOVIE_TIME);
+	}
+
+	public static TicketingException throwBadRequestPaymentComplete() {
+		throw new TicketingException(BAD_REQUEST_PAYMENT_COMPLETE);
+	}
+
+	public static TicketingException throwBadRequestPaymentReady() {
+		throw new TicketingException(BAD_REQUEST_PAYMENT_READY);
+	}
+
+	public static TicketingException throwBadRequestPaymentCancel() {
+		throw new TicketingException(BAD_REQUEST_PAYMENT_CANCEL);
 	}
 
 	/* 403 FORBIDDEN : 접근 권한 제한 */
@@ -112,5 +138,6 @@ public enum ErrorCode {
 	public static TicketingException throwDeletedMovie() {
 		throw new TicketingException(DELETED_MOVIE);
 	}
+
 
 }

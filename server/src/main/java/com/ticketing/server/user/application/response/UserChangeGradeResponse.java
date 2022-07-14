@@ -1,4 +1,4 @@
-package com.ticketing.server.user.application;
+package com.ticketing.server.user.application.response;
 
 import com.ticketing.server.user.domain.UserGrade;
 import lombok.AllArgsConstructor;

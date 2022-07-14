@@ -1,4 +1,4 @@
-package com.ticketing.server.user.domain;
+package com.ticketing.server.global.dto;
 
 import java.net.NetworkInterface;
 import java.security.SecureRandom;

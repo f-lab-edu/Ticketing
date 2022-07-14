@@ -1,14 +1,15 @@
 package com.ticketing.server.user.service;
 
-import static com.ticketing.server.payment.domain.PaymentStatus.COMPLETED;
+import static com.ticketing.server.payment.domain.PaymentStatus.SOLD;
 import static com.ticketing.server.payment.domain.PaymentType.KAKAO_PAY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import com.ticketing.server.global.redis.PaymentCache;
 import com.ticketing.server.payment.application.response.SimplePaymentsResponse;
-import com.ticketing.server.payment.service.dto.CreatePaymentDTO;
+import com.ticketing.server.payment.domain.Payment;
 import com.ticketing.server.payment.service.dto.SimplePaymentDTO;
 import com.ticketing.server.user.api.PaymentClient;
 import com.ticketing.server.user.domain.User;
@@ -68,9 +69,35 @@ class UserApisServiceImplTest {
 		// given
 		List<SimplePaymentDTO> payments = Arrays.asList(
 			new SimplePaymentDTO(
-				new CreatePaymentDTO(1L, "범죄도시2", KAKAO_PAY, COMPLETED, "004-323-77542", 15_000).toEntity()),
+				new Payment(
+					new PaymentCache(
+						user.getEmail(),
+						"범죄도시2",
+						"T2d03c9130bf237a9700",
+						List.of(1L, 2L),
+						user.getAlternateId(),
+						124124231513245L
+					),
+					KAKAO_PAY,
+					SOLD,
+					15_000
+				)
+			),
 			new SimplePaymentDTO(
-				new CreatePaymentDTO(1L, "토르", KAKAO_PAY, COMPLETED, "004-323-77544", 30_000).toEntity())
+				new Payment(
+					new PaymentCache(
+						user.getEmail(),
+						"범죄도시2",
+						"T2d03c9130bf237a97001",
+						List.of(3L),
+						user.getAlternateId(),
+						1241242343245L
+					),
+					KAKAO_PAY,
+					SOLD,
+					15_000
+				)
+			)
 		);
 
 		when(userService.findNotDeletedUserByEmail("ticketing@gmail.com")).thenReturn(user);

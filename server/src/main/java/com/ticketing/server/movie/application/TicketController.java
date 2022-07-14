@@ -21,10 +21,12 @@ public class TicketController {
 
 	private final TicketService ticketService;
 
-	@GetMapping("payments/{paymentId}")
+	@GetMapping("/payments/{paymentId}")
 	public ResponseEntity<TicketDetailsResponse> findTicketsByPaymentId(@PathVariable("paymentId") @NotNull Long paymentId) {
 		TicketDetailsDTO tickets = ticketService.findTicketsByPaymentId(paymentId);
-		return ResponseEntity.status(HttpStatus.OK).body(tickets.toResponse());
+
+		return ResponseEntity.status(HttpStatus.OK)
+			.body(tickets.toResponse());
 	}
 
 }

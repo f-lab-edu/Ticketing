@@ -4,6 +4,7 @@ import static com.ticketing.server.movie.domain.MovieTimeTest.MOVIE_TIMES;
 import static com.ticketing.server.movie.domain.SeatTest.SEATS_BY_THEATER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.ticketing.server.global.exception.ErrorCode;
 import com.ticketing.server.global.exception.TicketingException;
@@ -63,6 +64,111 @@ public class TicketTest {
 			.isInstanceOf(TicketingException.class)
 			.extracting("errorCode")
 			.isEqualTo(ErrorCode.DUPLICATE_PAYMENT);
+	}
+
+	@Test
+	@DisplayName("좌석 예약 성공")
+	void makeReservationSuccess() {
+		// given
+		Ticket ticket = tickets.get(0);
+
+		// when
+		ticket = ticket.makeReservation();
+
+		// then
+		assertThat(ticket.getStatus()).isEqualTo(TicketStatus.RESERVATION);
+	}
+
+	@Test
+	@DisplayName("좌석 예약 실패 - 이미 예약중인 좌석인 경우")
+	void makeReservationFail_Reservation() {
+		// given
+		Ticket ticket = tickets.get(0);
+		ticket.makeReservation();
+
+		// when
+		// then
+		assertThatThrownBy(ticket::makeReservation)
+			.isInstanceOf(TicketingException.class)
+			.extracting("errorCode")
+			.isEqualTo(ErrorCode.DUPLICATE_PAYMENT);
+	}
+
+	@Test
+	@DisplayName("좌석 예약 실패 - 이미 판매된 좌석인 경우")
+	void makeReservationFail_Sold() {
+		// given
+		Ticket ticket = tickets.get(0);
+		ticket.makeSold(123L);
+
+		// when
+		// then
+		assertThatThrownBy(ticket::makeReservation)
+			.isInstanceOf(TicketingException.class)
+			.extracting("errorCode")
+			.isEqualTo(ErrorCode.DUPLICATE_PAYMENT);
+	}
+
+	@Test
+	@DisplayName("좌석 구매 성공")
+	void makeSoldSuccess() {
+		// given
+		Ticket ticket = tickets.get(0);
+
+		// when
+		ticket.makeSold(123L);
+
+		// then
+		assertAll(
+			() -> assertThat(ticket.getStatus()).isEqualTo(TicketStatus.SOLD),
+			() -> assertThat(ticket.getPaymentId()).isEqualTo(123L)
+		);
+	}
+
+	@Test
+	@DisplayName("좌석 구매 실패 - 이미 판매된 좌석")
+	void makeSoldFail() {
+		// given
+		Ticket ticket = tickets.get(0);
+
+		// when
+		ticket.makeSold(123L);
+
+		// then
+		assertThatThrownBy(() -> ticket.makeSold(123L))
+			.isInstanceOf(TicketingException.class)
+			.extracting("errorCode")
+			.isEqualTo(ErrorCode.DUPLICATE_PAYMENT);
+	}
+
+	@Test
+	@DisplayName("좌석 취소 성공")
+	void cancelSuccess() {
+		// given
+		Ticket ticket = tickets.get(0);
+
+		// when
+		ticket.makeReservation();
+		ticket.cancel();
+
+		// then
+		assertThat(ticket.getStatus()).isEqualTo(TicketStatus.SALE);
+	}
+
+	@Test
+	@DisplayName("좌석 취소 실패")
+	void cancelFail() {
+		// given
+		Ticket ticket = tickets.get(0);
+
+		// when
+		ticket.makeSold(123L);
+
+		// then
+		assertThatThrownBy(() -> ticket.cancel())
+			.isInstanceOf(TicketingException.class)
+			.extracting("errorCode")
+			.isEqualTo(ErrorCode.BAD_REQUEST_PAYMENT_CANCEL);
 	}
 
 }

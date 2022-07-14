@@ -1,4 +1,4 @@
-package com.ticketing.server.user.domain;
+package com.ticketing.server.global.dto;
 
 public interface SequenceGenerator {
 
