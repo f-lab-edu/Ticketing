@@ -9,7 +9,7 @@ import com.ticketing.server.movie.domain.MovieTime;
 import com.ticketing.server.movie.domain.Theater;
 import com.ticketing.server.movie.domain.repository.MovieRepository;
 import com.ticketing.server.movie.domain.repository.MovieTimeRepository;
-import com.ticketing.server.movie.service.dto.MovieTimeDTO;
+import com.ticketing.server.movie.service.dto.MovieTimeListDTO;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -39,26 +39,26 @@ public class MovieTimeServiceImplTest {
     MovieTimeServiceImpl movieTimeService;
 
     @Test
-    @DisplayName("MovieTime Service Test - get empty list when there is no valid movie times")
+    @DisplayName("MovieTime Service Test - get empty list when there are no valid movie times")
     void shouldGetEmptyList() {
         // given
         Movie movie = new Movie(title, 106L);
 
-        when(movieRepository.findByTitle(title))
+        when(movieRepository.findByIdAndDeletedAtNull(any()))
             .thenReturn(Optional.of(movie));
 
         when(movieTimeRepository.findValidMovieTimes(any(), any(), any()))
             .thenReturn(Collections.emptyList());
 
         // when
-        List<MovieTimeDTO> movieTimeDTOList = movieTimeService.getMovieTimes(title, LocalDate.now());
+        MovieTimeListDTO movieTimeListDto = movieTimeService.getMovieTimes(any(), LocalDate.now());
 
         // then
-        assertTrue(movieTimeDTOList.isEmpty());
+        assertTrue(movieTimeListDto.getMovieTimeDtos().isEmpty());
     }
 
     @Test
-    @DisplayName("MovieTime Service Test - get list when there is valid movie times")
+    @DisplayName("MovieTime Service Test - get list when there are valid movie times")
     void shouldGetMovieTimeList() {
         // given
         Movie movie = new Movie(title, 106L);
@@ -69,17 +69,17 @@ public class MovieTimeServiceImplTest {
 
         movieTimes.add(movieTime);
 
-        when(movieRepository.findByTitle(title))
+        when(movieRepository.findByIdAndDeletedAtNull(any()))
             .thenReturn(Optional.of(movie));
 
         when(movieTimeRepository.findValidMovieTimes(any(), any(), any()))
             .thenReturn(movieTimes);
 
         // when
-        List<MovieTimeDTO> movieTimeDTOList = movieTimeService.getMovieTimes(title, LocalDate.of(2022, 07, 01));
+	    MovieTimeListDTO movieTimeListDto = movieTimeService.getMovieTimes(any(), LocalDate.of(2022, 07, 01));
 
         // then
-        assertTrue(!movieTimeDTOList.isEmpty());
+        assertTrue(!movieTimeListDto.getMovieTimeDtos().isEmpty());
     }
 
 }

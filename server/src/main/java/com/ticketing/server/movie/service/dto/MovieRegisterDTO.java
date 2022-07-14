@@ -21,4 +21,5 @@ public class MovieRegisterDTO {
 	public Movie toMovie() {
 		return new Movie(this.title, this.runningTime);
 	}
+
 }

@@ -28,11 +28,13 @@ public enum ErrorCode {
 	MOVIE_NOT_FOUND(NOT_FOUND, "해당 제목의 영화를 찾을 수 없습니다."),
 	REFRESH_TOKEN_NOT_FOUND(NOT_FOUND, "리프레쉬 토큰을 찾을 수 없습니다."),
 	PAYMENT_ID_NOT_FOUND(NOT_FOUND, "결제정보를 찾을 수 없습니다."),
+	THEATER_NOT_FOUND(NOT_FOUND, "상영관 정보를 찾을 수 없습니다."),
 
 	/* 409 CONFLICT : Resource 의 현재 상태와 충돌. 보통 중복된 데이터 존재 */
 	DUPLICATE_EMAIL(CONFLICT, "이메일이 이미 존재합니다."),
 	DUPLICATE_PAYMENT(CONFLICT, "해당 좌석은 현재 판매된 좌석입니다."),
 	DUPLICATE_MOVIE(CONFLICT, "해당 영화 정보가 이미 존재합니다."),
+	DUPLICATE_MOVIE_TIME(CONFLICT, "해당 영화 시간표 정보가 이미 존재합니다."),
 	DELETED_EMAIL(CONFLICT, "이미 삭제된 이메일 입니다."),
 	DELETED_MOVIE(CONFLICT, "이미 삭제된 영화 입니다.");
 
@@ -82,6 +84,10 @@ public enum ErrorCode {
 		throw new TicketingException(PAYMENT_ID_NOT_FOUND);
 	}
 
+	public static TicketingException throwTheaterNotFound() {
+		throw new TicketingException(THEATER_NOT_FOUND);
+	}
+
 	/* 409 CONFLICT : Resource 의 현재 상태와 충돌. 보통 중복된 데이터 존재 */
 	public static TicketingException throwDuplicateEmail() {
 		throw new TicketingException(DUPLICATE_EMAIL);
@@ -93,6 +99,10 @@ public enum ErrorCode {
 
 	public static TicketingException throwDuplicateMovie() {
 		throw new TicketingException(DUPLICATE_MOVIE);
+	}
+
+	public static TicketingException throwDuplicateMovieTime() {
+		throw new TicketingException(DUPLICATE_MOVIE_TIME);
 	}
 
 	public static TicketingException throwDeletedEmail() {

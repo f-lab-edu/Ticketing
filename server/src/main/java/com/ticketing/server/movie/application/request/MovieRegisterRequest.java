@@ -5,10 +5,8 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
 public class MovieRegisterRequest {
 
@@ -19,7 +17,7 @@ public class MovieRegisterRequest {
 	private Long runningTime;
 
 	public MovieRegisterDTO toMovieRegisterDTO() {
-		return new MovieRegisterDTO(this.title, this.runningTime);
+		return new MovieRegisterDTO(title, runningTime);
 	}
 
 }

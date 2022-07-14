@@ -1,6 +1,8 @@
 package com.ticketing.server.movie.domain;
 
+
 import com.ticketing.server.global.dto.repository.AbstractEntity;
+import com.ticketing.server.movie.service.dto.MovieTimeDTO;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,6 +72,11 @@ public class MovieTime extends AbstractEntity {
 
 	public List<Seat> getSeats() {
 		return this.theater.getSeats();
+	}
+
+	public MovieTimeDTO toMovieTimeDTO() {
+		return new MovieTimeDTO(
+			this.id, this.theater.getTheaterNumber(), this.round, this.startAt, this.endAt);
 	}
 
 }
