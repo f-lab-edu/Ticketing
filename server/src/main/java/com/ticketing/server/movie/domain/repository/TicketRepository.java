@@ -21,8 +21,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
 	List<Ticket> findValidTickets(MovieTime movieTime);
 
 	@Query(
-		value =
-			"SELECT t "
+		value = "SELECT t "
 			+ "FROM Ticket t "
 			+ "JOIN FETCH t.movieTime mt "
 			+ "JOIN FETCH t.seat s "
@@ -32,8 +31,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
 	List<Ticket> findTicketFetchJoinByPaymentId(@Param("paymentId") Long paymentId);
 
 	@Query(
-		value =
-			"SELECT t "
+		value = "SELECT t "
 				+ "FROM Ticket t "
 				+ "JOIN FETCH t.movieTime mt "
 				+ "JOIN FETCH t.seat s "
