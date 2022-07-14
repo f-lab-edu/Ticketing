@@ -24,6 +24,11 @@ public class TicketServiceImpl implements TicketService {
 	private final TicketRepository ticketRepository;
 
 	@Override
+	public TicketListDTO getTickets(Long movieTimeId) {
+
+	}
+
+	@Override
 	public TicketDetailsDTO findTicketsByPaymentId(@NotNull Long paymentId) {
 		List<TicketDetailDTO> ticketDetails = ticketRepository.findTicketFetchJoinByPaymentId(paymentId)
 			.stream()
