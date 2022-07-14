@@ -1,13 +1,14 @@
 package com.ticketing.server.movie.service.interfaces;
 
-import com.ticketing.server.movie.service.dto.MovieDTO;
-import com.ticketing.server.movie.service.dto.MovieRegisterDTO;
-import java.util.List;
+import com.ticketing.server.movie.service.dto.DeletedMovieDTO;
+import com.ticketing.server.movie.service.dto.MovieListDTO;
+import com.ticketing.server.movie.service.dto.RegisteredMovieDTO;
 
 public interface MovieService {
 
-	MovieDTO registerMovie(MovieRegisterDTO movieRegisterDto);
+	RegisteredMovieDTO registerMovie(String title, Long runningTime);
 
-    List<MovieDTO> getMovies();
+	MovieListDTO getMovies();
 
+	DeletedMovieDTO deleteMovie(Long id);
 }

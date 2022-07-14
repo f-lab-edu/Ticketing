@@ -3,12 +3,15 @@ package com.ticketing.server.movie.service;
 import com.ticketing.server.global.exception.ErrorCode;
 import com.ticketing.server.movie.domain.Movie;
 import com.ticketing.server.movie.domain.repository.MovieRepository;
+import com.ticketing.server.movie.service.dto.DeletedMovieDTO;
 import com.ticketing.server.movie.service.dto.MovieDTO;
-import com.ticketing.server.movie.service.dto.MovieRegisterDTO;
+import com.ticketing.server.movie.service.dto.MovieListDTO;
+import com.ticketing.server.movie.service.dto.RegisteredMovieDTO;
 import com.ticketing.server.movie.service.interfaces.MovieService;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,24 +24,39 @@ public class MovieServiceImpl implements MovieService {
 	private final MovieRepository movieRepository;
 
 	@Override
-	public MovieDTO registerMovie(MovieRegisterDTO movieRegisterDto) {
-		Optional<Movie> movie = movieRepository.findByTitle(movieRegisterDto.getTitle());
+	public RegisteredMovieDTO registerMovie(String title, Long runningTime) {
+		Optional<Movie> movie = movieRepository.findValidMovieWithTitle(title);
 
 		if(movie.isEmpty()) {
-			return MovieDTO.from(movieRepository.save(movieRegisterDto.toMovie()));
+			Movie newMovie = movieRepository.save(
+				new Movie(title, runningTime)
+			);
+
+			return new RegisteredMovieDTO(newMovie);
 		}
 
 		throw ErrorCode.throwDuplicateMovie();
 	}
 
 	@Override
-	public List<MovieDTO> getMovies() {
+	public MovieListDTO getMovies() {
 		List<Movie> movies = movieRepository.findValidMovies();
 
-		return movies.stream()
-			.map(MovieDTO::from)
+		List<MovieDTO> movieDtos = movies.stream()
+			.map(movie -> movie.toMovieDTO())
 			.collect(Collectors.toList());
 
+		return new MovieListDTO(movieDtos);
 	}
 
+	@Override
+	@Transactional
+	public DeletedMovieDTO deleteMovie(Long id) {
+		Movie movie = movieRepository.findByIdAndDeletedAtNull(id)
+			.orElseThrow(ErrorCode::throwMovieNotFound);
+
+		Movie deletedMovie = movie.delete();
+
+		return new DeletedMovieDTO(deletedMovie);
+	}
 }

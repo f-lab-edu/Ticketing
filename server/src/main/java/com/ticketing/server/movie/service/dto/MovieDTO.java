@@ -1,18 +1,14 @@
 package com.ticketing.server.movie.service.dto;
 
-import com.ticketing.server.movie.domain.Movie;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public class MovieDTO {
 
-    private String title;
+	private Long movieId;
 
-    public static MovieDTO from(Movie movie) {
-        return new MovieDTO(movie.getTitle());
-    }
+    private String title;
 
 }
