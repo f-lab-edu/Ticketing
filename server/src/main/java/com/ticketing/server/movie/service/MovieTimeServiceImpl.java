@@ -7,6 +7,7 @@ import com.ticketing.server.movie.domain.repository.MovieRepository;
 import com.ticketing.server.movie.domain.repository.MovieTimeRepository;
 import com.ticketing.server.movie.service.dto.MovieTimeDTO;
 import com.ticketing.server.movie.service.dto.MovieTimeListDTO;
+import com.ticketing.server.movie.service.dto.RegisteredMovieTimeDTO;
 import com.ticketing.server.movie.service.interfaces.MovieTimeService;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -27,7 +28,7 @@ public class MovieTimeServiceImpl implements MovieTimeService {
 
 	@Override
 	public RegisteredMovieTimeDTO registerMovieTime() {
-
+		MovieTime movieTime = movieTimeRepository.findByMovieAndTheaterAndRound();
 	}
 
 	@Override
