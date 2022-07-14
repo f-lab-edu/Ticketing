@@ -9,7 +9,6 @@ import com.ticketing.server.movie.domain.MovieTime;
 import com.ticketing.server.movie.domain.Theater;
 import com.ticketing.server.movie.domain.repository.MovieRepository;
 import com.ticketing.server.movie.domain.repository.MovieTimeRepository;
-import com.ticketing.server.movie.service.dto.MovieTimeDTO;
 import com.ticketing.server.movie.service.dto.MovieTimeListDTO;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
