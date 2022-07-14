@@ -34,6 +34,7 @@ public enum ErrorCode {
 	DUPLICATE_EMAIL(CONFLICT, "이메일이 이미 존재합니다."),
 	DUPLICATE_PAYMENT(CONFLICT, "해당 좌석은 현재 판매된 좌석입니다."),
 	DUPLICATE_MOVIE(CONFLICT, "해당 영화 정보가 이미 존재합니다."),
+	DUPLICATE_MOVIE_TIME(CONFLICT, "해당 영화 시간표 정보가 이미 존재합니다."),
 	DELETED_EMAIL(CONFLICT, "이미 삭제된 이메일 입니다."),
 	DELETED_MOVIE(CONFLICT, "이미 삭제된 영화 입니다.");
 
@@ -98,6 +99,10 @@ public enum ErrorCode {
 
 	public static TicketingException throwDuplicateMovie() {
 		throw new TicketingException(DUPLICATE_MOVIE);
+	}
+
+	public static TicketingException throwDuplicateMovieTime() {
+		throw new TicketingException(DUPLICATE_MOVIE_TIME);
 	}
 
 	public static TicketingException throwDeletedEmail() {

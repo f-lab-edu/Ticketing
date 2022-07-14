@@ -10,6 +10,7 @@ import com.ticketing.server.movie.domain.repository.TheaterRepository;
 import com.ticketing.server.movie.service.dto.MovieTimeDTO;
 import com.ticketing.server.movie.service.dto.MovieTimeListDTO;
 import com.ticketing.server.movie.service.dto.MovieTimeRegisterDTO;
+import com.ticketing.server.movie.service.dto.RegisteredMovieDTO;
 import com.ticketing.server.movie.service.dto.RegisteredMovieTimeDTO;
 import com.ticketing.server.movie.service.interfaces.MovieTimeService;
 import java.time.LocalDate;
@@ -35,18 +36,27 @@ public class MovieTimeServiceImpl implements MovieTimeService {
 
 	@Override
 	public RegisteredMovieTimeDTO registerMovieTime(@Valid MovieTimeRegisterDTO movieTimeRegisterDto) {
-		Movie movie = movieRepository.findById(movieTimeRegisterDto.getMovieId())
-			.orElseThrow(ErrorCode::throwMovieNotFound);
+		Movie movie = findMovieById(movieTimeRegisterDto.getMovieId());
+		Theater theater = findTheaterByNumber(movieTimeRegisterDto.getTheaterNumber());
+		int round = movieTimeRegisterDto.getTheaterNumber();
 
-		MovieTime movieTime = movieTimeRepository.findByMovieAndTheaterAndRoundAndDeletedAtNull(
+		Optional<MovieTime> movieTime =
+			movieTimeRepository.findByMovieAndTheaterAndRoundAndDeletedAtNull(movie, theater, round);
 
-		);
+		if(movieTime.isEmpty()) {
+			MovieTime newMovieTime = movieTimeRepository.save(
+				new MovieTime(movie, theater, round, movieTimeRegisterDto.getStartAt())
+			);
+
+			return new RegisteredMovieTimeDTO(newMovieTime);
+		}
+
+		throw ErrorCode.throwDuplicateMovieTime();
 	}
 
 	@Override
 	public MovieTimeListDTO getMovieTimes(Long movieId, LocalDate runningDate) {
-		Movie movie = movieRepository.findByIdAndDeletedAtNull(movieId)
-			.orElseThrow(ErrorCode::throwMovieNotFound);
+		Movie movie = findMovieById(movieId);
 
 		LocalDateTime startOfDay = runningDate.atStartOfDay().plusHours(6);
 		LocalDateTime endOfDay = startOfDay.plusDays(1);
@@ -62,13 +72,18 @@ public class MovieTimeServiceImpl implements MovieTimeService {
 
 	@Override
 	public Movie findMovieById(Long movieId) {
+		Movie movie = movieRepository.findByIdAndDeletedAtNull(movieId)
+			.orElseThrow(ErrorCode::throwMovieNotFound);
 
+		return movie;
 	}
 
 	@Override
 	public Theater findTheaterByNumber(Integer theaterNumber) {
 		Theater theater = theaterRepository.findByTheaterNumber(theaterNumber)
-			.orElseThrow(ErrorCode::throwTh)
+			.orElseThrow(ErrorCode::throwTheaterNotFound);
+
+		return theater;
 	}
 
 }

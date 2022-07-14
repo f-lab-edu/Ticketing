@@ -23,11 +23,8 @@ public class MovieTimeRegisterRequest {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
 	private LocalDateTime startAt;
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-	private LocalDateTime endAt;
-
 	public MovieTimeRegisterDTO toMovieTimeRegisterDTO() {
-		return new MovieTimeRegisterDTO(movieId, theaterNumber, round, startAt, endAt);
+		return new MovieTimeRegisterDTO(movieId, theaterNumber, round, startAt);
 	}
 
 }
