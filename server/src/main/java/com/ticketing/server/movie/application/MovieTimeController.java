@@ -46,8 +46,10 @@ public class MovieTimeController {
 			movieTimeRegisterRequest.toMovieTimeRegisterDTO()
 		);
 
-
-
+		return ResponseEntity.status(HttpStatus.OK)
+			.body(
+				registeredMovieTimeDto.toResponse()
+			);
 	}
 
 	@GetMapping

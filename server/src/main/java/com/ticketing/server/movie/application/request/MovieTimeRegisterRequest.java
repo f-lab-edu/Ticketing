@@ -20,7 +20,6 @@ public class MovieTimeRegisterRequest {
 	@NotNull(message = "{validation.not.null.round}")
 	private Integer round;
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
 	private LocalDateTime startAt;
 
 	public MovieTimeRegisterDTO toMovieTimeRegisterDTO() {
