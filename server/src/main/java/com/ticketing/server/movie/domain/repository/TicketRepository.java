@@ -1,5 +1,6 @@
 package com.ticketing.server.movie.domain.repository;
 
+import com.ticketing.server.movie.domain.MovieTime;
 import com.ticketing.server.movie.domain.Ticket;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,8 +12,16 @@ import org.springframework.stereotype.Repository;
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
 
 	@Query(
-		value =
-			"SELECT t "
+		value = "SELECT t "
+			+ "FROM Ticket t "
+			+ "JOIN FETCH t.seat s "
+			+ "WHERE t.movieTime = :movieTime "
+			+ "AND t.deletedAt IS NULL"
+	)
+	List<Ticket> findValidTickets(MovieTime movieTime);
+
+	@Query(
+		value = "SELECT t "
 			+ "FROM Ticket t "
 			+ "JOIN FETCH t.movieTime mt "
 			+ "JOIN FETCH t.seat s "
@@ -22,8 +31,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
 	List<Ticket> findTicketFetchJoinByPaymentId(@Param("paymentId") Long paymentId);
 
 	@Query(
-		value =
-			"SELECT t "
+		value = "SELECT t "
 				+ "FROM Ticket t "
 				+ "JOIN FETCH t.movieTime mt "
 				+ "JOIN FETCH t.seat s "

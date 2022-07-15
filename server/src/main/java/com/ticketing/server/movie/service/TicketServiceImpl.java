@@ -1,10 +1,14 @@
 package com.ticketing.server.movie.service;
 
 import com.ticketing.server.global.exception.ErrorCode;
+import com.ticketing.server.movie.domain.MovieTime;
+import com.ticketing.server.movie.domain.repository.MovieTimeRepository;
 import com.ticketing.server.global.validator.constraints.NotEmptyCollection;
 import com.ticketing.server.movie.domain.Ticket;
 import com.ticketing.server.movie.domain.repository.TicketRepository;
+import com.ticketing.server.movie.service.dto.TicketDTO;
 import com.ticketing.server.movie.service.dto.TicketDetailsDTO;
+import com.ticketing.server.movie.service.dto.TicketListDTO;
 import com.ticketing.server.movie.service.dto.TicketReservationDTO;
 import com.ticketing.server.movie.service.dto.TicketSoldDTO;
 import com.ticketing.server.movie.service.dto.TicketsCancelDTO;
@@ -29,6 +33,21 @@ import org.springframework.validation.annotation.Validated;
 public class TicketServiceImpl implements TicketService {
 
 	private final TicketRepository ticketRepository;
+
+	private final MovieTimeRepository movieTimeRepository;
+
+	@Override
+	public TicketListDTO getTickets(@NotNull Long movieTimeId) {
+		MovieTime movieTime = movieTimeRepository.findById(movieTimeId)
+			.orElseThrow(ErrorCode::throwMovieTimeNotFound);
+
+		List<TicketDTO> tickets = ticketRepository.findValidTickets(movieTime)
+			.stream()
+			.map(TicketDTO::new)
+			.collect(Collectors.toList());
+
+		return new TicketListDTO(tickets);
+	}
 
 	@Override
 	public TicketDetailsDTO findTicketsByPaymentId(@NotNull Long paymentId) {

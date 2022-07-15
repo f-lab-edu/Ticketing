@@ -11,7 +11,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class MovieTimeListResponse {
 
-    @ApiModelProperty(value = "영화 시간표 정보")
+    @ApiModelProperty(value = "영화 시간표 목록")
     private List<MovieTimeDTO> movieTimeDtos;
 
 }

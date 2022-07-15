@@ -38,12 +38,13 @@ public class MovieTimeServiceImpl implements MovieTimeService {
 	public RegisteredMovieTimeDTO registerMovieTime(@Valid MovieTimeRegisterDTO movieTimeRegisterDto) {
 		Movie movie = findMovieById(movieTimeRegisterDto.getMovieId());
 		Theater theater = findTheaterByNumber(movieTimeRegisterDto.getTheaterNumber());
+
 		int round = movieTimeRegisterDto.getRound();
 
 		Optional<MovieTime> movieTime =
 			movieTimeRepository.findByMovieAndTheaterAndRoundAndDeletedAtNull(movie, theater, round);
 
-		if(movieTime.isEmpty()) {
+		if (movieTime.isEmpty()) {
 			MovieTime newMovieTime = movieTimeRepository.save(
 				new MovieTime(movie, theater, round, movieTimeRegisterDto.getStartAt())
 			);

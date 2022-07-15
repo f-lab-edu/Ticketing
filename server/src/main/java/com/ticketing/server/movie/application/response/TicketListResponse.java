@@ -1,6 +1,6 @@
 package com.ticketing.server.movie.application.response;
 
-import com.ticketing.server.movie.service.dto.MovieDTO;
+import com.ticketing.server.movie.service.dto.TicketDTO;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -8,9 +8,9 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class MovieListResponse {
+public class TicketListResponse {
 
-    @ApiModelProperty(value = "영화 목록")
-    private List<MovieDTO> movieDtos;
+	@ApiModelProperty(value = "티켓 목록")
+	private List<TicketDTO> ticketDtos;
 
 }
