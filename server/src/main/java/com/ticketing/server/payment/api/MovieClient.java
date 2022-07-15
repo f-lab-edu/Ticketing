@@ -21,5 +21,7 @@ public interface MovieClient {
 
 	TicketCancelResponse ticketCancel(@NotNull TicketCancelRequest request);
 
-	TicketsRefundResponse myTicketRefund(TicketsRefundRequest request);
+	TicketsRefundResponse ticketRefundByDateTime(TicketsRefundRequest request);
+
+	TicketsRefundResponse ticketRefund(TicketsRefundRequest request);
 }

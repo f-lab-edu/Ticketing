@@ -52,8 +52,14 @@ public class MovieClientImpl implements MovieClient {
 	}
 
 	@Override
-	public TicketsRefundResponse myTicketRefund(TicketsRefundRequest request) {
-		TicketsRefundDTO ticketsRefundDto = ticketService.myTicketsRefund(request.getPaymentId());
+	public TicketsRefundResponse ticketRefundByDateTime(TicketsRefundRequest request) {
+		TicketsRefundDTO ticketsRefundDto = ticketService.ticketRefundByDateTime(request.getPaymentId());
+		return ticketsRefundDto.toResponse();
+	}
+
+	@Override
+	public TicketsRefundResponse ticketRefund(TicketsRefundRequest request) {
+		TicketsRefundDTO ticketsRefundDto = ticketService.ticketRefundByDateTime(request.getPaymentId());
 		return ticketsRefundDto.toResponse();
 	}
 

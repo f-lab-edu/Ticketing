@@ -21,4 +21,6 @@ public interface PaymentApisService {
 	PaymentCancelDTO cancel(@NotEmpty String email);
 
 	PaymentRefundDTO myPaymentRefund(@NotNull Long paymentId);
+
+	PaymentRefundDTO paymentRefund(@NotNull Long paymentId);
 }

@@ -22,5 +22,7 @@ public interface TicketService {
 
 	TicketsCancelDTO ticketCancel(@NotEmptyCollection List<Long> ticketIds);
 
-	TicketsRefundDTO myTicketsRefund(@NotNull Long paymentId);
+	TicketsRefundDTO ticketRefundByDateTime(@NotNull Long paymentId);
+
+	TicketsRefundDTO ticketsRefund(@NotNull Long paymentId);
 }

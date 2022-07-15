@@ -1,5 +1,6 @@
 package com.ticketing.server.payment.application;
 
+import static com.ticketing.server.user.domain.UserGrade.ROLES.STAFF;
 import static com.ticketing.server.user.domain.UserGrade.ROLES.USER;
 
 import com.ticketing.server.payment.application.request.PaymentReadyRequest;
@@ -93,6 +94,15 @@ public class PaymentController {
 	@Secured(USER)
 	public ResponseEntity<PaymentRefundResponse> refund(@RequestBody @Valid PaymentRefundRequest request) {
 		PaymentRefundDTO paymentRefundDto = paymentApisService.myPaymentRefund(request.getPaymentId());
+
+		return ResponseEntity.status(HttpStatus.OK)
+			.body(paymentRefundDto.toResponse());
+	}
+
+	@PostMapping("/staff/refund")
+	@Secured(STAFF)
+	public ResponseEntity<PaymentRefundResponse> adminRefund(@RequestBody @Valid PaymentRefundRequest request) {
+		PaymentRefundDTO paymentRefundDto = paymentApisService.paymentRefund(request.getPaymentId());
 
 		return ResponseEntity.status(HttpStatus.OK)
 			.body(paymentRefundDto.toResponse());

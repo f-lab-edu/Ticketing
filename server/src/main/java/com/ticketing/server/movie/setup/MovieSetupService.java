@@ -46,7 +46,7 @@ MovieSetupService {
 		initTheater();
 		initMovieTime();
 		initTicket();
-		initPayment();
+//		initPayment();
 	}
 
 	private void initMovie() {

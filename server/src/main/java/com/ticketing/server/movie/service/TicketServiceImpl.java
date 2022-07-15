@@ -109,12 +109,25 @@ public class TicketServiceImpl implements TicketService {
 
 	@Override
 	@Transactional
-	public TicketsRefundDTO myTicketsRefund(@NotNull Long paymentId) {
+	public TicketsRefundDTO ticketRefundByDateTime(@NotNull Long paymentId) {
 		List<Ticket> tickets = ticketRepository.findTicketFetchJoinByPaymentId(paymentId);
 		LocalDateTime now = LocalDateTime.now();
 
 		List<TicketRefundDTO> refundDtoList = tickets.stream()
 			.map(ticket -> ticket.refund(now))
+			.map(TicketRefundDTO::new)
+			.collect(Collectors.toList());
+
+		return new TicketsRefundDTO(refundDtoList);
+	}
+
+	@Override
+	@Transactional
+	public TicketsRefundDTO ticketsRefund(@NotNull Long paymentId) {
+		List<Ticket> tickets = ticketRepository.findTicketFetchJoinByPaymentId(paymentId);
+
+		List<TicketRefundDTO> refundDtoList = tickets.stream()
+			.map(Ticket::refund)
 			.map(TicketRefundDTO::new)
 			.collect(Collectors.toList());
 

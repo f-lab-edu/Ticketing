@@ -176,7 +176,25 @@ public class PaymentApisServiceImpl implements PaymentApisService {
 		);
 
 		// 내부 환불진행
-		TicketsRefundResponse refundResponse = movieClient.myTicketRefund(new TicketsRefundRequest(payment.getId()));
+		TicketsRefundResponse refundResponse = movieClient.ticketRefundByDateTime(new TicketsRefundRequest(payment.getId()));
+		payment.refund();
+
+		return new PaymentRefundDTO(payment, kakaoPayCancelResponse, refundResponse);
+	}
+
+	@Override
+	public PaymentRefundDTO paymentRefund(@NotNull Long paymentId) {
+		Payment payment = paymentRepository.findById(paymentId)
+			.orElseThrow(ErrorCode::throwPaymentIdNotFound);
+
+		// 카카오페이 환불
+		KakaoPayCancelResponse kakaoPayCancelResponse = kakaoPayClient.cancel(
+			kakaoPayProperties.getAuthorization(),
+			new KakaoPayCancelRequest(payment.getTid(), payment.getTotalPrice())
+		);
+
+		// 내부 환불진행
+		TicketsRefundResponse refundResponse = movieClient.ticketRefund(new TicketsRefundRequest(payment.getId()));
 		payment.refund();
 
 		return new PaymentRefundDTO(payment, kakaoPayCancelResponse, refundResponse);
