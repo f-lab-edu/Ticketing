@@ -2,6 +2,7 @@ package com.ticketing.server.payment.domain;
 
 import com.ticketing.server.global.dto.repository.AbstractEntity;
 import com.ticketing.server.global.redis.PaymentCache;
+import com.ticketing.server.payment.api.dto.response.UserDetailResponse;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -82,4 +83,14 @@ public class Payment extends AbstractEntity {
 		this.totalPrice = totalPrice;
 	}
 
+	public boolean validUser(UserDetailResponse userDetail) {
+		if (!userDetail.hasUserAlternateId(this)) {
+			return false;
+		}
+		return true;
+	}
+
+	public void refund() {
+		status = PaymentStatus.REFUNDED;
+	}
 }

@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.ticketing.server.global.exception.ErrorCode;
 import com.ticketing.server.global.exception.TicketingException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -165,10 +166,94 @@ public class TicketTest {
 		ticket.makeSold(123L);
 
 		// then
-		assertThatThrownBy(() -> ticket.cancel())
+		assertThatThrownBy(ticket::cancel)
 			.isInstanceOf(TicketingException.class)
 			.extracting("errorCode")
 			.isEqualTo(ErrorCode.BAD_REQUEST_PAYMENT_CANCEL);
+	}
+
+	@Test
+	@DisplayName("시간 비교 환불 성공")
+	void refundByDateTimeSuccess() {
+	    // given
+		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime dateTime = LocalDateTime.of(now.getYear(), now.getMonthValue(), now.getDayOfMonth(), 7, 50);
+		Ticket ticket = tickets.get(0);
+
+		// when
+		ticket.makeSold(123L);
+		ticket.refund(dateTime);
+
+	    // then
+		assertAll(
+			() -> assertThat(ticket.getStatus()).isEqualTo(TicketStatus.SALE),
+			() -> assertThat(ticket.getPaymentId()).isNull()
+		);
+	}
+
+	@Test
+	@DisplayName("시간 비교 환불 실패 - 상영시작 시간 10분보다 작을경우")
+	void refundByDateTimeFail() {
+		// given
+		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime dateTime = LocalDateTime.of(now.getYear(), now.getMonthValue(), now.getDayOfMonth(), 7, 51);
+		Ticket ticket = tickets.get(0);
+
+		// when
+		ticket.makeSold(123L);
+
+		// then
+		assertThatThrownBy(() -> ticket.refund(dateTime))
+			.isInstanceOf(TicketingException.class)
+			.extracting("errorCode")
+			.isEqualTo(ErrorCode.NOT_REFUNDABLE_TIME);
+	}
+
+	@Test
+	@DisplayName("관리자 환불 성공")
+	void refundSuccess() {
+	    // given
+		Ticket ticket = tickets.get(0);
+
+	    // when
+		ticket.makeSold(123L);
+		ticket.refund();
+
+	    // then
+		assertAll(
+			() -> assertThat(ticket.getStatus()).isEqualTo(TicketStatus.SALE),
+			() -> assertThat(ticket.getPaymentId()).isNull()
+		);
+	}
+
+	@Test
+	@DisplayName("관리자 환불 실패 - 상태 SALE")
+	void refundFail_SALE() {
+	    // given
+		Ticket ticket = tickets.get(0);
+
+	    // when
+	    // then
+		assertThatThrownBy(ticket::refund)
+			.isInstanceOf(TicketingException.class)
+			.extracting("errorCode")
+			.isEqualTo(ErrorCode.NOT_REFUNDABLE_SEAT);
+	}
+
+	@Test
+	@DisplayName("관리자 환불 실패 - 상태 RESERVATION")
+	void refundFail_RESERVATION() {
+	    // given
+		Ticket ticket = tickets.get(0);
+
+	    // when
+		ticket.makeReservation();
+
+	    // then
+		assertThatThrownBy(ticket::refund)
+			.isInstanceOf(TicketingException.class)
+			.extracting("errorCode")
+			.isEqualTo(ErrorCode.NOT_REFUNDABLE_SEAT);
 	}
 
 }

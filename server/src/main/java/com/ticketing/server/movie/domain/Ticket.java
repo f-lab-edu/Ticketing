@@ -3,6 +3,7 @@ package com.ticketing.server.movie.domain;
 import com.ticketing.server.global.dto.repository.AbstractEntity;
 import com.ticketing.server.global.exception.ErrorCode;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -78,6 +79,26 @@ public class Ticket extends AbstractEntity {
 		}
 
 		status = TicketStatus.SALE;
+		paymentId = null;
+		return this;
+	}
+
+	public Ticket refund(LocalDateTime dateTime) {
+		long seconds = ChronoUnit.SECONDS.between(dateTime, getStartAt());
+		if (600L > seconds) {
+			throw ErrorCode.throwNotRefundableTime();
+		}
+
+		return refund();
+	}
+
+	public Ticket refund() {
+		if (!TicketStatus.SOLD.equals(status)) {
+			throw ErrorCode.throwNotRefundableSeat();
+		}
+
+		status = TicketStatus.SALE;
+		paymentId = null;
 		return this;
 	}
 

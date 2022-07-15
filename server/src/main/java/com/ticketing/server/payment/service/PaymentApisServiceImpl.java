@@ -10,6 +10,8 @@ import com.ticketing.server.movie.application.request.TicketReservationRequest;
 import com.ticketing.server.movie.application.request.TicketSoldRequest;
 import com.ticketing.server.movie.application.response.TicketDetailsResponse;
 import com.ticketing.server.movie.application.response.TicketReservationResponse;
+import com.ticketing.server.movie.service.dto.TicketsRefundResponse;
+import com.ticketing.server.payment.api.dto.requset.KakaoPayCancelRequest;
 import com.ticketing.server.payment.api.KakaoPayClient;
 import com.ticketing.server.payment.api.KakaoPayProperties;
 import com.ticketing.server.payment.api.MovieClient;
@@ -17,8 +19,10 @@ import com.ticketing.server.payment.api.UserClient;
 import com.ticketing.server.payment.api.dto.requset.KakaoPayApproveRequest;
 import com.ticketing.server.payment.api.dto.requset.KakaoPayReadyRequest;
 import com.ticketing.server.payment.api.dto.response.KakaoPayApproveResponse;
+import com.ticketing.server.payment.api.dto.response.KakaoPayCancelResponse;
 import com.ticketing.server.payment.api.dto.response.KakaoPayReadyResponse;
 import com.ticketing.server.payment.api.dto.response.UserDetailResponse;
+import com.ticketing.server.payment.api.impl.TicketsRefundRequest;
 import com.ticketing.server.payment.domain.Payment;
 import com.ticketing.server.payment.domain.PaymentStatus;
 import com.ticketing.server.payment.domain.PaymentType;
@@ -27,6 +31,7 @@ import com.ticketing.server.payment.service.dto.PaymentCancelDTO;
 import com.ticketing.server.payment.service.dto.PaymentCompleteDTO;
 import com.ticketing.server.payment.service.dto.PaymentDetailDTO;
 import com.ticketing.server.payment.service.dto.PaymentReadyDTO;
+import com.ticketing.server.payment.service.dto.PaymentRefundDTO;
 import com.ticketing.server.payment.service.interfaces.PaymentApisService;
 import java.util.List;
 import javax.validation.constraints.NotEmpty;
@@ -151,6 +156,30 @@ public class PaymentApisServiceImpl implements PaymentApisService {
 		paymentCacheRepository.delete(paymentCache);
 
 		return new PaymentCancelDTO(paymentCache);
+	}
+
+	@Override
+	@Transactional
+	public PaymentRefundDTO myPaymentRefund(@NotNull Long paymentId) {
+		UserDetailResponse userDetail = userClient.detail();
+		Payment payment = paymentRepository.findById(paymentId)
+			.orElseThrow(ErrorCode::throwPaymentIdNotFound);
+
+		if (!payment.validUser(userDetail)) {
+			throw ErrorCode.throwValidUserId();
+		}
+
+		// 카카오페이 환불
+		KakaoPayCancelResponse kakaoPayCancelResponse = kakaoPayClient.cancel(
+			kakaoPayProperties.getAuthorization(),
+			new KakaoPayCancelRequest(payment.getTid(), payment.getTotalPrice())
+		);
+
+		// 내부 환불진행
+		TicketsRefundResponse refundResponse = movieClient.myTicketRefund(new TicketsRefundRequest(payment.getId()));
+		payment.refund();
+
+		return new PaymentRefundDTO(payment, kakaoPayCancelResponse, refundResponse);
 	}
 
 }

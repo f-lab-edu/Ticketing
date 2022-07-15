@@ -9,6 +9,8 @@ import com.ticketing.server.movie.application.response.TicketReservationResponse
 import com.ticketing.server.movie.application.response.TicketSoldResponse;
 import com.ticketing.server.movie.service.dto.TicketDetailsDTO;
 import com.ticketing.server.movie.service.dto.TicketsCancelDTO;
+import com.ticketing.server.movie.service.dto.TicketsRefundDTO;
+import com.ticketing.server.movie.service.dto.TicketsRefundResponse;
 import com.ticketing.server.movie.service.dto.TicketsReservationDTO;
 import com.ticketing.server.movie.service.dto.TicketsSoldDTO;
 import com.ticketing.server.movie.service.interfaces.TicketService;
@@ -47,6 +49,12 @@ public class MovieClientImpl implements MovieClient {
 	public TicketCancelResponse ticketCancel(@NotNull TicketCancelRequest request) {
 		TicketsCancelDTO ticketsCancelDto = ticketService.ticketCancel(request.getTicketIds());
 		return ticketsCancelDto.toResponse();
+	}
+
+	@Override
+	public TicketsRefundResponse myTicketRefund(TicketsRefundRequest request) {
+		TicketsRefundDTO ticketsRefundDto = ticketService.myTicketsRefund(request.getPaymentId());
+		return ticketsRefundDto.toResponse();
 	}
 
 }

@@ -9,13 +9,16 @@ import com.ticketing.server.movie.domain.repository.TicketRepository;
 import com.ticketing.server.movie.service.dto.TicketDTO;
 import com.ticketing.server.movie.service.dto.TicketDetailsDTO;
 import com.ticketing.server.movie.service.dto.TicketListDTO;
+import com.ticketing.server.movie.service.dto.TicketRefundDTO;
 import com.ticketing.server.movie.service.dto.TicketReservationDTO;
 import com.ticketing.server.movie.service.dto.TicketSoldDTO;
 import com.ticketing.server.movie.service.dto.TicketsCancelDTO;
+import com.ticketing.server.movie.service.dto.TicketsRefundDTO;
 import com.ticketing.server.movie.service.dto.TicketsReservationDTO;
 import com.ticketing.server.movie.service.dto.TicketsSoldDTO;
 import com.ticketing.server.movie.service.interfaces.TicketService;
 import com.ticketing.server.payment.service.dto.TicketDetailDTO;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.constraints.NotNull;
@@ -102,6 +105,20 @@ public class TicketServiceImpl implements TicketService {
 		tickets.forEach(Ticket::cancel);
 
 		return new TicketsCancelDTO(ticketIds);
+	}
+
+	@Override
+	@Transactional
+	public TicketsRefundDTO myTicketsRefund(@NotNull Long paymentId) {
+		List<Ticket> tickets = ticketRepository.findTicketFetchJoinByPaymentId(paymentId);
+		LocalDateTime now = LocalDateTime.now();
+
+		List<TicketRefundDTO> refundDtoList = tickets.stream()
+			.map(ticket -> ticket.refund(now))
+			.map(TicketRefundDTO::new)
+			.collect(Collectors.toList());
+
+		return new TicketsRefundDTO(refundDtoList);
 	}
 
 	private List<Ticket> getTicketsByInTicketIds(List<Long> ticketIds) {

@@ -7,6 +7,8 @@ import com.ticketing.server.movie.application.response.TicketDetailsResponse;
 import com.ticketing.server.movie.application.response.TicketReservationResponse;
 import com.ticketing.server.movie.application.request.TicketSoldRequest;
 import com.ticketing.server.movie.application.response.TicketSoldResponse;
+import com.ticketing.server.movie.service.dto.TicketsRefundResponse;
+import com.ticketing.server.payment.api.impl.TicketsRefundRequest;
 import javax.validation.constraints.NotNull;
 
 public interface MovieClient {
@@ -18,4 +20,6 @@ public interface MovieClient {
 	TicketSoldResponse ticketSold(@NotNull TicketSoldRequest request);
 
 	TicketCancelResponse ticketCancel(@NotNull TicketCancelRequest request);
+
+	TicketsRefundResponse myTicketRefund(TicketsRefundRequest request);
 }

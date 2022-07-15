@@ -1,6 +1,7 @@
 package com.ticketing.server.payment.service.interfaces;
 
 import com.ticketing.server.global.validator.constraints.NotEmptyCollection;
+import com.ticketing.server.payment.service.dto.PaymentRefundDTO;
 import com.ticketing.server.payment.service.dto.PaymentCancelDTO;
 import com.ticketing.server.payment.service.dto.PaymentCompleteDTO;
 import com.ticketing.server.payment.service.dto.PaymentDetailDTO;
@@ -19,4 +20,5 @@ public interface PaymentApisService {
 
 	PaymentCancelDTO cancel(@NotEmpty String email);
 
+	PaymentRefundDTO myPaymentRefund(@NotNull Long paymentId);
 }

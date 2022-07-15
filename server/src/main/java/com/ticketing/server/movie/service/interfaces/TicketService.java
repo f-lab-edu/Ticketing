@@ -4,6 +4,7 @@ import com.ticketing.server.global.validator.constraints.NotEmptyCollection;
 import com.ticketing.server.movie.service.dto.TicketDetailsDTO;
 import com.ticketing.server.movie.service.dto.TicketListDTO;
 import com.ticketing.server.movie.service.dto.TicketsCancelDTO;
+import com.ticketing.server.movie.service.dto.TicketsRefundDTO;
 import com.ticketing.server.movie.service.dto.TicketsReservationDTO;
 import com.ticketing.server.movie.service.dto.TicketsSoldDTO;
 import java.util.List;
@@ -21,4 +22,5 @@ public interface TicketService {
 
 	TicketsCancelDTO ticketCancel(@NotEmptyCollection List<Long> ticketIds);
 
+	TicketsRefundDTO myTicketsRefund(@NotNull Long paymentId);
 }

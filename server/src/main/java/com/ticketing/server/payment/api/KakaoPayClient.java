@@ -3,8 +3,10 @@ package com.ticketing.server.payment.api;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VALUE;
 
 import com.ticketing.server.payment.api.dto.requset.KakaoPayApproveRequest;
+import com.ticketing.server.payment.api.dto.requset.KakaoPayCancelRequest;
 import com.ticketing.server.payment.api.dto.requset.KakaoPayReadyRequest;
 import com.ticketing.server.payment.api.dto.response.KakaoPayApproveResponse;
+import com.ticketing.server.payment.api.dto.response.KakaoPayCancelResponse;
 import com.ticketing.server.payment.api.dto.response.KakaoPayReadyResponse;
 import feign.Headers;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -22,5 +24,9 @@ public interface KakaoPayClient {
 	@PostMapping(value = "/approve", consumes = APPLICATION_FORM_URLENCODED_VALUE)
 	@Headers("Content-Type: application/x-www-form-urlencoded;charset=utf-8")
 	KakaoPayApproveResponse approve(@RequestHeader(value = "Authorization") String authorization, KakaoPayApproveRequest request);
+
+	@PostMapping(value = "/cancel", consumes = APPLICATION_FORM_URLENCODED_VALUE)
+	@Headers("Content-Type: application/x-www-form-urlencoded;charset=utf-8")
+	KakaoPayCancelResponse cancel(@RequestHeader(value = "Authorization") String authorization, KakaoPayCancelRequest request);
 
 }
