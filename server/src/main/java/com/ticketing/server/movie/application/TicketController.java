@@ -40,7 +40,7 @@ public class TicketController {
 			);
 	}
 
-	@GetMapping("payments/{paymentId}")
+	@GetMapping("/payments/{paymentId}")
 	@Secured(USER)
 	public ResponseEntity<TicketDetailsResponse> findTicketsByPaymentId(
 		@PathVariable("paymentId") @NotNull Long paymentId) {

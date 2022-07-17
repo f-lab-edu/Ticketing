@@ -57,7 +57,8 @@ class PaymentServiceImplTest {
 					"T2d03c9130bf237a97001",
 					List.of(3L),
 					userAlternateId,
-					1241242343245L
+					1241242343245L,
+					15_000
 				),
 				KAKAO_PAY,
 				SOLD,
@@ -70,7 +71,8 @@ class PaymentServiceImplTest {
 					"T2d03c9130bf237a97002",
 					List.of(3L),
 					userAlternateId,
-					12412343212445L
+					12412343212445L,
+					30_000
 				),
 				KAKAO_PAY,
 				SOLD,

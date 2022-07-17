@@ -24,6 +24,8 @@ public enum ErrorCode {
 	BAD_REQUEST_PAYMENT_COMPLETE(BAD_REQUEST, "처리할 결제 정보가 존재하지 않습니다."),
 	BAD_REQUEST_PAYMENT_READY(BAD_REQUEST, "이미 진행 중인 결제가 존재합니다."),
 	BAD_REQUEST_PAYMENT_CANCEL(BAD_REQUEST, "취소할 티켓이 존재하지 않습니다."),
+	NOT_REFUNDABLE_TIME(BAD_REQUEST, "환불이 가능한 시간이 지났습니다."),
+	NOT_REFUNDABLE_SEAT(BAD_REQUEST, "환불할 수 있는 좌석이 아닙니다."),
 
 	/* 403 FORBIDDEN : 접근 권한 제한 */
 	VALID_USER_ID(FORBIDDEN, "해당 정보에 접근 권한이 존재하지 않습니다."),
@@ -83,6 +85,14 @@ public enum ErrorCode {
 
 	public static TicketingException throwBadRequestPaymentCancel() {
 		throw new TicketingException(BAD_REQUEST_PAYMENT_CANCEL);
+	}
+
+	public static TicketingException throwNotRefundableTime() {
+		throw new TicketingException(NOT_REFUNDABLE_TIME);
+	}
+
+	public static TicketingException throwNotRefundableSeat() {
+		throw new TicketingException(NOT_REFUNDABLE_SEAT);
 	}
 
 	/* 403 FORBIDDEN : 접근 권한 제한 */

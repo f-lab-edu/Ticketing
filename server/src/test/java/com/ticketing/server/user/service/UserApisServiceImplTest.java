@@ -76,7 +76,8 @@ class UserApisServiceImplTest {
 						"T2d03c9130bf237a9700",
 						List.of(1L, 2L),
 						user.getAlternateId(),
-						124124231513245L
+						124124231513245L,
+						15_000
 					),
 					KAKAO_PAY,
 					SOLD,
@@ -91,7 +92,8 @@ class UserApisServiceImplTest {
 						"T2d03c9130bf237a97001",
 						List.of(3L),
 						user.getAlternateId(),
-						1241242343245L
+						1241242343245L,
+						15_000
 					),
 					KAKAO_PAY,
 					SOLD,

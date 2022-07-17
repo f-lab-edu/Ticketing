@@ -1,18 +1,25 @@
 package com.ticketing.server.payment.application;
 
+import static com.ticketing.server.user.domain.UserGrade.ROLES.STAFF;
+import static com.ticketing.server.user.domain.UserGrade.ROLES.USER;
+
 import com.ticketing.server.payment.application.request.PaymentReadyRequest;
-import com.ticketing.server.payment.application.response.PaymentDetailResponse;
-import com.ticketing.server.payment.application.response.SimplePaymentsResponse;
-import com.ticketing.server.payment.service.dto.PaymentCancelDTO;
+import com.ticketing.server.payment.application.request.PaymentRefundRequest;
 import com.ticketing.server.payment.application.response.PaymentCancelResponse;
-import com.ticketing.server.payment.service.dto.PaymentCompleteDTO;
 import com.ticketing.server.payment.application.response.PaymentCompleteResponse;
+import com.ticketing.server.payment.application.response.PaymentDetailResponse;
+import com.ticketing.server.payment.application.response.PaymentRefundResponse;
+import com.ticketing.server.payment.application.response.SimplePaymentsResponse;
+import com.ticketing.server.payment.service.AdminKakaoPayRefundService;
+import com.ticketing.server.payment.service.MyKakaoPayRefundService;
+import com.ticketing.server.payment.service.dto.PaymentCancelDTO;
+import com.ticketing.server.payment.service.dto.PaymentCompleteDTO;
 import com.ticketing.server.payment.service.dto.PaymentDetailDTO;
 import com.ticketing.server.payment.service.dto.PaymentReadyDTO;
+import com.ticketing.server.payment.service.dto.PaymentRefundDTO;
 import com.ticketing.server.payment.service.dto.SimplePaymentsDTO;
 import com.ticketing.server.payment.service.interfaces.PaymentApisService;
 import com.ticketing.server.payment.service.interfaces.PaymentService;
-import com.ticketing.server.user.domain.UserGrade;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -37,9 +44,11 @@ public class PaymentController {
 
 	private final PaymentApisService paymentApisService;
 	private final PaymentService paymentService;
+	private final AdminKakaoPayRefundService adminKakaoPayRefundService;
+	private final MyKakaoPayRefundService myKakaoPayRefundService;
 
 	@GetMapping
-	@Secured(UserGrade.ROLES.USER)
+	@Secured(USER)
 	public ResponseEntity<SimplePaymentsResponse> simplePayments(@NotNull Long userAlternateId) {
 		SimplePaymentsDTO simplePayments = paymentService.findSimplePayments(userAlternateId);
 
@@ -48,7 +57,7 @@ public class PaymentController {
 	}
 
 	@GetMapping("/detail")
-	@Secured(UserGrade.ROLES.USER)
+	@Secured(USER)
 	public ResponseEntity<PaymentDetailResponse> detail(@NotNull Long paymentId) {
 		PaymentDetailDTO paymentDetail = paymentApisService.findPaymentDetail(paymentId);
 
@@ -57,7 +66,7 @@ public class PaymentController {
 	}
 
 	@PostMapping("/ready")
-	@Secured(UserGrade.ROLES.USER)
+	@Secured(USER)
 	public ResponseEntity<PaymentReadyDTO> ready(@RequestBody @Valid PaymentReadyRequest request) {
 		PaymentReadyDTO paymentReadyDto = paymentApisService.ready(request.getTicketIds());
 
@@ -66,7 +75,7 @@ public class PaymentController {
 	}
 
 	@GetMapping("/complete")
-	@Secured(UserGrade.ROLES.USER)
+	@Secured(USER)
 	public ResponseEntity<PaymentCompleteResponse> complete(
 		@AuthenticationPrincipal UserDetails userRequest,
 		@RequestParam("pg_token") String pgToken) {
@@ -77,12 +86,30 @@ public class PaymentController {
 	}
 
 	@GetMapping("/cancel")
-	@Secured(UserGrade.ROLES.USER)
+	@Secured(USER)
 	public ResponseEntity<PaymentCancelResponse> cancel(@AuthenticationPrincipal UserDetails userRequest) {
 		PaymentCancelDTO paymentCancelDto = paymentApisService.cancel(userRequest.getUsername());
 
 		return ResponseEntity.status(HttpStatus.OK)
 			.body(paymentCancelDto.toResponse());
+	}
+
+	@PostMapping("/refund")
+	@Secured(USER)
+	public ResponseEntity<PaymentRefundResponse> refund(@RequestBody @Valid PaymentRefundRequest request) {
+		PaymentRefundDTO paymentRefundDto = myKakaoPayRefundService.refund(request.getPaymentId());
+
+		return ResponseEntity.status(HttpStatus.OK)
+			.body(paymentRefundDto.toResponse());
+	}
+
+	@PostMapping("/staff/refund")
+	@Secured(STAFF)
+	public ResponseEntity<PaymentRefundResponse> adminRefund(@RequestBody @Valid PaymentRefundRequest request) {
+		PaymentRefundDTO paymentRefundDto = adminKakaoPayRefundService.refund(request.getPaymentId());
+
+		return ResponseEntity.status(HttpStatus.OK)
+			.body(paymentRefundDto.toResponse());
 	}
 
 }

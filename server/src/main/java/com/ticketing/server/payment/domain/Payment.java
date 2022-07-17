@@ -82,4 +82,7 @@ public class Payment extends AbstractEntity {
 		this.totalPrice = totalPrice;
 	}
 
+	public void refund() {
+		status = PaymentStatus.REFUNDED;
+	}
 }
