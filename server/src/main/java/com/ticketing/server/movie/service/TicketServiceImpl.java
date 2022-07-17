@@ -20,6 +20,8 @@ import com.ticketing.server.movie.service.interfaces.TicketService;
 import com.ticketing.server.payment.service.dto.TicketDetailDTO;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -109,25 +111,11 @@ public class TicketServiceImpl implements TicketService {
 
 	@Override
 	@Transactional
-	public TicketsRefundDTO ticketRefundByDateTime(@NotNull Long paymentId) {
-		List<Ticket> tickets = ticketRepository.findTicketFetchJoinByPaymentId(paymentId);
-		LocalDateTime now = LocalDateTime.now();
-
-		List<TicketRefundDTO> refundDtoList = tickets.stream()
-			.map(ticket -> ticket.refund(now))
-			.map(TicketRefundDTO::new)
-			.collect(Collectors.toList());
-
-		return new TicketsRefundDTO(refundDtoList);
-	}
-
-	@Override
-	@Transactional
-	public TicketsRefundDTO ticketsRefund(@NotNull Long paymentId) {
+	public TicketsRefundDTO ticketsRefund(@NotNull Long paymentId, UnaryOperator<Ticket> refund) {
 		List<Ticket> tickets = ticketRepository.findTicketFetchJoinByPaymentId(paymentId);
 
 		List<TicketRefundDTO> refundDtoList = tickets.stream()
-			.map(Ticket::refund)
+			.map(refund)
 			.map(TicketRefundDTO::new)
 			.collect(Collectors.toList());
 

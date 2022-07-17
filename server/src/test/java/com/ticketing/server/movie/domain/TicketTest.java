@@ -175,7 +175,7 @@ public class TicketTest {
 	@Test
 	@DisplayName("시간 비교 환불 성공")
 	void refundByDateTimeSuccess() {
-	    // given
+		// given
 		LocalDateTime now = LocalDateTime.now();
 		LocalDateTime dateTime = LocalDateTime.of(now.getYear(), now.getMonthValue(), now.getDayOfMonth(), 7, 50);
 		Ticket ticket = tickets.get(0);
@@ -184,7 +184,7 @@ public class TicketTest {
 		ticket.makeSold(123L);
 		ticket.refund(dateTime);
 
-	    // then
+		// then
 		assertAll(
 			() -> assertThat(ticket.getStatus()).isEqualTo(TicketStatus.SALE),
 			() -> assertThat(ticket.getPaymentId()).isNull()
@@ -212,14 +212,14 @@ public class TicketTest {
 	@Test
 	@DisplayName("관리자 환불 성공")
 	void refundSuccess() {
-	    // given
+		// given
 		Ticket ticket = tickets.get(0);
 
-	    // when
+		// when
 		ticket.makeSold(123L);
 		ticket.refund();
 
-	    // then
+		// then
 		assertAll(
 			() -> assertThat(ticket.getStatus()).isEqualTo(TicketStatus.SALE),
 			() -> assertThat(ticket.getPaymentId()).isNull()
@@ -229,11 +229,11 @@ public class TicketTest {
 	@Test
 	@DisplayName("관리자 환불 실패 - 상태 SALE")
 	void refundFail_SALE() {
-	    // given
+		// given
 		Ticket ticket = tickets.get(0);
 
-	    // when
-	    // then
+		// when
+		// then
 		assertThatThrownBy(ticket::refund)
 			.isInstanceOf(TicketingException.class)
 			.extracting("errorCode")
@@ -243,13 +243,13 @@ public class TicketTest {
 	@Test
 	@DisplayName("관리자 환불 실패 - 상태 RESERVATION")
 	void refundFail_RESERVATION() {
-	    // given
+		// given
 		Ticket ticket = tickets.get(0);
 
-	    // when
+		// when
 		ticket.makeReservation();
 
-	    // then
+		// then
 		assertThatThrownBy(ticket::refund)
 			.isInstanceOf(TicketingException.class)
 			.extracting("errorCode")

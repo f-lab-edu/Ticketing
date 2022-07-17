@@ -10,11 +10,13 @@ import com.ticketing.server.payment.application.response.PaymentCompleteResponse
 import com.ticketing.server.payment.application.response.PaymentDetailResponse;
 import com.ticketing.server.payment.application.response.PaymentRefundResponse;
 import com.ticketing.server.payment.application.response.SimplePaymentsResponse;
-import com.ticketing.server.payment.service.dto.PaymentRefundDTO;
+import com.ticketing.server.payment.service.AdminKakaoPayRefundService;
+import com.ticketing.server.payment.service.MyKakaoPayRefundService;
 import com.ticketing.server.payment.service.dto.PaymentCancelDTO;
 import com.ticketing.server.payment.service.dto.PaymentCompleteDTO;
 import com.ticketing.server.payment.service.dto.PaymentDetailDTO;
 import com.ticketing.server.payment.service.dto.PaymentReadyDTO;
+import com.ticketing.server.payment.service.dto.PaymentRefundDTO;
 import com.ticketing.server.payment.service.dto.SimplePaymentsDTO;
 import com.ticketing.server.payment.service.interfaces.PaymentApisService;
 import com.ticketing.server.payment.service.interfaces.PaymentService;
@@ -42,6 +44,8 @@ public class PaymentController {
 
 	private final PaymentApisService paymentApisService;
 	private final PaymentService paymentService;
+	private final AdminKakaoPayRefundService adminKakaoPayRefundService;
+	private final MyKakaoPayRefundService myKakaoPayRefundService;
 
 	@GetMapping
 	@Secured(USER)
@@ -93,7 +97,7 @@ public class PaymentController {
 	@PostMapping("/refund")
 	@Secured(USER)
 	public ResponseEntity<PaymentRefundResponse> refund(@RequestBody @Valid PaymentRefundRequest request) {
-		PaymentRefundDTO paymentRefundDto = paymentApisService.myPaymentRefund(request.getPaymentId());
+		PaymentRefundDTO paymentRefundDto = myKakaoPayRefundService.refund(request.getPaymentId());
 
 		return ResponseEntity.status(HttpStatus.OK)
 			.body(paymentRefundDto.toResponse());
@@ -102,7 +106,7 @@ public class PaymentController {
 	@PostMapping("/staff/refund")
 	@Secured(STAFF)
 	public ResponseEntity<PaymentRefundResponse> adminRefund(@RequestBody @Valid PaymentRefundRequest request) {
-		PaymentRefundDTO paymentRefundDto = paymentApisService.paymentRefund(request.getPaymentId());
+		PaymentRefundDTO paymentRefundDto = adminKakaoPayRefundService.refund(request.getPaymentId());
 
 		return ResponseEntity.status(HttpStatus.OK)
 			.body(paymentRefundDto.toResponse());

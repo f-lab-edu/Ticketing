@@ -10,8 +10,6 @@ import com.ticketing.server.movie.application.request.TicketReservationRequest;
 import com.ticketing.server.movie.application.request.TicketSoldRequest;
 import com.ticketing.server.movie.application.response.TicketDetailsResponse;
 import com.ticketing.server.movie.application.response.TicketReservationResponse;
-import com.ticketing.server.movie.service.dto.TicketsRefundResponse;
-import com.ticketing.server.payment.api.dto.requset.KakaoPayCancelRequest;
 import com.ticketing.server.payment.api.KakaoPayClient;
 import com.ticketing.server.payment.api.KakaoPayProperties;
 import com.ticketing.server.payment.api.MovieClient;
@@ -19,10 +17,8 @@ import com.ticketing.server.payment.api.UserClient;
 import com.ticketing.server.payment.api.dto.requset.KakaoPayApproveRequest;
 import com.ticketing.server.payment.api.dto.requset.KakaoPayReadyRequest;
 import com.ticketing.server.payment.api.dto.response.KakaoPayApproveResponse;
-import com.ticketing.server.payment.api.dto.response.KakaoPayCancelResponse;
 import com.ticketing.server.payment.api.dto.response.KakaoPayReadyResponse;
 import com.ticketing.server.payment.api.dto.response.UserDetailResponse;
-import com.ticketing.server.payment.api.impl.TicketsRefundRequest;
 import com.ticketing.server.payment.domain.Payment;
 import com.ticketing.server.payment.domain.PaymentStatus;
 import com.ticketing.server.payment.domain.PaymentType;
@@ -31,7 +27,6 @@ import com.ticketing.server.payment.service.dto.PaymentCancelDTO;
 import com.ticketing.server.payment.service.dto.PaymentCompleteDTO;
 import com.ticketing.server.payment.service.dto.PaymentDetailDTO;
 import com.ticketing.server.payment.service.dto.PaymentReadyDTO;
-import com.ticketing.server.payment.service.dto.PaymentRefundDTO;
 import com.ticketing.server.payment.service.interfaces.PaymentApisService;
 import java.util.List;
 import javax.validation.constraints.NotEmpty;
@@ -81,6 +76,10 @@ public class PaymentApisServiceImpl implements PaymentApisService {
 		UserDetailResponse userResponse = userClient.detail();
 		Long userAlternateId = userResponse.getUserAlternateId();
 
+		// 다른 결제중인 데이터가 있다면, 예외처리
+		paymentCacheRepository.findByEmail(userResponse.getEmail())
+			.ifPresent(paymentCache -> ErrorCode.throwBadRequestPaymentReady());
+
 		// Ticket 정보 조회 - 영화제목, 티켓가격이 필요함.
 		TicketReservationResponse ticketResponse = movieClient.ticketReservation(new TicketReservationRequest(ticketIds));
 		String movieTitle = ticketResponse.getMovieTitle();
@@ -100,20 +99,17 @@ public class PaymentApisServiceImpl implements PaymentApisService {
 		);
 		KakaoPayReadyResponse response = kakaoPayClient.ready(kakaoPayProperties.getAuthorization(), request);
 
-		PaymentCache paymentReady = new PaymentCache(
-			userResponse.getEmail(),
-			movieTitle,
-			response.getTid(),
-			ticketIds,
-			userAlternateId,
-			paymentNumber
+		paymentCacheRepository.save(
+			new PaymentCache(
+				userResponse.getEmail(),
+				movieTitle,
+				response.getTid(),
+				ticketIds,
+				userAlternateId,
+				paymentNumber,
+				request.getTotalAmount()
+			)
 		);
-
-		paymentCacheRepository.findByEmail(userResponse.getEmail())
-			.ifPresentOrElse(
-				paymentCache -> ErrorCode.throwBadRequestPaymentReady()
-				, () -> paymentCacheRepository.save(paymentReady)
-			);
 
 		return new PaymentReadyDTO(response);
 	}
@@ -124,6 +120,13 @@ public class PaymentApisServiceImpl implements PaymentApisService {
 		PaymentCache paymentCache = paymentCacheRepository.findByEmail(email)
 			.orElseThrow(ErrorCode::throwBadRequestPaymentComplete);
 
+		Payment payment = new Payment(paymentCache, PaymentType.KAKAO_PAY, PaymentStatus.SOLD, paymentCache.getTotalAmount());
+		payment = paymentRepository.save(payment);
+
+		movieClient.ticketSold(new TicketSoldRequest(payment.getId(), paymentCache.getTicketIds()));
+		paymentCacheRepository.delete(paymentCache);
+
+		// 카카오페이 결제완료
 		String paymentNumberToString = paymentCache.getPaymentNumber().toString();
 		String userAlternateIdToString = paymentCache.getUserAlternateId().toString();
 		KakaoPayApproveRequest kakaoPayApproveRequest = new KakaoPayApproveRequest(
@@ -136,12 +139,6 @@ public class PaymentApisServiceImpl implements PaymentApisService {
 			kakaoPayProperties.getAuthorization(),
 			kakaoPayApproveRequest
 		);
-
-		Payment payment = new Payment(paymentCache, PaymentType.KAKAO_PAY, PaymentStatus.SOLD, kakaoPayApproveResponse.getTotalAmount());
-		payment = paymentRepository.save(payment);
-
-		movieClient.ticketSold(new TicketSoldRequest(payment.getId(), paymentCache.getTicketIds()));
-		paymentCacheRepository.delete(paymentCache);
 
 		return new PaymentCompleteDTO(email, kakaoPayApproveResponse);
 	}
@@ -156,48 +153,6 @@ public class PaymentApisServiceImpl implements PaymentApisService {
 		paymentCacheRepository.delete(paymentCache);
 
 		return new PaymentCancelDTO(paymentCache);
-	}
-
-	@Override
-	@Transactional
-	public PaymentRefundDTO myPaymentRefund(@NotNull Long paymentId) {
-		UserDetailResponse userDetail = userClient.detail();
-		Payment payment = paymentRepository.findById(paymentId)
-			.orElseThrow(ErrorCode::throwPaymentIdNotFound);
-
-		if (!payment.validUser(userDetail)) {
-			throw ErrorCode.throwValidUserId();
-		}
-
-		// 카카오페이 환불
-		KakaoPayCancelResponse kakaoPayCancelResponse = kakaoPayClient.cancel(
-			kakaoPayProperties.getAuthorization(),
-			new KakaoPayCancelRequest(payment.getTid(), payment.getTotalPrice())
-		);
-
-		// 내부 환불진행
-		TicketsRefundResponse refundResponse = movieClient.ticketRefundByDateTime(new TicketsRefundRequest(payment.getId()));
-		payment.refund();
-
-		return new PaymentRefundDTO(payment, kakaoPayCancelResponse, refundResponse);
-	}
-
-	@Override
-	public PaymentRefundDTO paymentRefund(@NotNull Long paymentId) {
-		Payment payment = paymentRepository.findById(paymentId)
-			.orElseThrow(ErrorCode::throwPaymentIdNotFound);
-
-		// 카카오페이 환불
-		KakaoPayCancelResponse kakaoPayCancelResponse = kakaoPayClient.cancel(
-			kakaoPayProperties.getAuthorization(),
-			new KakaoPayCancelRequest(payment.getTid(), payment.getTotalPrice())
-		);
-
-		// 내부 환불진행
-		TicketsRefundResponse refundResponse = movieClient.ticketRefund(new TicketsRefundRequest(payment.getId()));
-		payment.refund();
-
-		return new PaymentRefundDTO(payment, kakaoPayCancelResponse, refundResponse);
 	}
 
 }

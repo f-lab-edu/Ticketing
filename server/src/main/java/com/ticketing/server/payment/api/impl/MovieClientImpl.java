@@ -7,6 +7,7 @@ import com.ticketing.server.movie.application.response.TicketCancelResponse;
 import com.ticketing.server.movie.application.response.TicketDetailsResponse;
 import com.ticketing.server.movie.application.response.TicketReservationResponse;
 import com.ticketing.server.movie.application.response.TicketSoldResponse;
+import com.ticketing.server.movie.domain.Ticket;
 import com.ticketing.server.movie.service.dto.TicketDetailsDTO;
 import com.ticketing.server.movie.service.dto.TicketsCancelDTO;
 import com.ticketing.server.movie.service.dto.TicketsRefundDTO;
@@ -15,6 +16,7 @@ import com.ticketing.server.movie.service.dto.TicketsReservationDTO;
 import com.ticketing.server.movie.service.dto.TicketsSoldDTO;
 import com.ticketing.server.movie.service.interfaces.TicketService;
 import com.ticketing.server.payment.api.MovieClient;
+import java.time.LocalDateTime;
 import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -52,14 +54,14 @@ public class MovieClientImpl implements MovieClient {
 	}
 
 	@Override
-	public TicketsRefundResponse ticketRefundByDateTime(TicketsRefundRequest request) {
-		TicketsRefundDTO ticketsRefundDto = ticketService.ticketRefundByDateTime(request.getPaymentId());
+	public TicketsRefundResponse ticketRefundByDateTime(TicketsRefundRequest request, LocalDateTime dateTime) {
+		TicketsRefundDTO ticketsRefundDto = ticketService.ticketsRefund(request.getPaymentId(), ticket -> ticket.refund(dateTime));
 		return ticketsRefundDto.toResponse();
 	}
 
 	@Override
 	public TicketsRefundResponse ticketRefund(TicketsRefundRequest request) {
-		TicketsRefundDTO ticketsRefundDto = ticketService.ticketRefundByDateTime(request.getPaymentId());
+		TicketsRefundDTO ticketsRefundDto = ticketService.ticketsRefund(request.getPaymentId(), Ticket::refund);
 		return ticketsRefundDto.toResponse();
 	}
 

@@ -33,12 +33,15 @@ public class PaymentCache {
 
 	private Long paymentNumber;
 
-	public PaymentCache(String email, String movieTitle, String tid, List<Long> ticketIds, Long userAlternateId, Long paymentNumber) {
+	private Integer totalAmount;
+
+	public PaymentCache(String email, String movieTitle, String tid, List<Long> ticketIds, Long userAlternateId, Long paymentNumber, Integer totalAmount) {
 		this.email = email;
 		this.movieTitle = movieTitle;
 		this.tid = tid;
 		this.ticketIds = ticketIds;
 		this.userAlternateId = userAlternateId;
 		this.paymentNumber = paymentNumber;
+		this.totalAmount = totalAmount;
 	}
 }

@@ -125,7 +125,8 @@ MovieSetupService {
 			"T2d03c9130bf237a9700",
 			List.of(1L, 2L),
 			user.getAlternateId(),
-			124124231513245L
+			124124231513245L,
+			30_000
 		);
 
 		Payment payment = new Payment(paymentCache, PaymentType.KAKAO_PAY, PaymentStatus.SOLD, 30_000);

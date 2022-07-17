@@ -2,13 +2,14 @@ package com.ticketing.server.payment.api;
 
 import com.ticketing.server.movie.application.request.TicketCancelRequest;
 import com.ticketing.server.movie.application.request.TicketReservationRequest;
+import com.ticketing.server.movie.application.request.TicketSoldRequest;
 import com.ticketing.server.movie.application.response.TicketCancelResponse;
 import com.ticketing.server.movie.application.response.TicketDetailsResponse;
 import com.ticketing.server.movie.application.response.TicketReservationResponse;
-import com.ticketing.server.movie.application.request.TicketSoldRequest;
 import com.ticketing.server.movie.application.response.TicketSoldResponse;
 import com.ticketing.server.movie.service.dto.TicketsRefundResponse;
 import com.ticketing.server.payment.api.impl.TicketsRefundRequest;
+import java.time.LocalDateTime;
 import javax.validation.constraints.NotNull;
 
 public interface MovieClient {
@@ -21,7 +22,7 @@ public interface MovieClient {
 
 	TicketCancelResponse ticketCancel(@NotNull TicketCancelRequest request);
 
-	TicketsRefundResponse ticketRefundByDateTime(TicketsRefundRequest request);
+	TicketsRefundResponse ticketRefundByDateTime(TicketsRefundRequest request, LocalDateTime dateTime);
 
 	TicketsRefundResponse ticketRefund(TicketsRefundRequest request);
 }
