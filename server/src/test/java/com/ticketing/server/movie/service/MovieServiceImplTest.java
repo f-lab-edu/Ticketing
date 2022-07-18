@@ -1,15 +1,18 @@
 package com.ticketing.server.movie.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import com.ticketing.server.movie.domain.Movie;
 import com.ticketing.server.movie.domain.repository.MovieRepository;
 import com.ticketing.server.movie.service.dto.MovieDTO;
-import com.ticketing.server.movie.service.dto.MovieListDTO;
+import com.ticketing.server.movie.service.dto.RegisteredMovieDTO;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,9 +24,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 public class MovieServiceImplTest {
 
     Movie movie;
-    MovieDTO movieDto;
     List<Movie> movies = new ArrayList<>();
-    List<MovieDTO> movieDTOS = new ArrayList<>();
 
     @Mock
     MovieRepository movieRepository;
@@ -59,7 +60,28 @@ public class MovieServiceImplTest {
 	    List<MovieDTO> movieDtos = movieService.getMovies();
 
 	    // then
-	    assertTrue(movieDtos.isEmpty());
+	    assertTrue(!movieDtos.isEmpty());
     }
 
+	@Test
+	@DisplayName("Movie Service Test - register movie")
+	void shouldAbleToRegisterMovie() {
+		// given
+		String title = "추가할 영화 제목";
+		movie = new Movie(title, 100L);
+
+		when(movieRepository.findValidMovieWithTitle(title))
+			.thenReturn(Optional.empty());
+		when(movieRepository.save(any()))
+			.thenReturn(movie);
+
+		// when
+		RegisteredMovieDTO registeredMovieDTO =
+			movieService.registerMovie(title, movie.getRunningTime());
+
+		// then
+		assertThat(registeredMovieDTO).isNotNull();
+		assertTrue(registeredMovieDTO.getTitle().equals(title));
+
+	}
 }
