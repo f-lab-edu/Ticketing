@@ -8,11 +8,12 @@ import com.ticketing.server.movie.application.response.MovieDeleteResponse;
 import com.ticketing.server.movie.application.response.MovieListResponse;
 import com.ticketing.server.movie.application.response.MovieInfoResponse;
 import com.ticketing.server.movie.service.dto.DeletedMovieDTO;
-import com.ticketing.server.movie.service.dto.MovieListDTO;
+import com.ticketing.server.movie.service.dto.MovieDTO;
 import com.ticketing.server.movie.service.dto.RegisteredMovieDTO;
 import com.ticketing.server.movie.service.interfaces.MovieService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -51,11 +52,11 @@ public class MovieController {
 	@GetMapping()
 	@ApiOperation(value = "영화 목록 조회")
 	public ResponseEntity<MovieListResponse> getMovies() {
-		MovieListDTO movieListDto = movieService.getMovies();
+		List<MovieDTO> movieDtos = movieService.getMovies();
 
 		return ResponseEntity.status(HttpStatus.OK)
 			.body(
-				movieListDto.toResponse()
+				new MovieListResponse(movieDtos)
 			);
 	}
 
