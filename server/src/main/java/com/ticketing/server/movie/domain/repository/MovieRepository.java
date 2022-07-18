@@ -1,7 +1,6 @@
 package com.ticketing.server.movie.domain.repository;
 
 import com.ticketing.server.movie.domain.Movie;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,8 +16,8 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 
 	@Query(value = "SELECT m "
 		+ "FROM Movie m "
-		+ "WHERE title = :title "
-		+ "AND deleted_at IS NULL")
+		+ "WHERE m.title = :title "
+		+ "AND m.deletedAt IS NULL")
 	Optional<Movie> findValidMovieWithTitle(String title);
 
     @Query(value = "SELECT * "
