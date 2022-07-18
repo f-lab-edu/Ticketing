@@ -3,10 +3,12 @@ package com.ticketing.server.movie.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 import com.ticketing.server.movie.domain.Movie;
 import com.ticketing.server.movie.domain.repository.MovieRepository;
+import com.ticketing.server.movie.service.dto.DeletedMovieDTO;
 import com.ticketing.server.movie.service.dto.MovieDTO;
 import com.ticketing.server.movie.service.dto.RegisteredMovieDTO;
 import java.util.ArrayList;
@@ -76,12 +78,30 @@ public class MovieServiceImplTest {
 			.thenReturn(movie);
 
 		// when
-		RegisteredMovieDTO registeredMovieDTO =
+		RegisteredMovieDTO registeredMovieDto =
 			movieService.registerMovie(title, movie.getRunningTime());
 
 		// then
-		assertThat(registeredMovieDTO).isNotNull();
-		assertTrue(registeredMovieDTO.getTitle().equals(title));
-
+		assertThat(registeredMovieDto).isNotNull();
+		assertTrue(registeredMovieDto.getTitle().equals(title));
 	}
+
+	@Test
+	@DisplayName("Movie Service Test - delete movie")
+	void shouldAbleToDeleteMovie() {
+		// given
+		Movie movie = new Movie("삭제할 영화 제목", 100L);
+
+		when(movieRepository.findByIdAndDeletedAtNull(1L))
+			.thenReturn(Optional.of(movie));
+
+		// when
+		DeletedMovieDTO deletedMovieDto =
+			movieService.deleteMovie(1L);
+
+		// then
+		assertTrue(deletedMovieDto.getTitle().equals("삭제할 영화 제목"));
+		assertThat(deletedMovieDto.getDeletedAt()).isNotNull();
+	}
+	
 }
