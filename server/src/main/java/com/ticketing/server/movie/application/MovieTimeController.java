@@ -5,13 +5,14 @@ import static com.ticketing.server.user.domain.UserGrade.ROLES.STAFF;
 import com.ticketing.server.movie.application.request.MovieTimeRegisterRequest;
 import com.ticketing.server.movie.application.response.MovieTimeInfoResponse;
 import com.ticketing.server.movie.application.response.MovieTimeListResponse;
-import com.ticketing.server.movie.service.dto.MovieTimeListDTO;
+import com.ticketing.server.movie.service.dto.MovieTimeDTO;
 import com.ticketing.server.movie.service.dto.RegisteredMovieTimeDTO;
 import com.ticketing.server.movie.service.interfaces.MovieTimeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import java.time.LocalDate;
+import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -58,11 +59,11 @@ public class MovieTimeController {
 	public ResponseEntity<MovieTimeListResponse> getMovieTimes(
 		@ApiParam(value = "영화 ID", required = true) @RequestParam @NotNull Long movieId,
 		@ApiParam(value = "상영 날짜", required = true) @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate runningDate) {
-		MovieTimeListDTO movieTimeListDto = movieTimeService.getMovieTimes(movieId, runningDate);
+		List<MovieTimeDTO> movieTimeDtos = movieTimeService.getMovieTimes(movieId, runningDate);
 
 		return ResponseEntity.status(HttpStatus.OK)
 			.body(
-				movieTimeListDto.toResponse()
+				new MovieTimeListResponse(movieTimeDtos)
 			);
 	}
 
