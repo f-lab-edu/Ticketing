@@ -1,26 +1,21 @@
 package com.ticketing.server.movie.service;
 
 import com.ticketing.server.global.exception.ErrorCode;
-import com.ticketing.server.movie.domain.MovieTime;
-import com.ticketing.server.movie.domain.repository.MovieTimeRepository;
 import com.ticketing.server.global.validator.constraints.NotEmptyCollection;
+import com.ticketing.server.movie.domain.MovieTime;
 import com.ticketing.server.movie.domain.Ticket;
+import com.ticketing.server.movie.domain.repository.MovieTimeRepository;
 import com.ticketing.server.movie.domain.repository.TicketRepository;
 import com.ticketing.server.movie.service.dto.TicketDTO;
-import com.ticketing.server.movie.service.dto.TicketDetailsDTO;
-import com.ticketing.server.movie.service.dto.TicketListDTO;
 import com.ticketing.server.movie.service.dto.TicketRefundDTO;
 import com.ticketing.server.movie.service.dto.TicketReservationDTO;
 import com.ticketing.server.movie.service.dto.TicketSoldDTO;
 import com.ticketing.server.movie.service.dto.TicketsCancelDTO;
-import com.ticketing.server.movie.service.dto.TicketsRefundDTO;
 import com.ticketing.server.movie.service.dto.TicketsReservationDTO;
 import com.ticketing.server.movie.service.dto.TicketsSoldDTO;
 import com.ticketing.server.movie.service.interfaces.TicketService;
 import com.ticketing.server.payment.service.dto.TicketDetailDTO;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import javax.validation.constraints.NotNull;
@@ -42,20 +37,18 @@ public class TicketServiceImpl implements TicketService {
 	private final MovieTimeRepository movieTimeRepository;
 
 	@Override
-	public TicketListDTO getTickets(@NotNull Long movieTimeId) {
+	public List<TicketDTO> getTickets(@NotNull Long movieTimeId) {
 		MovieTime movieTime = movieTimeRepository.findById(movieTimeId)
 			.orElseThrow(ErrorCode::throwMovieTimeNotFound);
 
-		List<TicketDTO> tickets = ticketRepository.findValidTickets(movieTime)
+		return ticketRepository.findValidTickets(movieTime)
 			.stream()
 			.map(TicketDTO::new)
 			.collect(Collectors.toList());
-
-		return new TicketListDTO(tickets);
 	}
 
 	@Override
-	public TicketDetailsDTO findTicketsByPaymentId(@NotNull Long paymentId) {
+	public List<TicketDetailDTO> findTicketsByPaymentId(@NotNull Long paymentId) {
 		List<TicketDetailDTO> ticketDetails = ticketRepository.findTicketFetchJoinByPaymentId(paymentId)
 			.stream()
 			.map(TicketDetailDTO::new)
@@ -65,7 +58,7 @@ public class TicketServiceImpl implements TicketService {
 			throw ErrorCode.throwPaymentIdNotFound();
 		}
 
-		return new TicketDetailsDTO(ticketDetails);
+		return ticketDetails;
 	}
 
 	@Override
@@ -106,20 +99,18 @@ public class TicketServiceImpl implements TicketService {
 		List<Ticket> tickets = getTicketsByInTicketIds(ticketIds);
 		tickets.forEach(Ticket::cancel);
 
-		return new TicketsCancelDTO(ticketIds);
+		return new TicketsCancelDTO(tickets);
 	}
 
 	@Override
 	@Transactional
-	public TicketsRefundDTO ticketsRefund(@NotNull Long paymentId, UnaryOperator<Ticket> refund) {
+	public List<TicketRefundDTO> ticketsRefund(@NotNull Long paymentId, UnaryOperator<Ticket> refund) {
 		List<Ticket> tickets = ticketRepository.findTicketFetchJoinByPaymentId(paymentId);
 
-		List<TicketRefundDTO> refundDtoList = tickets.stream()
+		return tickets.stream()
 			.map(refund)
 			.map(TicketRefundDTO::new)
 			.collect(Collectors.toList());
-
-		return new TicketsRefundDTO(refundDtoList);
 	}
 
 	private List<Ticket> getTicketsByInTicketIds(List<Long> ticketIds) {

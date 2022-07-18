@@ -4,10 +4,11 @@ import static com.ticketing.server.user.domain.UserGrade.ROLES.USER;
 
 import com.ticketing.server.movie.application.response.TicketDetailsResponse;
 import com.ticketing.server.movie.application.response.TicketListResponse;
-import com.ticketing.server.movie.service.dto.TicketDetailsDTO;
-import com.ticketing.server.movie.service.dto.TicketListDTO;
+import com.ticketing.server.movie.service.dto.TicketDTO;
 import com.ticketing.server.movie.service.interfaces.TicketService;
+import com.ticketing.server.payment.service.dto.TicketDetailDTO;
 import io.swagger.annotations.ApiParam;
+import java.util.List;
 import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -32,11 +33,11 @@ public class TicketController {
 	@Secured(USER)
 	public ResponseEntity<TicketListResponse> getTickets(
 		@ApiParam(value = "영화 시간표 ID", required = true) @RequestParam @NotNull Long movieTimeId) {
-		TicketListDTO ticketListDto = ticketService.getTickets(movieTimeId);
+		List<TicketDTO> tickets = ticketService.getTickets(movieTimeId);
 
 		return ResponseEntity.status(HttpStatus.OK)
 			.body(
-				ticketListDto.toResponse()
+				new TicketListResponse(tickets)
 			);
 	}
 
@@ -44,11 +45,11 @@ public class TicketController {
 	@Secured(USER)
 	public ResponseEntity<TicketDetailsResponse> findTicketsByPaymentId(
 		@PathVariable("paymentId") @NotNull Long paymentId) {
-		TicketDetailsDTO tickets = ticketService.findTicketsByPaymentId(paymentId);
+		List<TicketDetailDTO> tickets = ticketService.findTicketsByPaymentId(paymentId);
 
 		return ResponseEntity.status(HttpStatus.OK)
 			.body(
-				tickets.toResponse()
+				new TicketDetailsResponse(tickets)
 			);
 	}
 

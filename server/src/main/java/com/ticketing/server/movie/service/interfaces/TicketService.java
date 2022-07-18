@@ -2,21 +2,21 @@ package com.ticketing.server.movie.service.interfaces;
 
 import com.ticketing.server.global.validator.constraints.NotEmptyCollection;
 import com.ticketing.server.movie.domain.Ticket;
-import com.ticketing.server.movie.service.dto.TicketDetailsDTO;
-import com.ticketing.server.movie.service.dto.TicketListDTO;
+import com.ticketing.server.movie.service.dto.TicketDTO;
+import com.ticketing.server.movie.service.dto.TicketRefundDTO;
 import com.ticketing.server.movie.service.dto.TicketsCancelDTO;
-import com.ticketing.server.movie.service.dto.TicketsRefundDTO;
 import com.ticketing.server.movie.service.dto.TicketsReservationDTO;
 import com.ticketing.server.movie.service.dto.TicketsSoldDTO;
+import com.ticketing.server.payment.service.dto.TicketDetailDTO;
 import java.util.List;
 import java.util.function.UnaryOperator;
 import javax.validation.constraints.NotNull;
 
 public interface TicketService {
 
-	TicketListDTO getTickets(@NotNull Long movieTimeId);
+	List<TicketDTO> getTickets(@NotNull Long movieTimeId);
 
-	TicketDetailsDTO findTicketsByPaymentId(@NotNull Long paymentId);
+	List<TicketDetailDTO> findTicketsByPaymentId(@NotNull Long paymentId);
 
 	TicketsReservationDTO ticketReservation(@NotEmptyCollection List<Long> ticketIds);
 
@@ -24,6 +24,6 @@ public interface TicketService {
 
 	TicketsCancelDTO ticketCancel(@NotEmptyCollection List<Long> ticketIds);
 
-	TicketsRefundDTO ticketsRefund(@NotNull Long paymentId, UnaryOperator<Ticket> refund);
+	List<TicketRefundDTO> ticketsRefund(@NotNull Long paymentId, UnaryOperator<Ticket> refund);
 
 }
