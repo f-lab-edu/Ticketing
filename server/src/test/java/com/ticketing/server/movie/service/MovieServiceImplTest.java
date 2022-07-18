@@ -39,10 +39,10 @@ public class MovieServiceImplTest {
             .thenReturn(Collections.emptyList());
 
         // when
-        MovieListDTO movieListDto = movieService.getMovies();
+        List<MovieDTO> movieDtos = movieService.getMovies();
 
         // then
-        assertTrue(movieListDto.getMovieDtos().isEmpty());
+        assertTrue(movieDtos.isEmpty());
     }
 
     @Test
@@ -55,11 +55,11 @@ public class MovieServiceImplTest {
         when(movieRepository.findValidMovies())
             .thenReturn(movies);
 
-        // when
-	    MovieListDTO movieListDto = movieService.getMovies();
+	    // when
+	    List<MovieDTO> movieDtos = movieService.getMovies();
 
-        // then
-        assertTrue(!movieListDto.getMovieDtos().isEmpty());
+	    // then
+	    assertTrue(movieDtos.isEmpty());
     }
 
 }

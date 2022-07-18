@@ -8,9 +8,7 @@ import com.ticketing.server.movie.domain.repository.MovieRepository;
 import com.ticketing.server.movie.domain.repository.MovieTimeRepository;
 import com.ticketing.server.movie.domain.repository.TheaterRepository;
 import com.ticketing.server.movie.service.dto.MovieTimeDTO;
-import com.ticketing.server.movie.service.dto.MovieTimeListDTO;
 import com.ticketing.server.movie.service.dto.MovieTimeRegisterDTO;
-import com.ticketing.server.movie.service.dto.RegisteredMovieDTO;
 import com.ticketing.server.movie.service.dto.RegisteredMovieTimeDTO;
 import com.ticketing.server.movie.service.interfaces.MovieTimeService;
 import java.time.LocalDate;
@@ -56,7 +54,7 @@ public class MovieTimeServiceImpl implements MovieTimeService {
 	}
 
 	@Override
-	public MovieTimeListDTO getMovieTimes(Long movieId, LocalDate runningDate) {
+	public List<MovieTimeDTO> getMovieTimes(Long movieId, LocalDate runningDate) {
 		Movie movie = findMovieById(movieId);
 
 		LocalDateTime startOfDay = runningDate.atStartOfDay().plusHours(6);
@@ -64,11 +62,9 @@ public class MovieTimeServiceImpl implements MovieTimeService {
 
 		List<MovieTime> movieTimes = movieTimeRepository.findValidMovieTimes(movie, startOfDay, endOfDay);
 
-		List<MovieTimeDTO> movieTimeDtos = movieTimes.stream()
+		return movieTimes.stream()
 			.map(movieTime -> movieTime.toMovieTimeDTO())
 			.collect(Collectors.toList());
-
-		return new MovieTimeListDTO(movieTimeDtos);
 	}
 
 	@Override
