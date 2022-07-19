@@ -17,6 +17,7 @@ import com.ticketing.server.user.application.request.UserChangeGradeRequest;
 import com.ticketing.server.user.application.request.UserChangePasswordRequest;
 import com.ticketing.server.user.application.request.UserDeleteRequest;
 import com.ticketing.server.user.domain.UserGrade;
+import com.ticketing.server.user.domain.UserGrade.ROLES;
 import com.ticketing.server.user.domain.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -47,8 +48,11 @@ class UserControllerTest {
 	private static final String UPDATED_AT = "$.updatedAt";
 	private static final String BEFORE_GRADE = "$.beforeGrade";
 	private static final String AFTER_GRADE = "$.afterGrade";
+
 	private static final String USER_EMAIL = "testemail@ticketing.com";
 	private static final String USER_PW = "qwe123";
+	private static final String USER_NAME = "김철수";
+	private static final String USER_PHONE = "010-1234-5678";
 
 	@Autowired
 	UserRepository userRepository;
@@ -79,13 +83,13 @@ class UserControllerTest {
 		resultActions
 			.andExpect(status().isCreated())
 			.andExpect(content().contentType(APPLICATION_JSON))
-			.andExpect(jsonPath(NAME).value("김철수"))
+			.andExpect(jsonPath(NAME).value(USER_NAME))
 			.andExpect(jsonPath(EMAIL).value(USER_EMAIL));
 	}
 
 	@Test
 	@DisplayName("유저 정보 조회")
-	@WithAuthUser(email = USER_EMAIL, role = "ROLE_USER")
+	@WithAuthUser(email = USER_EMAIL, role = ROLES.USER)
 	void detailsSuccess() throws Exception {
 		// given
 		mvc.perform(
@@ -105,15 +109,15 @@ class UserControllerTest {
 		resultActions
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(APPLICATION_JSON))
-			.andExpect(jsonPath(NAME).value("김철수"))
+			.andExpect(jsonPath(NAME).value(USER_NAME))
 			.andExpect(jsonPath(EMAIL).value(USER_EMAIL))
-			.andExpect(jsonPath(GRADE).value("USER"))
-			.andExpect(jsonPath(PHONE).value("010-1234-5678"));
+			.andExpect(jsonPath(GRADE).value(UserGrade.USER.name()))
+			.andExpect(jsonPath(PHONE).value(USER_PHONE));
 	}
 
 	@Test
 	@DisplayName("유저 탈퇴 성공")
-	@WithAuthUser(email = USER_EMAIL, role = "ROLE_USER")
+	@WithAuthUser(email = USER_EMAIL, role = ROLES.USER)
 	void deleteUserSuccess() throws Exception {
 		// given
 		UserDeleteRequest deleteRequest = new UserDeleteRequest(USER_EMAIL, USER_PW);
@@ -134,14 +138,14 @@ class UserControllerTest {
 		resultActions
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(APPLICATION_JSON))
-			.andExpect(jsonPath(NAME).value("김철수"))
+			.andExpect(jsonPath(NAME).value(USER_NAME))
 			.andExpect(jsonPath(EMAIL).value(USER_EMAIL))
 			.andExpect(jsonPath(DELETED_AT).isNotEmpty());
 	}
 
 	@Test
 	@DisplayName("비밀번호 변경 성공")
-	@WithAuthUser(email = USER_EMAIL, role = "ROLE_USER")
+	@WithAuthUser(email = USER_EMAIL, role = ROLES.USER)
 	void changePasswordSuccess() throws Exception {
 		// given
 		UserChangePasswordRequest changePasswordRequest = new UserChangePasswordRequest(USER_PW, "qwe1234");
@@ -163,14 +167,14 @@ class UserControllerTest {
 		resultActions
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(APPLICATION_JSON))
-			.andExpect(jsonPath(NAME).value("김철수"))
+			.andExpect(jsonPath(NAME).value(USER_NAME))
 			.andExpect(jsonPath(EMAIL).value(USER_EMAIL))
 			.andExpect(jsonPath(UPDATED_AT).isNotEmpty());
 	}
 
 	@Test
 	@DisplayName("유저 등급 변경")
-	@WithAuthUser(email = "admin@ticketing.com", role = "ROLE_ADMIN")
+	@WithAuthUser(email = "admin@ticketing.com", role = ROLES.ADMIN)
 	void changeGradeSuccess() throws Exception {
 		// given
 		UserChangeGradeRequest changeGradeRequest = new UserChangeGradeRequest(USER_EMAIL, UserGrade.STAFF);
@@ -192,13 +196,13 @@ class UserControllerTest {
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(APPLICATION_JSON))
 			.andExpect(jsonPath(EMAIL).value(USER_EMAIL))
-			.andExpect(jsonPath(BEFORE_GRADE).value("USER"))
-			.andExpect(jsonPath(AFTER_GRADE).value("STAFF"));
+			.andExpect(jsonPath(BEFORE_GRADE).value(UserGrade.USER.name()))
+			.andExpect(jsonPath(AFTER_GRADE).value(UserGrade.STAFF.name()));
 	}
 
 	@Test
 	@DisplayName("유저 등급 변경 실패 - 권한 등급이 낮을 경우")
-	@WithAuthUser(email = "staff@ticketing.com", role = "ROLE_STAFF")
+	@WithAuthUser(email = "staff@ticketing.com", role = ROLES.STAFF)
 	void changeGradeFail() throws Exception {
 		// given
 		UserChangeGradeRequest changeGradeRequest = new UserChangeGradeRequest(USER_EMAIL, UserGrade.STAFF);
@@ -222,7 +226,7 @@ class UserControllerTest {
 			.apply(springSecurity())
 			.build();
 
-		signUpRequest = new SignUpRequest("김철수", USER_EMAIL, USER_PW, "010-1234-5678");
+		signUpRequest = new SignUpRequest(USER_NAME, USER_EMAIL, USER_PW, USER_PHONE);
 	}
 
 }
