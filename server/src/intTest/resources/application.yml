@@ -20,6 +20,9 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
 
+  config:
+    import: "optional:configserver:"
+
 jasypt:
   encryptor:
     bean: jasyptStringEncryptor
