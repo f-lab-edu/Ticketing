@@ -21,6 +21,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.ObjectError;
@@ -208,6 +209,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 		log.error("AccessDeniedException :: ", ex);
 
 		ErrorResponse response = new ErrorResponse(FORBIDDEN, ex.getLocalizedMessage(), "접근 권한이 없습니다.");
+		return ResponseEntity.status(response.getStatus()).headers(new HttpHeaders()).body(response);
+	}
+
+	/**
+	 * 이메일이 존재하지 않을 경우
+	 */
+	@ExceptionHandler(value = BadCredentialsException.class)
+	protected ResponseEntity<ErrorResponse> handleBadCredentialsException(BadCredentialsException ex) {
+		log.error("BadCredentialsException :: ", ex);
+
+		ErrorResponse response = new ErrorResponse(UNAUTHORIZED, ex.getLocalizedMessage(), "아이디 혹은 패스워드가 일치하지 않습니다.");
 		return ResponseEntity.status(response.getStatus()).headers(new HttpHeaders()).body(response);
 	}
 
