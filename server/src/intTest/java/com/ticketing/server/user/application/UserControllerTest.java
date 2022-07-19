@@ -12,6 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ticketing.server.global.config.WithAuthUser;
+import com.ticketing.server.user.application.request.LoginRequest;
 import com.ticketing.server.user.application.request.SignUpRequest;
 import com.ticketing.server.user.application.request.UserChangeGradeRequest;
 import com.ticketing.server.user.application.request.UserChangePasswordRequest;
@@ -25,6 +26,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -35,6 +37,8 @@ import org.springframework.web.context.WebApplicationContext;
 @Transactional
 class UserControllerTest {
 
+	private static final String LOGIN_URL = "/api/auth/token";
+
 	private static final String BASICS_URL = "/api/users";
 	private static final String DETAILS_URL = "/api/users/details";
 	private static final String CHANGE_PASSWORD_URL = "/api/users/password";
@@ -44,8 +48,6 @@ class UserControllerTest {
 	private static final String EMAIL = "$.email";
 	private static final String GRADE = "$.grade";
 	private static final String PHONE = "$.phone";
-	private static final String DELETED_AT = "$.deletedAt";
-	private static final String UPDATED_AT = "$.updatedAt";
 	private static final String BEFORE_GRADE = "$.beforeGrade";
 	private static final String AFTER_GRADE = "$.afterGrade";
 
@@ -121,6 +123,7 @@ class UserControllerTest {
 	void deleteUserSuccess() throws Exception {
 		// given
 		UserDeleteRequest deleteRequest = new UserDeleteRequest(USER_EMAIL, USER_PW);
+		LoginRequest loginRequest = new LoginRequest(USER_EMAIL, USER_PW);
 		mvc.perform(
 			post(BASICS_URL)
 				.content(mapper.writeValueAsString(signUpRequest))
@@ -128,19 +131,22 @@ class UserControllerTest {
 		);
 
 		// when
-		ResultActions resultActions = mvc.perform(
+
+		// 1. 회원 탈퇴 진행
+		mvc.perform(
 			delete(BASICS_URL)
 				.content(mapper.writeValueAsString(deleteRequest))
 				.contentType(APPLICATION_JSON)
 		);
 
+		// 2. 탈퇴된 계정 로그인
+		ResultActions resultActions = mvc.perform(post(LOGIN_URL)
+			.content(mapper.writeValueAsString(loginRequest))
+			.contentType(MediaType.APPLICATION_JSON));
+
 		// then
 		resultActions
-			.andExpect(status().isOk())
-			.andExpect(content().contentType(APPLICATION_JSON))
-			.andExpect(jsonPath(NAME).value(USER_NAME))
-			.andExpect(jsonPath(EMAIL).value(USER_EMAIL))
-			.andExpect(jsonPath(DELETED_AT).isNotEmpty());
+			.andExpect(status().isUnauthorized());
 	}
 
 	@Test
@@ -149,6 +155,7 @@ class UserControllerTest {
 	void changePasswordSuccess() throws Exception {
 		// given
 		UserChangePasswordRequest changePasswordRequest = new UserChangePasswordRequest(USER_PW, "qwe1234");
+		LoginRequest loginRequest = new LoginRequest(USER_EMAIL, USER_PW);
 		mvc.perform(
 			post(BASICS_URL)
 				.content(mapper.writeValueAsString(this.signUpRequest))
@@ -156,20 +163,23 @@ class UserControllerTest {
 		);
 
 		// when
-		ResultActions resultActions = mvc.perform(
+
+		// 1. 패스워드 변경
+		mvc.perform(
 				put(CHANGE_PASSWORD_URL)
 					.content(mapper.writeValueAsString(changePasswordRequest))
 					.contentType(APPLICATION_JSON)
 			)
 			.andExpect(status().isOk());
 
+		// 2. 변경 전 계정으로 로그인
+		ResultActions resultActions = mvc.perform(post(LOGIN_URL)
+			.content(mapper.writeValueAsString(loginRequest))
+			.contentType(MediaType.APPLICATION_JSON));
+
 		// then
 		resultActions
-			.andExpect(status().isOk())
-			.andExpect(content().contentType(APPLICATION_JSON))
-			.andExpect(jsonPath(NAME).value(USER_NAME))
-			.andExpect(jsonPath(EMAIL).value(USER_EMAIL))
-			.andExpect(jsonPath(UPDATED_AT).isNotEmpty());
+			.andExpect(status().isUnauthorized());
 	}
 
 	@Test
