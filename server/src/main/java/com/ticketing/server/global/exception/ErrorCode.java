@@ -5,7 +5,6 @@ import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
-import com.ticketing.server.global.redis.PaymentCache;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
@@ -24,6 +23,8 @@ public enum ErrorCode {
 	BAD_REQUEST_PAYMENT_COMPLETE(BAD_REQUEST, "처리할 결제 정보가 존재하지 않습니다."),
 	BAD_REQUEST_PAYMENT_READY(BAD_REQUEST, "이미 진행 중인 결제가 존재합니다."),
 	BAD_REQUEST_PAYMENT_CANCEL(BAD_REQUEST, "취소할 티켓이 존재하지 않습니다."),
+	BAD_REQUEST_TICKET_RESERVATION(BAD_REQUEST, "이미 다른 고객이 예약 진행 중인 좌석이 존재합니다."),
+	BAD_REQUEST_TICKET_SOLD(BAD_REQUEST, "이미 환불 진행 중 입니다."),
 	NOT_REFUNDABLE_TIME(BAD_REQUEST, "환불이 가능한 시간이 지났습니다."),
 	NOT_REFUNDABLE_SEAT(BAD_REQUEST, "환불할 수 있는 좌석이 아닙니다."),
 
@@ -48,7 +49,7 @@ public enum ErrorCode {
 	DELETED_MOVIE(CONFLICT, "이미 삭제된 영화 입니다.");
 
 	private final HttpStatus httpStatus;
-	private String detail;
+	private final String detail;
 
 	/* 400 BAD_REQUEST : 잘못된 요청 */
 	public static TicketingException throwMismatchPassword() {
@@ -67,14 +68,6 @@ public enum ErrorCode {
 		throw new TicketingException(UNABLE_CHANGE_GRADE);
 	}
 
-	public static TicketingException throwInvalidTicketId() {
-		throw new TicketingException(INVALID_TICKET_ID);
-	}
-
-	public static TicketingException throwBadRequestMovieTime() {
-		throw new TicketingException(BAD_REQUEST_MOVIE_TIME);
-	}
-
 	public static TicketingException throwBadRequestPaymentComplete() {
 		throw new TicketingException(BAD_REQUEST_PAYMENT_COMPLETE);
 	}
@@ -83,27 +76,12 @@ public enum ErrorCode {
 		throw new TicketingException(BAD_REQUEST_PAYMENT_READY);
 	}
 
-	public static TicketingException throwBadRequestPaymentCancel() {
-		throw new TicketingException(BAD_REQUEST_PAYMENT_CANCEL);
-	}
-
-	public static TicketingException throwNotRefundableTime() {
-		throw new TicketingException(NOT_REFUNDABLE_TIME);
-	}
-
-	public static TicketingException throwNotRefundableSeat() {
-		throw new TicketingException(NOT_REFUNDABLE_SEAT);
-	}
-
 	/* 403 FORBIDDEN : 접근 권한 제한 */
 	public static TicketingException throwValidUserId() {
 		throw new TicketingException(VALID_USER_ID);
 	}
 
 	/* 404 NOT_FOUND : Resource 를 찾을 수 없음 */
-	public static TicketingException throwUserNotFound() {
-		throw new TicketingException(USER_NOT_FOUND);
-	}
 
 	public static TicketingException throwEmailNotFound() {
 		throw new TicketingException(EMAIL_NOT_FOUND);
@@ -111,10 +89,6 @@ public enum ErrorCode {
 
 	public static TicketingException throwMovieNotFound() {
 		throw new TicketingException(MOVIE_NOT_FOUND);
-	}
-
-	public static TicketingException throwMovieTimeNotFound() {
-		throw new TicketingException(MOVIE_TIME_NOT_FOUND);
 	}
 
 	public static TicketingException throwRefreshTokenNotFound() {
