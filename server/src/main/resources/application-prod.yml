@@ -1,0 +1,26 @@
+server:
+  port: 8443
+  address: 0.0.0.0
+
+  http:
+    port: 8080
+
+  ssl:
+    key-store: classpath:keystore/ticketing.p12
+    key-store-password: ENC(OMvGcpZLpggFTiGNkqNe66Zq/SmJXF6o)
+    key-store-type: PKCS12
+
+spring:
+  datasource:
+    url: jdbc:mysql://ticketing-db/ticketing?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: ENC(LowN1n4w0Ep/DqLD8+q5Bq6AXM4b8e3V)
+    password: ENC(OMvGcpZLpggFTiGNkqNe66Zq/SmJXF6o)
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+    hibernate:
+      ddl-auto: create
