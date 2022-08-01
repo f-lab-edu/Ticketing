@@ -1,4 +1,4 @@
-package com.ticketing.server.movie.service;
+package com.ticketing.server.movie.aop;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -14,10 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-public class TicketServiceImplTest {
+class TicketLockAspectTest {
 
 	@Autowired
-	private TicketServiceImpl ticketService;
+	private TicketLockAspect ticketLockAspect;
 
 	@Test
 	@DisplayName("티켓 lock 동시성 체크")
@@ -33,19 +33,19 @@ public class TicketServiceImplTest {
 
 		// when
 		executorService.execute(() -> {
-			result1.set(ticketService.isEveryTicketIdLock(lockIds));
+			result1.set(ticketLockAspect.isEveryTicketIdLock(lockIds));
 			latch.countDown();
 		});
 
 		executorService.execute(() -> {
-			result2.set(ticketService.isEveryTicketIdLock(List.of("TicketLock:1")));
+			result2.set(ticketLockAspect.isEveryTicketIdLock(List.of("TicketLock:1")));
 			latch.countDown();
 		});
 
 		latch.await();
 
 		// then
-		Long unlockCount = ticketService.ticketIdsUnlock(lockIds);
+		Long unlockCount = ticketLockAspect.ticketIdsUnlock(lockIds);
 
 		assertAll(
 			() -> assertThat(result1).isNotEqualTo(result2),

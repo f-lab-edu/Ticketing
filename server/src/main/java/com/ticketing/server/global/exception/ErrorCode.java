@@ -27,6 +27,7 @@ public enum ErrorCode {
 	BAD_REQUEST_TICKET_SOLD(BAD_REQUEST, "이미 환불 진행 중 입니다."),
 	NOT_REFUNDABLE_TIME(BAD_REQUEST, "환불이 가능한 시간이 지났습니다."),
 	NOT_REFUNDABLE_SEAT(BAD_REQUEST, "환불할 수 있는 좌석이 아닙니다."),
+	EMPTY_TICKET_ID(BAD_REQUEST, "티켓 정보가 존재하지 않습니다."),
 
 	/* 403 FORBIDDEN : 접근 권한 제한 */
 	VALID_USER_ID(FORBIDDEN, "해당 정보에 접근 권한이 존재하지 않습니다."),
