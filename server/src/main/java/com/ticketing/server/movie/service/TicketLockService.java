@@ -4,7 +4,6 @@ import static com.ticketing.server.global.exception.ErrorCode.BAD_REQUEST_MOVIE_
 import static com.ticketing.server.global.exception.ErrorCode.INVALID_TICKET_ID;
 
 import com.ticketing.server.global.exception.TicketingException;
-import com.ticketing.server.movie.aop.TicketLock;
 import com.ticketing.server.movie.domain.Ticket;
 import com.ticketing.server.movie.domain.repository.TicketRepository;
 import com.ticketing.server.movie.service.dto.TicketIdsDTO;
@@ -27,7 +26,6 @@ public class TicketLockService {
 
 	private final TicketRepository ticketRepository;
 
-	@TicketLock
 	public TicketsReservationDTO ticketReservation(@Valid TicketIdsDTO ticketIdsDto) {
 		List<Ticket> tickets = getTicketsByInTicketIds(ticketIdsDto.getTicketIds());
 
@@ -45,7 +43,6 @@ public class TicketLockService {
 		return new TicketsReservationDTO(firstMovieTitle(tickets), reservationDtoList);
 	}
 
-	@TicketLock
 	public TicketsSoldDTO ticketSold(@NotNull Long paymentId, @Valid TicketIdsDTO ticketIdsDto) {
 		List<Ticket> tickets = getTicketsByInTicketIds(ticketIdsDto.getTicketIds());
 
