@@ -5,8 +5,8 @@ import com.ticketing.server.global.redis.RefreshRedisRepository;
 import com.ticketing.server.global.redis.RefreshToken;
 import com.ticketing.server.global.security.jwt.JwtProperties;
 import com.ticketing.server.global.security.jwt.JwtProvider;
-import com.ticketing.server.user.service.dto.TokenDTO;
 import com.ticketing.server.user.service.dto.DeleteRefreshTokenDTO;
+import com.ticketing.server.user.service.dto.TokenDTO;
 import com.ticketing.server.user.service.interfaces.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -40,8 +40,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		// refresh 토큰이 있으면 수정, 없으면 생성
 		refreshRedisRepository.findByEmail(email)
 			.ifPresentOrElse(
-				tokenEntity -> tokenEntity.changeToken(tokenDto.getRefreshToken()),
-				() -> refreshRedisRepository.save(new RefreshToken(email, tokenDto.getRefreshToken()))
+				tokenEntity -> refreshRedisRepository.save(
+					tokenEntity.changeToken(
+						tokenDto.getRefreshToken()
+					)
+				),
+				() -> refreshRedisRepository.save(
+					new RefreshToken(email, tokenDto.getRefreshToken())
+				)
 			);
 
 		return tokenDto;
