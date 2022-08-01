@@ -27,6 +27,7 @@ public class JwtProvider {
 
 	private static final String AUTHORITIES_KEY = "auth";
 	private static final String AUTHORITIES_DELIMITER = ",";
+	private static final String ROLE = "ROLE_";
 
 	private final Key key;
 	private final String prefix;
@@ -89,7 +90,7 @@ public class JwtProvider {
 	}
 
 	private String makeRoleName(String role) {
-		return "ROLE_" + role.toUpperCase();
+		return role.contains(ROLE) ? role.toUpperCase() : ROLE + role.toUpperCase();
 	}
 
 	public Authentication getAuthentication(String token) {
