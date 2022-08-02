@@ -1,15 +1,18 @@
 package com.ticketing.server.movie.service;
 
-import com.ticketing.server.global.exception.ErrorCode;
+import static com.ticketing.server.global.exception.ErrorCode.INVALID_TICKET_ID;
+import static com.ticketing.server.global.exception.ErrorCode.MOVIE_TIME_NOT_FOUND;
+import static com.ticketing.server.global.exception.ErrorCode.PAYMENT_ID_NOT_FOUND;
+
+import com.ticketing.server.global.exception.TicketingException;
 import com.ticketing.server.global.validator.constraints.NotEmptyCollection;
 import com.ticketing.server.movie.domain.MovieTime;
 import com.ticketing.server.movie.domain.Ticket;
 import com.ticketing.server.movie.domain.repository.MovieTimeRepository;
 import com.ticketing.server.movie.domain.repository.TicketRepository;
 import com.ticketing.server.movie.service.dto.TicketDTO;
+import com.ticketing.server.movie.service.dto.TicketIdsDTO;
 import com.ticketing.server.movie.service.dto.TicketRefundDTO;
-import com.ticketing.server.movie.service.dto.TicketReservationDTO;
-import com.ticketing.server.movie.service.dto.TicketSoldDTO;
 import com.ticketing.server.movie.service.dto.TicketsCancelDTO;
 import com.ticketing.server.movie.service.dto.TicketsReservationDTO;
 import com.ticketing.server.movie.service.dto.TicketsSoldDTO;
@@ -33,13 +36,13 @@ import org.springframework.validation.annotation.Validated;
 public class TicketServiceImpl implements TicketService {
 
 	private final TicketRepository ticketRepository;
-
 	private final MovieTimeRepository movieTimeRepository;
+	private final TicketLockService ticketLockService;
 
 	@Override
 	public List<TicketDTO> getTickets(@NotNull Long movieTimeId) {
 		MovieTime movieTime = movieTimeRepository.findById(movieTimeId)
-			.orElseThrow(ErrorCode::throwMovieTimeNotFound);
+			.orElseThrow(() -> new TicketingException(MOVIE_TIME_NOT_FOUND));
 
 		return ticketRepository.findValidTickets(movieTime)
 			.stream()
@@ -55,7 +58,7 @@ public class TicketServiceImpl implements TicketService {
 			.collect(Collectors.toList());
 
 		if (ticketDetails.isEmpty()) {
-			throw ErrorCode.throwPaymentIdNotFound();
+			throw new TicketingException(PAYMENT_ID_NOT_FOUND);
 		}
 
 		return ticketDetails;
@@ -64,33 +67,13 @@ public class TicketServiceImpl implements TicketService {
 	@Override
 	@Transactional
 	public TicketsReservationDTO ticketReservation(@NotEmptyCollection List<Long> ticketIds) {
-		List<Ticket> tickets = getTicketsByInTicketIds(ticketIds);
-
-		Long firstMovieTimeId = firstMovieTimeId(tickets);
-		List<TicketReservationDTO> reservationDtoList = tickets.stream()
-			.map(Ticket::makeReservation)
-			.filter(ticket -> firstMovieTimeId.equals(ticket.getMovieTimeId()))
-			.map(TicketReservationDTO::new)
-			.collect(Collectors.toList());
-
-		if (ticketIds.size() != reservationDtoList.size()) {
-			throw ErrorCode.throwBadRequestMovieTime();
-		}
-
-		return new TicketsReservationDTO(firstMovieTitle(tickets), reservationDtoList);
+		return ticketLockService.ticketReservation(new TicketIdsDTO(ticketIds));
 	}
 
 	@Override
 	@Transactional
 	public TicketsSoldDTO ticketSold(@NotNull Long paymentId, @NotEmptyCollection List<Long> ticketIds) {
-		List<Ticket> tickets = getTicketsByInTicketIds(ticketIds);
-
-		List<TicketSoldDTO> soldDtoList = tickets.stream()
-			.map(ticket -> ticket.makeSold(paymentId))
-			.map(TicketSoldDTO::new)
-			.collect(Collectors.toList());
-
-		return new TicketsSoldDTO(paymentId, soldDtoList);
+		return ticketLockService.ticketSold(paymentId, new TicketIdsDTO(ticketIds));
 	}
 
 	@Override
@@ -117,20 +100,10 @@ public class TicketServiceImpl implements TicketService {
 		List<Ticket> tickets = ticketRepository.findTicketFetchJoinByTicketIds(ticketIds);
 
 		if (tickets.size() != ticketIds.size()) {
-			throw ErrorCode.throwInvalidTicketId();
+			throw new TicketingException(INVALID_TICKET_ID);
 		}
 
 		return tickets;
-	}
-
-	private Long firstMovieTimeId(List<Ticket> tickets) {
-		Ticket ticket = tickets.get(0);
-		return ticket.getMovieTimeId();
-	}
-
-	private String firstMovieTitle(List<Ticket> tickets) {
-		Ticket ticket = tickets.get(0);
-		return ticket.getMovieTitle();
 	}
 
 }

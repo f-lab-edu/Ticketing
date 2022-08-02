@@ -1,7 +1,13 @@
 package com.ticketing.server.movie.domain;
 
+import static com.ticketing.server.global.exception.ErrorCode.BAD_REQUEST_PAYMENT_CANCEL;
+import static com.ticketing.server.global.exception.ErrorCode.DUPLICATE_PAYMENT;
+import static com.ticketing.server.global.exception.ErrorCode.NOT_REFUNDABLE_SEAT;
+import static com.ticketing.server.global.exception.ErrorCode.NOT_REFUNDABLE_TIME;
+
 import com.ticketing.server.global.dto.repository.AbstractEntity;
 import com.ticketing.server.global.exception.ErrorCode;
+import com.ticketing.server.global.exception.TicketingException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import javax.persistence.Entity;
@@ -56,7 +62,7 @@ public class Ticket extends AbstractEntity {
 
 	public Ticket makeReservation() {
 		if (!TicketStatus.SALE.equals(status)) {
-			throw ErrorCode.throwDuplicatePayment();
+			throw new TicketingException(DUPLICATE_PAYMENT);
 		}
 
 		status = TicketStatus.RESERVATION;
@@ -65,7 +71,7 @@ public class Ticket extends AbstractEntity {
 
 	public Ticket makeSold(Long paymentId) {
 		if (TicketStatus.SOLD.equals(status)) {
-			throw ErrorCode.throwDuplicatePayment();
+			throw new TicketingException(DUPLICATE_PAYMENT);
 		}
 
 		status = TicketStatus.SOLD;
@@ -75,7 +81,7 @@ public class Ticket extends AbstractEntity {
 
 	public Ticket cancel() {
 		if (!TicketStatus.RESERVATION.equals(status)) {
-			throw ErrorCode.throwBadRequestPaymentCancel();
+			throw new TicketingException(BAD_REQUEST_PAYMENT_CANCEL);
 		}
 
 		status = TicketStatus.SALE;
@@ -86,7 +92,7 @@ public class Ticket extends AbstractEntity {
 	public Ticket refund(LocalDateTime dateTime) {
 		long seconds = ChronoUnit.SECONDS.between(dateTime, getStartAt());
 		if (600L > seconds) {
-			throw ErrorCode.throwNotRefundableTime();
+			throw new TicketingException(NOT_REFUNDABLE_TIME);
 		}
 
 		return refund();
@@ -94,7 +100,7 @@ public class Ticket extends AbstractEntity {
 
 	public Ticket refund() {
 		if (!TicketStatus.SOLD.equals(status)) {
-			throw ErrorCode.throwNotRefundableSeat();
+			throw new TicketingException(NOT_REFUNDABLE_SEAT);
 		}
 
 		status = TicketStatus.SALE;
