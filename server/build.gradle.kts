@@ -43,6 +43,8 @@ dependencies {
 	implementation("com.google.code.findbugs:jsr305:3.0.2")
 	implementation ("org.springframework.cloud:spring-cloud-starter-config")
 	implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
+	implementation("io.micrometer:micrometer-core")
+	implementation("io.micrometer:micrometer-registry-prometheus")
 
 	modules {
 		module("org.springframework.boot:spring-boot-starter-logging") {
