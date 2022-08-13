@@ -3,9 +3,9 @@ package com.ticketing.server.user.application;
 import com.ticketing.server.user.application.request.LoginRequest;
 import com.ticketing.server.user.application.request.RefreshRequest;
 import com.ticketing.server.user.application.response.LogoutResponse;
-import com.ticketing.server.user.service.dto.TokenDTO;
 import com.ticketing.server.user.application.response.TokenResponse;
 import com.ticketing.server.user.service.dto.DeleteRefreshTokenDTO;
+import com.ticketing.server.user.service.dto.TokenDTO;
 import com.ticketing.server.user.service.interfaces.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
