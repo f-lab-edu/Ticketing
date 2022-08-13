@@ -1,6 +1,7 @@
 package com.ticketing.server.user.application;
 
 import com.ticketing.server.user.application.request.LoginRequest;
+import com.ticketing.server.user.application.request.RefreshRequest;
 import com.ticketing.server.user.application.response.LogoutResponse;
 import com.ticketing.server.user.service.dto.TokenDTO;
 import com.ticketing.server.user.application.response.TokenResponse;
@@ -37,8 +38,8 @@ public class AuthController {
 	}
 
 	@PostMapping("/refresh")
-	public ResponseEntity<TokenResponse> refreshToken(@RequestParam("refreshToken") String refreshToken) {
-		TokenDTO tokenDto = authenticationService.reissueTokenDto(refreshToken);
+	public ResponseEntity<TokenResponse> refreshToken(@RequestBody RefreshRequest request) {
+		TokenDTO tokenDto = authenticationService.reissueTokenDto(request.getRefreshToken());
 
 		return ResponseEntity.status(HttpStatus.OK)
 			.headers(getHttpHeaders())

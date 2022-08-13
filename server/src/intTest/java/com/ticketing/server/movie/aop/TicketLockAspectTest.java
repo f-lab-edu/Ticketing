@@ -49,7 +49,7 @@ class TicketLockAspectTest {
 
 		assertAll(
 			() -> assertThat(result1).isNotEqualTo(result2),
-			() -> assertThat(unlockCount > 1).isTrue()
+			() -> assertThat(unlockCount > 0).isTrue()
 		);
 	}
 
