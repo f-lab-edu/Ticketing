@@ -10,8 +10,8 @@ import com.ticketing.server.global.redis.RefreshRedisRepository;
 import com.ticketing.server.global.redis.RefreshToken;
 import com.ticketing.server.global.security.jwt.JwtProperties;
 import com.ticketing.server.global.security.jwt.JwtProvider;
-import com.ticketing.server.user.service.dto.TokenDTO;
 import com.ticketing.server.user.domain.UserGrade;
+import com.ticketing.server.user.service.dto.TokenDTO;
 import java.util.Collections;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -62,7 +62,7 @@ class AuthenticationServiceImplTest {
 	@DisplayName("토큰 재발급 성공")
 	void reissueAccessToken() {
 		// given
-		String refreshToken = "Bearer eyJhbGciOiJIUzUxMiJ9";
+		String refreshToken = "eyJhbGciOiJIUzUxMiJ9";
 		when(jwtProvider.validateToken(any())).thenReturn(true);
 		when(jwtProvider.getAuthentication(any())).thenReturn(authenticationToken);
 		when(jwtProvider.generateTokenDto(any())).thenReturn(useJwtProvider.generateTokenDto(authenticationToken));

@@ -69,7 +69,6 @@ class UserControllerTest {
 
 	SignUpRequest signUpRequest;
 
-
 	@Test
 	@DisplayName("회원가입 성공")
 	void registerSuccess() throws Exception {

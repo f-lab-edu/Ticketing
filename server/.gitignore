@@ -6,6 +6,7 @@
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 HELP.md
+bin/**
 
 # User-specific stuff
 .idea/**/workspace.xml

@@ -1,4 +1,4 @@
-package com.ticketing.server.user.application.response;
+package com.ticketing.server.user.application.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,11 +7,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TokenResponse {
+public class RefreshRequest {
 
-	private String accessToken;
 	private String refreshToken;
-	private String tokenType;
-	private long expiresIn;
 
 }
