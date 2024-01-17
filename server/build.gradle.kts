@@ -1,7 +1,13 @@
+import Dependencies.AnnotationProcessorLib
+import Dependencies.DependencyManagementLib
+import Dependencies.ModuleLib
+import Dependencies.RuntimeOnlyLib
+import Dependencies.TestLib
+
 plugins {
 	java
-	id("org.springframework.boot") version "2.6.7"
-	id("io.spring.dependency-management") version "1.0.11.RELEASE"
+	id("org.springframework.boot") version Versions.SPRING_BOOT_STARTER
+	id("io.spring.dependency-management") version Versions.SPRING_DEPENDENCY_MANAGEMENT
 }
 
 group = "com.ticketing"
@@ -23,50 +29,50 @@ repositories {
 	mavenCentral()
 }
 
-extra["springCloudVersion"] = "2021.0.3"
+extra["springCloudVersion"] = Versions.SPRING_CLOUD
 
 dependencies {
-	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-	implementation("org.springframework.boot:spring-boot-starter-security")
-	implementation("org.springframework.boot:spring-boot-starter-validation")
-	implementation("org.springframework.boot:spring-boot-starter-web")
-	implementation("org.springframework.boot:spring-boot-starter-actuator")
-	implementation("org.springframework.boot:spring-boot-starter-log4j2")
-	implementation("org.projectlombok:lombok:1.18.24")
-	implementation("io.springfox:springfox-boot-starter:3.0.0")
-	implementation("io.springfox:springfox-swagger-ui:3.0.0")
-	implementation("com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.4")
-	implementation("com.lmax:disruptor:3.4.4")
-	implementation("io.jsonwebtoken:jjwt-api:0.11.5")
-	implementation("com.googlecode.json-simple:json-simple:1.1.1")
-	implementation("org.springframework.boot:spring-boot-starter-data-redis")
-	implementation("com.google.code.findbugs:jsr305:3.0.2")
-	implementation ("org.springframework.cloud:spring-cloud-starter-config")
-	implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
-	implementation("io.micrometer:micrometer-core")
-	implementation("io.micrometer:micrometer-registry-prometheus")
+	implementation(Dependencies.SPRING_BOOT_STARTER_DATA_JPA)
+	implementation(Dependencies.SPRING_BOOT_STARTER_SECURITY)
+	implementation(Dependencies.SPRING_BOOT_STARTER_VALIDATION)
+	implementation(Dependencies.SPRING_BOOT_STARTER_WEB)
+	implementation(Dependencies.SPRING_BOOT_STARTER_ACTUATOR)
+	implementation(Dependencies.SPRING_BOOT_STARTER_LOG4J2)
+	implementation(Dependencies.LOMBOK)
+	implementation(Dependencies.SPRING_FOX_STARTER)
+	implementation(Dependencies.SWAGGER)
+	implementation(Dependencies.JASYPT_SPRING_BOOT_STARTER)
+	implementation(Dependencies.DISRUPTOR)
+	implementation(Dependencies.JJWT)
+	implementation(Dependencies.JSON_SIMPLE)
+	implementation(Dependencies.SPRING_BOOT_STARTER_REDIS)
+	implementation(Dependencies.JSR350)
+	implementation(Dependencies.SPRING_CLOUD_STARTER)
+	implementation(Dependencies.SPRING_CLOUD_FEIGN)
+	implementation(Dependencies.MICROMETER_CORE)
+	implementation(Dependencies.MICROMETER_REGISTRY_PROMETHEUS)
 
 	modules {
-		module("org.springframework.boot:spring-boot-starter-logging") {
-			replacedBy("org.springframework.boot:spring-boot-starter-log4j2", "Use Log4j2 instead of Logback")
+		module(ModuleLib.SPRING_BOOT_STARTER_LOGGING) {
+			replacedBy(ModuleLib.SPRING_BOOT_STARTER_LOG4J2, "Use Log4j2 instead of Logback")
 		}
 	}
 
-	compileOnly("org.projectlombok:lombok")
-	runtimeOnly("mysql:mysql-connector-java")
-	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
-	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")
-	annotationProcessor("org.projectlombok:lombok")
-	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+	compileOnly(Dependencies.LOMBOK)
+	runtimeOnly(RuntimeOnlyLib.MYSQL)
+	runtimeOnly(RuntimeOnlyLib.JJWT_IMPL)
+	runtimeOnly(RuntimeOnlyLib.JJWT_JACKSON)
+	annotationProcessor(Dependencies.LOMBOK)
+	annotationProcessor(AnnotationProcessorLib.SPRING_BOOT_PROCESSOR)
 
-	testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
-	testImplementation("org.springframework.boot:spring-boot-starter-test")
-	testImplementation("org.springframework.security:spring-security-test")
+	testImplementation(TestLib.JUPITER)
+	testImplementation(TestLib.SPRING_BOOT_STARTER)
+	testImplementation(TestLib.SPRING_SECURITY)
 }
 
 dependencyManagement {
 	imports {
-		mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
+		mavenBom(DependencyManagementLib.SPRING_CLOUD)
 	}
 }
 
